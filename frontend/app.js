@@ -1,4 +1,7 @@
-﻿const API_BASE = 'https://tuvi-backend-d5gx.onrender.com';\nconst apiFetch = (path, options = {}) => fetch(API_BASE + path, { credentials: 'include', ...options });\n\n// =====================================================
+﻿const API_BASE = 'https://tuvi-backend-d5gx.onrender.com';
+const apiFetch = (path, options = {}) => fetch(API_BASE + path, { credentials: 'include', ...options });
+
+// =====================================================
 // 🕵️‍♂️ DEBUG: Theo dõi mọi thay đổi giá trị Cục Số
 // -----------------------------------------------------
 Object.defineProperty(window, "debugCucSo", {
@@ -13953,5 +13956,6 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     });
   }
 })();
+
 
 
