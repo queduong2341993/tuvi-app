@@ -2860,8 +2860,8 @@ function xacDinhCucSo(canChiNam, cungMenh) {
     .replace(/[ \s]+/g, " ")
     .trim()
     .split(" ")[0]
-    .replace(/[^A-Za-zĂ€-á»¹ÄÄ‘]/g, "");
-
+    // Giữ lại chữ cái (có dấu) bằng Unicode class \p{L}, tránh lỗi range RegExp
+    .replace(/[^\p{L}]/gu, "");
   const chi = (typeof cungMenh === "string") ? cungMenh.trim() : "";
 
   const bangCuc = {
