@@ -1,13 +1,18 @@
+﻿const API_BASE = 'https://tuvi-backend-d5gx.onrender.com';
+const apiFetch = (path, options = {}) => fetch(API_BASE + path, { credentials: 'include', ...options });
+
+
+
 // =====================================================
-// 🕵️‍♂️ DEBUG: Theo dõi mọi thay đổi giá trị Cục Số
+// đŸ•µï¸â€â™‚ï¸ DEBUG: Theo dĂµi má»i thay Ä‘á»•i giĂ¡ trá»‹ Cá»¥c Sá»‘
 // -----------------------------------------------------
 Object.defineProperty(window, "debugCucSo", {
   set(value) {
-    console.groupCollapsed("⚠️ CUC_SO bị gán mới:", value);
-    console.trace("Nguồn gốc thay đổi:");
+    console.groupCollapsed("â ï¸ CUC_SO bá»‹ gĂ¡n má»›i:", value);
+    console.trace("Nguá»“n gá»‘c thay Ä‘á»•i:");
     console.groupEnd();
 
-    // Ghi ngược lại vào data chính (nếu tồn tại)
+    // Ghi ngÆ°á»£c láº¡i vĂ o data chĂ­nh (náº¿u tá»“n táº¡i)
     if (window.DEBUG_DATA_CUC) {
       window.DEBUG_DATA_CUC.cucSo = value;
     }
@@ -19,39 +24,39 @@ Object.defineProperty(window, "debugCucSo", {
 
 
 // ======================================================
-// 🗺️ BẢN ĐỒ CUNG CHUẨN TOÀN CỤC (layout NGHỊCH)
+// đŸ—ºï¸ Báº¢N Äá»’ CUNG CHUáº¨N TOĂ€N Cá»¤C (layout NGHá»CH)
 // ======================================================
 window.mapCung = {
-  "Dần": 9, "Mão": 7, "Thìn": 5, "Tỵ": 1, "Ngọ": 2, "Mùi": 3,
-  "Thân": 4, "Dậu": 6, "Tuất": 8, "Hợi": 12, "Tý": 11, "Sửu": 10
+  "Dáº§n": 9, "MĂ£o": 7, "ThĂ¬n": 5, "Tá»µ": 1, "Ngá»": 2, "MĂ¹i": 3,
+  "ThĂ¢n": 4, "Dáº­u": 6, "Tuáº¥t": 8, "Há»£i": 12, "TĂ½": 11, "Sá»­u": 10
 };
-const mapCung = window.mapCung; // để dùng ngắn gọn
+const mapCung = window.mapCung; // Ä‘á»ƒ dĂ¹ng ngáº¯n gá»n
 
 // ======================================================
-// 🗺️ TAM HỢP + ĐỐI CUNG (chuẩn layout NGHỊCH của bạn)
+// đŸ—ºï¸ TAM Há»¢P + Äá»I CUNG (chuáº©n layout NGHá»CH cá»§a báº¡n)
 // ======================================================
 const TAM_HOP_THEO_TEN = {
-  "Tỵ": ["Sửu", "Dậu"],
-  "Ngọ": ["Dần", "Tuất"],
-  "Mùi": ["Mão", "Hợi"],
-  "Thân": ["Tý", "Thìn"],
-  "Dậu": ["Tỵ", "Sửu"],
-  "Tuất": ["Ngọ", "Dần"],
-  "Hợi": ["Mùi", "Mão"],
-  "Tý": ["Thân", "Thìn"],
-  "Sửu": ["Tỵ", "Dậu"],
-  "Dần": ["Ngọ", "Tuất"],
-  "Mão": ["Hợi", "Mùi"],
-  "Thìn": ["Tý", "Thân"]
+  "Tá»µ": ["Sá»­u", "Dáº­u"],
+  "Ngá»": ["Dáº§n", "Tuáº¥t"],
+  "MĂ¹i": ["MĂ£o", "Há»£i"],
+  "ThĂ¢n": ["TĂ½", "ThĂ¬n"],
+  "Dáº­u": ["Tá»µ", "Sá»­u"],
+  "Tuáº¥t": ["Ngá»", "Dáº§n"],
+  "Há»£i": ["MĂ¹i", "MĂ£o"],
+  "TĂ½": ["ThĂ¢n", "ThĂ¬n"],
+  "Sá»­u": ["Tá»µ", "Dáº­u"],
+  "Dáº§n": ["Ngá»", "Tuáº¥t"],
+  "MĂ£o": ["Há»£i", "MĂ¹i"],
+  "ThĂ¬n": ["TĂ½", "ThĂ¢n"]
 };
 
 const DOI_CUNG_THEO_TEN = {
-  "Tỵ": "Hợi", "Ngọ": "Tý", "Mùi": "Sửu", "Thân": "Dần",
-  "Dậu": "Mão", "Tuất": "Thìn", "Hợi": "Tỵ", "Tý": "Ngọ",
-  "Sửu": "Mùi", "Dần": "Thân", "Mão": "Dậu", "Thìn": "Tuất"
+  "Tá»µ": "Há»£i", "Ngá»": "TĂ½", "MĂ¹i": "Sá»­u", "ThĂ¢n": "Dáº§n",
+  "Dáº­u": "MĂ£o", "Tuáº¥t": "ThĂ¬n", "Há»£i": "Tá»µ", "TĂ½": "Ngá»",
+  "Sá»­u": "MĂ¹i", "Dáº§n": "ThĂ¢n", "MĂ£o": "Dáº­u", "ThĂ¬n": "Tuáº¥t"
 };
 
-// 🔁 Sinh TAM_HOP và DOI_CUNG toàn cục
+// đŸ” Sinh TAM_HOP vĂ  DOI_CUNG toĂ n cá»¥c
 window.TAM_HOP = {};
 window.DOI_CUNG = {};
 
@@ -81,7 +86,7 @@ Object.entries(DOI_CUNG_THEO_TEN).forEach(([ten, doiTen]) => {
 
 
 // =====================================================
-// 🧩 Tạo database nếu chưa có (ép onupgradeneeded chạy 1 lần)
+// đŸ§© Táº¡o database náº¿u chÆ°a cĂ³ (Ă©p onupgradeneeded cháº¡y 1 láº§n)
 // =====================================================
 (function initDB() {
   const req = indexedDB.open("TuViDB", 1);
@@ -89,17 +94,17 @@ Object.entries(DOI_CUNG_THEO_TEN).forEach(([ten, doiTen]) => {
     const db = e.target.result;
     if (!db.objectStoreNames.contains("jsonStore")) {
       db.createObjectStore("jsonStore");
-      console.log("🆕 Đã tạo store 'jsonStore' (initDB chạy lần đầu)");
+      console.log("đŸ†• ÄĂ£ táº¡o store 'jsonStore' (initDB cháº¡y láº§n Ä‘áº§u)");
     }
   };
-  req.onsuccess = () => console.log("✅ IndexedDB sẵn sàng");
-  req.onerror = e => console.warn("⚠️ Lỗi khởi tạo DB:", e);
+  req.onsuccess = () => console.log("âœ… IndexedDB sáºµn sĂ ng");
+  req.onerror = e => console.warn("â ï¸ Lá»—i khá»Ÿi táº¡o DB:", e);
 })();
 
 // =====================================================
-// 🧱 PHẦN 1: KHỞI TẠO LÁ SỐ TRẮNG (TỐI ƯU AN TOÀN, KHÔNG ĐỔI CẤU TRÚC)
+// đŸ§± PHáº¦N 1: KHá»I Táº O LĂ Sá» TRáº®NG (Tá»I Æ¯U AN TOĂ€N, KHĂ”NG Äá»”I Cáº¤U TRĂC)
 // =====================================================
-window.saoToCung = {}; // 🪐 Lưu vị trí sao chính tinh toàn cục cho các lớp sau
+window.saoToCung = {}; // đŸª LÆ°u vá»‹ trĂ­ sao chĂ­nh tinh toĂ n cá»¥c cho cĂ¡c lá»›p sau
 
 function taoLaSoTrang(data) {
   window.dataGlobal = data;
@@ -107,34 +112,34 @@ function taoLaSoTrang(data) {
     data.thangAm = data.lunar[1];
     window.dataGlobal.thangAm = data.lunar[1];
   }
-// 🌙 Bổ sung: đảm bảo luôn có tháng âm sinh (chỉ lấy từ lịch âm)
+// đŸŒ™ Bá»• sung: Ä‘áº£m báº£o luĂ´n cĂ³ thĂ¡ng Ă¢m sinh (chá»‰ láº¥y tá»« lá»‹ch Ă¢m)
 if (!window.dataGlobal.thangAm) {
   if (Array.isArray(data.lunar)) {
-    // Nếu lunar là mảng [ngày, tháng, năm]
+    // Náº¿u lunar lĂ  máº£ng [ngĂ y, thĂ¡ng, nÄƒm]
     window.dataGlobal.thangAm = data.lunar[1];
   } else if (data.lunar && typeof data.lunar === "object" && data.lunar.thang) {
-    // Nếu lunar là object {ngay, thang, nam}
+    // Náº¿u lunar lĂ  object {ngay, thang, nam}
     window.dataGlobal.thangAm = data.lunar.thang;
   } else if (data.thangSinh) {
-    // Nếu có biến thangSinh (đã là âm)
+    // Náº¿u cĂ³ biáº¿n thangSinh (Ä‘Ă£ lĂ  Ă¢m)
     window.dataGlobal.thangAm = data.thangSinh;
   } else {
-    console.warn("⚠️ Không có dữ liệu tháng âm sinh, chưa thể an sao TheoThangSinh!");
+    console.warn("â ï¸ KhĂ´ng cĂ³ dá»¯ liá»‡u thĂ¡ng Ă¢m sinh, chÆ°a thá»ƒ an sao TheoThangSinh!");
   }
-  console.log("🌙 Tháng âm sinh:", window.dataGlobal.thangAm);
+  console.log("đŸŒ™ ThĂ¡ng Ă¢m sinh:", window.dataGlobal.thangAm);
 }
 
 
   const container = document.getElementById("lasoContainer");
   if (!container) return;
 
-  // ⚡ Ẩn container trong lúc render để giảm reflow
+  // â¡ áº¨n container trong lĂºc render Ä‘á»ƒ giáº£m reflow
   const oldDisplay = container.style.display;
   container.style.display = "none";
   container.innerHTML = "";
 
   // ==============================
-  // 🔹 Tạo 12 ô cung cơ bản
+  // đŸ”¹ Táº¡o 12 Ă´ cung cÆ¡ báº£n
   // ==============================
   const frag = document.createDocumentFragment();
   const layerNames = [
@@ -176,53 +181,53 @@ if (!window.dataGlobal.thangAm) {
   container.appendChild(frag);
 
   // ==============================
-  // 🔹 Ô trung tâm
+  // đŸ”¹ Ă” trung tĂ¢m
   // ==============================
   const { name, gender, menh, canChiNam, canChiThang, canChiNgay, canChiGio, lunar } = data;
   const center = document.createElement("div");
   center.id = "centerCell";
   center.innerHTML = `
-    <div class="title">LÁ SỐ TỬ VI<br><span style="font-size:16px;font-style:italic;color:#c44;">An lá số tại tuvitoanthu.com</span></div>
+    <div class="title">LĂ Sá» Tá»¬ VI<br><span style="font-size:16px;font-style:italic;color:#c44;">An lĂ¡ sá»‘ táº¡i tuvitoanthu.com</span></div>
 <div id="showCatHungToggle">
   <label>
     <input type="checkbox" id="toggleCatHung" />
-    Định Cát Hung - Cách cục
+    Äá»‹nh CĂ¡t Hung - CĂ¡ch cá»¥c
   </label>
 </div>
 
-    <div class="info-line"><b>Họ và tên:</b> ${name}</div>
-    <div class="info-line"><b>Giới tính:</b> ${gender}</div>
-    <div class="info-line"><b>Mệnh:</b> ${menh}</div>
+    <div class="info-line"><b>Há» vĂ  tĂªn:</b> ${name}</div>
+    <div class="info-line"><b>Giá»›i tĂ­nh:</b> ${gender}</div>
+    <div class="info-line"><b>Má»‡nh:</b> ${menh}</div>
    <div class="info-line">
-  <b>Cục số:</b>
-  <span id="cucSoText">(đang xác định...)</span>
+  <b>Cá»¥c sá»‘:</b>
+  <span id="cucSoText">(Ä‘ang xĂ¡c Ä‘á»‹nh...)</span>
 </div>
 
     <div class="info-line">
-      <b>Năm:</b> ${lunar[2]} &nbsp;|&nbsp;
-      <b>Tháng:</b> ${lunar[1]} &nbsp;|&nbsp;
-      <b>Ngày:</b> ${lunar[0]} &nbsp;|&nbsp;
-      <b>Giờ:</b> ${canChiGio.split(" ")[1]}
+      <b>NÄƒm:</b> ${lunar[2]} &nbsp;|&nbsp;
+      <b>ThĂ¡ng:</b> ${lunar[1]} &nbsp;|&nbsp;
+      <b>NgĂ y:</b> ${lunar[0]} &nbsp;|&nbsp;
+      <b>Giá»:</b> ${canChiGio.split(" ")[1]}
     </div>
-    <div class="sub-info">${canChiNam} • ${canChiThang} • ${canChiNgay} • ${canChiGio}</div>
+    <div class="sub-info">${canChiNam} â€¢ ${canChiThang} â€¢ ${canChiNgay} â€¢ ${canChiGio}</div>
   `;
   container.appendChild(center);
-// Tick mặc định khi load lá số
+// Tick máº·c Ä‘á»‹nh khi load lĂ¡ sá»‘
 const chk = document.getElementById("toggleCatHung");
 if (chk) chk.checked = true;
 
   // ==============================
-  // 🔹 Cache nhanh danh sách cung
+  // đŸ”¹ Cache nhanh danh sĂ¡ch cung
   // ==============================
   window.cungNodes = Array.from(container.querySelectorAll(".cung"));
 
   // ==============================
-  // 🔹 Bật hiển thị lại sau khi render xong
+  // đŸ”¹ Báº­t hiá»ƒn thá»‹ láº¡i sau khi render xong
   // ==============================
   container.style.display = oldDisplay || "grid";
 
   // ==============================
-  // 🔹 Gắn sự kiện tính tuổi & toggle lưu vận
+  // đŸ”¹ Gáº¯n sá»± kiá»‡n tĂ­nh tuá»•i & toggle lÆ°u váº­n
   // ==============================
   ["luuNam","luuThang","luuNgay"].forEach(id=>{
     const el=document.getElementById(id);
@@ -243,29 +248,29 @@ if (chk) chk.checked = true;
 
 
 // =====================================================
-// 🪄 PHẦN 2: KHAI BÁO GIỜ ĐỊA CHI (KHÔNG GẮN VÀO DROPDOWN NỮA)
+// đŸª„ PHáº¦N 2: KHAI BĂO GIá»œ Äá»A CHI (KHĂ”NG Gáº®N VĂ€O DROPDOWN Ná»®A)
 // =====================================================
 
-// Giữ lại mảng ZHOURS để các hàm khác có thể dùng
+// Giá»¯ láº¡i máº£ng ZHOURS Ä‘á»ƒ cĂ¡c hĂ m khĂ¡c cĂ³ thá»ƒ dĂ¹ng
 const ZHOURS = [
-  { label: "Tý (00:00–00:59)", value: "0" },
-  { label: "Sửu (01:00–02:59)", value: "1" },
-  { label: "Dần (03:00–04:59)", value: "3" },
-  { label: "Mão (05:00–06:59)", value: "5" },
-  { label: "Thìn (07:00–08:59)", value: "7" },
-  { label: "Tỵ (09:00–10:59)", value: "9" },
-  { label: "Ngọ (11:00–12:59)", value: "11" },
-  { label: "Mùi (13:00–14:59)", value: "13" },
-  { label: "Thân (15:00–16:59)", value: "15" },
-  { label: "Dậu (17:00–18:59)", value: "17" },
-  { label: "Tuất (19:00–20:59)", value: "19" },
-  { label: "Hợi (21:00–22:59)", value: "21" },
-  { label: "Tý (23:00–23:59)", value: "23" }
+  { label: "TĂ½ (00:00â€“00:59)", value: "0" },
+  { label: "Sá»­u (01:00â€“02:59)", value: "1" },
+  { label: "Dáº§n (03:00â€“04:59)", value: "3" },
+  { label: "MĂ£o (05:00â€“06:59)", value: "5" },
+  { label: "ThĂ¬n (07:00â€“08:59)", value: "7" },
+  { label: "Tá»µ (09:00â€“10:59)", value: "9" },
+  { label: "Ngá» (11:00â€“12:59)", value: "11" },
+  { label: "MĂ¹i (13:00â€“14:59)", value: "13" },
+  { label: "ThĂ¢n (15:00â€“16:59)", value: "15" },
+  { label: "Dáº­u (17:00â€“18:59)", value: "17" },
+  { label: "Tuáº¥t (19:00â€“20:59)", value: "19" },
+  { label: "Há»£i (21:00â€“22:59)", value: "21" },
+  { label: "TĂ½ (23:00â€“23:59)", value: "23" }
 ];
 
 
 // =====================================================
-// 🗓️ Hàm lấy ngày âm theo giờ - Dựa vào bảng đã tính sẵn
+// đŸ—“ï¸ HĂ m láº¥y ngĂ y Ă¢m theo giá» - Dá»±a vĂ o báº£ng Ä‘Ă£ tĂ­nh sáºµn
 // =====================================================
 
 function layNgayAmTheoGio(solarDay, solarMonth, solarYear, hour, bangAm) {
@@ -278,27 +283,27 @@ function layNgayAmTheoGio(solarDay, solarMonth, solarYear, hour, bangAm) {
   let mAm = ngayObj.mAm;
   let yAm = ngayObj.yAm;
 
-  // ⚙️ Điều chỉnh theo Giờ Tý
+  // â™ï¸ Äiá»u chá»‰nh theo Giá» TĂ½
   if (hour === 23) {
-    // ✅ Nếu đã từng xử lý Giờ Tý (khi lưu), không cộng thêm
+    // âœ… Náº¿u Ä‘Ă£ tá»«ng xá»­ lĂ½ Giá» TĂ½ (khi lÆ°u), khĂ´ng cá»™ng thĂªm
     if (window.dataGlobal?.daXuLyGioTy) {
-      console.log("🕛 Giờ Tý đã được xử lý khi lưu — bỏ qua cộng ngày âm.");
+      console.log("đŸ•› Giá» TĂ½ Ä‘Ă£ Ä‘Æ°á»£c xá»­ lĂ½ khi lÆ°u â€” bá» qua cá»™ng ngĂ y Ă¢m.");
       return [dAm, mAm, yAm];
     }
 
-    console.log("🕛 Giờ Tý sau – tăng 1 ngày Âm lịch");
-    return congNgayAm(dAm, mAm, yAm, bangAm); // Tý sau → qua ngày
+    console.log("đŸ•› Giá» TĂ½ sau â€“ tÄƒng 1 ngĂ y Ă‚m lá»‹ch");
+    return congNgayAm(dAm, mAm, yAm, bangAm); // TĂ½ sau â†’ qua ngĂ y
   }
 
   if (hour === 0) {
-    console.log("🕐 Giờ Tý đầu – giữ nguyên ngày Âm lịch");
+    console.log("đŸ• Giá» TĂ½ Ä‘áº§u â€“ giá»¯ nguyĂªn ngĂ y Ă‚m lá»‹ch");
     return [dAm, mAm, yAm];
   }
 
-  return [dAm, mAm, yAm]; // Giờ khác → giữ nguyên
+  return [dAm, mAm, yAm]; // Giá» khĂ¡c â†’ giá»¯ nguyĂªn
 }
 
-// 🔧 Cộng thêm 1 ngày Âm lịch
+// đŸ”§ Cá»™ng thĂªm 1 ngĂ y Ă‚m lá»‹ch
 function congNgayAm(dAm, mAm, yAm, bangAm) {
   for (let y in bangAm) {
     for (let m in bangAm[y]) {
@@ -333,14 +338,14 @@ function congNgayAm(dAm, mAm, yAm, bangAm) {
 
 
 // =====================================================
-// 🗓️ KHỞI TẠO NGÀY / THÁNG / NĂM
+// đŸ—“ï¸ KHá»I Táº O NGĂ€Y / THĂNG / NÄ‚M
 // =====================================================
 function populateSelectors() {
   const dSel = document.getElementById("day");
   const mSel = document.getElementById("month");
   const ySel = document.getElementById("year");
 
-  // Ngày
+  // NgĂ y
   for (let d = 1; d <= 31; d++) {
     const o = document.createElement("option");
     o.value = d;
@@ -349,16 +354,16 @@ function populateSelectors() {
     dSel.appendChild(o);
   }
 
-  // Tháng
+  // ThĂ¡ng
   for (let m = 1; m <= 12; m++) {
     const o = document.createElement("option");
     o.value = m;
-    o.textContent = "Tháng " + m;
+    o.textContent = "ThĂ¡ng " + m;
     if (m === 12) o.selected = true;
     mSel.appendChild(o);
   }
 
-  // Năm
+  // NÄƒm
   for (let y = 1900; y <= 2100; y++) {
     const o = document.createElement("option");
     o.value = y;
@@ -369,27 +374,27 @@ function populateSelectors() {
  }
 
 /* =====================================================
-   🧮 PHẦN 3: THUẬT TOÁN HỒ NGỌC ĐỨC
+   đŸ§® PHáº¦N 3: THUáº¬T TOĂN Há»’ NGá»ŒC Äá»¨C
    -----------------------------------------------------
-   Gồm các hàm lõi:
-   - Tính ngày Julius
-   - Tính ngày Sóc (New Moon)
-   - Tính tháng nhuận
-   - Chuyển đổi Âm ⇆ Dương
+   Gá»“m cĂ¡c hĂ m lĂµi:
+   - TĂ­nh ngĂ y Julius
+   - TĂ­nh ngĂ y SĂ³c (New Moon)
+   - TĂ­nh thĂ¡ng nhuáº­n
+   - Chuyá»ƒn Ä‘á»•i Ă‚m â‡† DÆ°Æ¡ng
    ===================================================== */
 
 // -------------------------------
-// 🔹 BẢNG THIÊN CAN – ĐỊA CHI
+// đŸ”¹ Báº¢NG THIĂN CAN â€“ Äá»A CHI
 // -------------------------------
-const CAN = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
-const CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-const TZ = 7; // Múi giờ Việt Nam (UTC+7)
+const CAN = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
+const CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+const TZ = 7; // MĂºi giá» Viá»‡t Nam (UTC+7)
 
 // -------------------------------
-// 🔹 TÍNH NGÀY JULIUS
+// đŸ”¹ TĂNH NGĂ€Y JULIUS
 // -------------------------------
 function jdFromDate(dd, mm, yy) {
-  // Đổi ngày dương sang số Julius
+  // Äá»•i ngĂ y dÆ°Æ¡ng sang sá»‘ Julius
   let a = Math.floor((14 - mm) / 12);
   let y = yy + 4800 - a;
   let m = mm + 12 * a - 3;
@@ -401,7 +406,7 @@ function jdFromDate(dd, mm, yy) {
 }
 
 function jdToDate(jd) {
-  // Đổi số Julius về ngày dương
+  // Äá»•i sá»‘ Julius vá» ngĂ y dÆ°Æ¡ng
   let Z = Math.floor(jd + 0.5), A = Z;
   if (Z >= 2299161) {
     let alpha = Math.floor((Z - 1867216.25) / 36524.25);
@@ -418,10 +423,10 @@ function jdToDate(jd) {
 }
 
 // -------------------------------
-// 🌑 TÍNH NGÀY SÓC (NEW MOON)
+// đŸŒ‘ TĂNH NGĂ€Y SĂ“C (NEW MOON)
 // -------------------------------
 function NewMoon(k) {
-  // Trả về số Julius của kỳ Sóc thứ k kể từ 1/1/1900
+  // Tráº£ vá» sá»‘ Julius cá»§a ká»³ SĂ³c thá»© k ká»ƒ tá»« 1/1/1900
   let T = k / 1236.85, T2 = T*T, T3 = T2*T, dr = Math.PI/180;
   let Jd1 = 2415020.75933 + 29.53058868*k + 0.0001178*T2 - 0.000000155*T3;
   Jd1 += 0.00033*Math.sin((166.56 + 132.87*T - 0.009173*T2)*dr);
@@ -447,7 +452,7 @@ function NewMoon(k) {
 }
 
 // -------------------------------
-// ☀️ VỊ TRÍ MẶT TRỜI
+// â˜€ï¸ Vá» TRĂ Máº¶T TRá»œI
 // -------------------------------
 function getNewMoonDay(k, tz) { return Math.floor(NewMoon(k) + 0.5 + tz/24); }
 function SunLongitude(jdn) {
@@ -466,7 +471,7 @@ function getSunLongitude(jdn, tz) {
 }
 
 // -------------------------------
-// 🌙 XÁC ĐỊNH THÁNG ÂM VÀ THÁNG NHUẬN
+// đŸŒ™ XĂC Äá»NH THĂNG Ă‚M VĂ€ THĂNG NHUáº¬N
 // -------------------------------
 function getLunarMonth11(yy, tz) {
   let off = jdFromDate(31, 12, yy) - 2415021;
@@ -485,7 +490,7 @@ function getLeapMonthOffset(a11, tz) {
 }
 
 // -------------------------------
-// 🔁 CHUYỂN ĐỔI ÂM ⇆ DƯƠNG
+// đŸ” CHUYá»‚N Äá»”I Ă‚M â‡† DÆ¯Æ NG
 // -------------------------------
 function convertSolarToLunar(dd, mm, yy, tz) {
   let dayNumber = jdFromDate(dd, mm, yy);
@@ -512,24 +517,24 @@ function convertSolarToLunar(dd, mm, yy, tz) {
     }
   }
   if (lunarMonth > 12) lunarMonth -= 12;
-  if (lunarMonth >= 11 && diff < 4) lunarYear += 1; // giữ nguyên tạm thời
+  if (lunarMonth >= 11 && diff < 4) lunarYear += 1; // giá»¯ nguyĂªn táº¡m thá»i
 
   return [lunarDay, lunarMonth, lunarYear, lunarLeap];
 }
 // =====================================================
-// 🧭 FIX: Giữ năm âm theo bảng khởi tháng (chỉ qua 1/1 âm mới đổi năm)
+// đŸ§­ FIX: Giá»¯ nÄƒm Ă¢m theo báº£ng khá»Ÿi thĂ¡ng (chá»‰ qua 1/1 Ă¢m má»›i Ä‘á»•i nÄƒm)
 // =====================================================
 if (window.dataGlobal && window.dataGlobal.thangAm) {
   const thangAm = Number(window.dataGlobal.thangAm);
   
-  // Nếu đang ở tháng 11 hoặc 12 âm thì không cho đổi năm âm
+  // Náº¿u Ä‘ang á»Ÿ thĂ¡ng 11 hoáº·c 12 Ă¢m thĂ¬ khĂ´ng cho Ä‘á»•i nÄƒm Ă¢m
   if (thangAm === 11 || thangAm === 12) {
-    // Nếu đang bị lệch do công thức Hồ Ngọc Đức thì khôi phục
+    // Náº¿u Ä‘ang bá»‹ lá»‡ch do cĂ´ng thá»©c Há»“ Ngá»c Äá»©c thĂ¬ khĂ´i phá»¥c
     if (lunar[2] > year) {
-      lunar[2] = year;       // Giữ nguyên năm hiện tại
+      lunar[2] = year;       // Giá»¯ nguyĂªn nÄƒm hiá»‡n táº¡i
     }
     if (lunar[2] < year - 1) {
-      lunar[2] = year - 1;   // Giữ đúng năm âm trước nếu trước Tết
+      lunar[2] = year - 1;   // Giá»¯ Ä‘Ăºng nÄƒm Ă¢m trÆ°á»›c náº¿u trÆ°á»›c Táº¿t
     }
   }
 }
@@ -554,31 +559,31 @@ function convertLunarToSolar(ld, lm, ly, leap, tz) {
 }
 
 /* =====================================================
-   🧭 PHẦN 4: CAN CHI – MỆNH – CHUYỂN ĐỔI
+   đŸ§­ PHáº¦N 4: CAN CHI â€“ Má»†NH â€“ CHUYá»‚N Äá»”I
    -----------------------------------------------------
-   - Tính Can Chi theo năm, tháng, ngày, giờ
-   - Tính Mệnh Âm/Dương
-   - Xử lý nút "Chuyển đổi"
+   - TĂ­nh Can Chi theo nÄƒm, thĂ¡ng, ngĂ y, giá»
+   - TĂ­nh Má»‡nh Ă‚m/DÆ°Æ¡ng
+   - Xá»­ lĂ½ nĂºt "Chuyá»ƒn Ä‘á»•i"
    ===================================================== */
 
 // -------------------------
-// 🔹 BẢNG CAN THÁNG THEO CAN NĂM
+// đŸ”¹ Báº¢NG CAN THĂNG THEO CAN NÄ‚M
 // -------------------------
 const CAN_THANG = {
- "Giáp":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
- "Ất":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
- "Bính":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
- "Đinh":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
- "Mậu":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"],
- "Kỷ":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
- "Canh":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
- "Tân":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
- "Nhâm":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
- "Quý":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"]
+ "GiĂ¡p":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+ "áº¤t":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+ "BĂ­nh":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+ "Äinh":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+ "Máº­u":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"],
+ "Ká»·":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+ "Canh":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+ "TĂ¢n":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+ "NhĂ¢m":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+ "QuĂ½":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"]
 };
 
 // -------------------------
-// 🔹 HÀM TÍNH CAN CHI
+// đŸ”¹ HĂ€M TĂNH CAN CHI
 // -------------------------
 function canChiYear(y){ return CAN[(y+6)%10] + " " + CHI[(y+8)%12]; }
 function canChiMonth(y,m){
@@ -601,20 +606,20 @@ function canChiHour(h,canDayIndex){
 }
 
 // -------------------------
-// 💫 TÍNH MỆNH ÂM DƯƠNG NAM/NỮ
+// đŸ’« TĂNH Má»†NH Ă‚M DÆ¯Æ NG NAM/Ná»®
 // -------------------------
 function tinhMenhAD(canChiNam, gender){
   const can = canChiNam.split(" ")[0];
-  const duong = ["Giáp","Bính","Mậu","Canh","Nhâm"];
-  const m = duong.includes(can) ? "Dương" : "Âm";
-  if (m==="Dương" && gender==="Nam") return "Dương Nam";
-  if (m==="Dương" && gender==="Nữ") return "Dương Nữ";
-  if (m==="Âm" && gender==="Nam") return "Âm Nam";
-  return "Âm Nữ";
+  const duong = ["GiĂ¡p","BĂ­nh","Máº­u","Canh","NhĂ¢m"];
+  const m = duong.includes(can) ? "DÆ°Æ¡ng" : "Ă‚m";
+  if (m==="DÆ°Æ¡ng" && gender==="Nam") return "DÆ°Æ¡ng Nam";
+  if (m==="DÆ°Æ¡ng" && gender==="Ná»¯") return "DÆ°Æ¡ng Ná»¯";
+  if (m==="Ă‚m" && gender==="Nam") return "Ă‚m Nam";
+  return "Ă‚m Ná»¯";
 }
 
 // -------------------------
-// 🔁 CẬP NHẬT THÁNG ÂM NHUẬN
+// đŸ” Cáº¬P NHáº¬T THĂNG Ă‚M NHUáº¬N
 // -------------------------
 function getLeapMonthOfYear(y, tz){
   const a11=getLunarMonth11(y-1,tz);
@@ -636,19 +641,19 @@ function updateMonths(){
   if(type==="solar"){
     for(let m=1;m<=12;m++){
       const o=document.createElement("option");
-      o.value=m; o.textContent="Tháng "+m;
+      o.value=m; o.textContent="ThĂ¡ng "+m;
       mSel.appendChild(o);
     }
   } else {
     const leap=getLeapMonthOfYear(year,TZ);
     for(let m=1;m<=12;m++){
       const o=document.createElement("option");
-      o.value=m; o.textContent="Tháng "+m;
+      o.value=m; o.textContent="ThĂ¡ng "+m;
       mSel.appendChild(o);
       if(m===leap){
         const n=document.createElement("option");
         n.value=m+"_nhuan";
-        n.textContent="Tháng "+m+" (nhuận)";
+        n.textContent="ThĂ¡ng "+m+" (nhuáº­n)";
         mSel.appendChild(n);
       }
     }
@@ -668,7 +673,7 @@ function resetChart() {
   const cells = document.querySelectorAll("[id^='cell']");
 
   cells.forEach(cell => {
-    // Xóa TẤT CẢ các layer động trong cung
+    // XĂ³a Táº¤T Cáº¢ cĂ¡c layer Ä‘á»™ng trong cung
     cell.querySelectorAll(`
       .layer-2,
       .layer-3,
@@ -691,7 +696,7 @@ function resetChart() {
     `).forEach(e => e.remove());
   });
 
-  // reset map gán sao
+  // reset map gĂ¡n sao
   window.saoToCung = {};
 
   // reset dataGlobal
@@ -701,18 +706,18 @@ function resetChart() {
     delete window.dataGlobal.cucSo;
   }
 
-  console.log("♻️ ĐÃ RESET LÁ SỐ – SẴNG SÀNG AN LẠI");
+  console.log("â™»ï¸ ÄĂƒ RESET LĂ Sá» â€“ Sáº´NG SĂ€NG AN Láº I");
 }
 
 
 // -------------------------
-// 🔘 NÚT "CHUYỂN ĐỔI"
+// đŸ”˜ NĂT "CHUYá»‚N Äá»”I"
 // -------------------------
 
 document.getElementById("convert").addEventListener("click", async ()=>{
 resetChart();
 
-  const name=document.getElementById("name").value.trim()||"Người dùng";
+  const name=document.getElementById("name").value.trim()||"NgÆ°á»i dĂ¹ng";
   const gender=document.getElementById("gender").value;
   const type=document.getElementById("calendarType").value;
  let day = parseInt(document.getElementById("day").value);
@@ -726,7 +731,7 @@ let year = parseInt(document.getElementById("year").value);
 
   let lunar,html="";
   // =====================================================
-  // 📡 Gọi backend chuyển đổi âm/dương (giữ nguyên công thức)
+  // đŸ“¡ Gá»i backend chuyá»ƒn Ä‘á»•i Ă¢m/dÆ°Æ¡ng (giá»¯ nguyĂªn cĂ´ng thá»©c)
   // =====================================================
   const payload = {
     type,
@@ -741,7 +746,7 @@ let year = parseInt(document.getElementById("year").value);
 
   let apiData;
   try {
-    const resp = await fetch("/api/convert", {
+    const resp = await apiFetch("/api/convert", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -750,14 +755,14 @@ let year = parseInt(document.getElementById("year").value);
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     apiData = await resp.json();
   } catch (err) {
-    console.error("❌ Lỗi gọi /api/convert:", err);
-    alert("Không gọi được backend để chuyển đổi lịch. Vui lòng kiểm tra server.");
+    console.error("âŒ Lá»—i gá»i /api/convert:", err);
+    alert("KhĂ´ng gá»i Ä‘Æ°á»£c backend Ä‘á»ƒ chuyá»ƒn Ä‘á»•i lá»‹ch. Vui lĂ²ng kiá»ƒm tra server.");
     return;
   }
 
   const { solar = {}, lunar: lunarObj = {}, canChi = {}, menh: menhApi } = apiData || {};
 
-  // 🗓️ Áp dụng kết quả từ backend
+  // đŸ—“ï¸ Ăp dá»¥ng káº¿t quáº£ tá»« backend
   day = Number(solar.day);
   month = Number(solar.month);
   year = Number(solar.year);
@@ -769,7 +774,7 @@ let year = parseInt(document.getElementById("year").value);
   ];
 
 
-// ✅ Đảm bảo có tháng âm cho Tiểu Tinh
+// âœ… Äáº£m báº£o cĂ³ thĂ¡ng Ă¢m cho Tiá»ƒu Tinh
 if (!window.dataGlobal) window.dataGlobal = {};
 window.dataGlobal.thangAm = (Array.isArray(lunar) && Number(lunar[1]))
   ? Number(lunar[1])
@@ -777,16 +782,16 @@ window.dataGlobal.thangAm = (Array.isArray(lunar) && Number(lunar[1]))
 
 
 
-  // 🌓 TÍNH CAN CHI + MỆNH (ưu tiên công thức local để có dấu chuẩn)
+  // đŸŒ“ TĂNH CAN CHI + Má»†NH (Æ°u tiĂªn cĂ´ng thá»©c local Ä‘á»ƒ cĂ³ dáº¥u chuáº©n)
   const canY = canChiYear(lunar[2]);
   const canM = canChiMonth(lunar[2], lunar[1]);
   const canD = canChiDay(year, month, day);
   let jd = jdFromDate(day, month, year);
 
-// ✅ Giờ Tý (23h) thuộc về ngày hôm sau theo quy tắc Tử Vi
+// âœ… Giá» TĂ½ (23h) thuá»™c vá» ngĂ y hĂ´m sau theo quy táº¯c Tá»­ Vi
 if (hour === 23) {
   jd += 1;
-  console.log("🕛 Giờ Tý sau → tính Can Chi giờ theo ngày hôm sau");
+  console.log("đŸ•› Giá» TĂ½ sau â†’ tĂ­nh Can Chi giá» theo ngĂ y hĂ´m sau");
 }
 
 const canH = canChiHour(hour, (jd + 9) % 10);
@@ -795,7 +800,7 @@ const canH = canChiHour(hour, (jd + 9) % 10);
 
 
 // =====================================================
-// 🌟 TẠO DATA CHO TOÀN BỘ LÁ SỐ
+// đŸŒŸ Táº O DATA CHO TOĂ€N Bá»˜ LĂ Sá»
 // -----------------------------------------------------
 const data = {
 
@@ -812,43 +817,43 @@ const data = {
 };
 
 
-  // 🪞 HIỂN THỊ KẾT QUẢ
+  // đŸª HIá»‚N THá» Káº¾T QUáº¢
   html = `
   <table>
-    <tr><th></th><th>Dương lịch</th><th>Âm lịch</th><th>Can Chi</th></tr>
-    <tr><td>Năm</td><td>${year}</td><td>${lunar[2]}</td><td>${canY}</td></tr>
-    <tr><td>Tháng</td><td>${month}</td><td>${lunar[1]}${lunar[3]?" (nhuận)":""}</td><td>${canM}</td></tr>
-    <tr><td>Ngày</td><td>${day}</td><td>${lunar[0]}</td><td>${canD}</td></tr>
-    <tr><td>Giờ</td>
+    <tr><th></th><th>DÆ°Æ¡ng lá»‹ch</th><th>Ă‚m lá»‹ch</th><th>Can Chi</th></tr>
+    <tr><td>NÄƒm</td><td>${year}</td><td>${lunar[2]}</td><td>${canY}</td></tr>
+    <tr><td>ThĂ¡ng</td><td>${month}</td><td>${lunar[1]}${lunar[3]?" (nhuáº­n)":""}</td><td>${canM}</td></tr>
+    <tr><td>NgĂ y</td><td>${day}</td><td>${lunar[0]}</td><td>${canD}</td></tr>
+    <tr><td>Giá»</td>
         <td>${ZHOURS.find(z=>z.value==hour).label}</td>
         <td>${ZHOURS.find(z=>z.value==hour).label}</td>
         <td>${canH}</td></tr>
     <tr><td colspan="4" style="font-style:italic;background:#fafafa;font-size:13px;">
-      ${name} – ${menh} – ${day}/${month}/${year}
-      ⇔ ${lunar[0]}/${lunar[1]}${lunar[3]?"(nhuận)":""}/${lunar[2]} (Âm)
+      ${name} â€“ ${menh} â€“ ${day}/${month}/${year}
+      â‡” ${lunar[0]}/${lunar[1]}${lunar[3]?"(nhuáº­n)":""}/${lunar[2]} (Ă‚m)
     </td></tr>
   </table>`;
 
   document.getElementById("output").innerHTML = html;
 
-  // 🌟 TẠO LÁ SỐ TRẮNG (chuẩn bị an sao sau này)
-    // 🌟 An lớp 2 (Mệnh) trước để lấy vị trí cung Mệnh
+  // đŸŒŸ Táº O LĂ Sá» TRáº®NG (chuáº©n bá»‹ an sao sau nĂ y)
+    // đŸŒŸ An lá»›p 2 (Má»‡nh) trÆ°á»›c Ä‘á»ƒ láº¥y vá»‹ trĂ­ cung Má»‡nh
  function xacDinhThanCung(gioSinhChi) {
   switch (gioSinhChi) {
-    case "Tý": case "Ngọ":
-      return "Mệnh";
-    case "Dần": case "Thân":
-      return "Quan Lộc";
-    case "Tuất": case "Thìn":
-      return "Tài Bạch";
-    case "Sửu": case "Mùi":
-      return "Phúc Đức";
-    case "Tỵ": case "Hợi":
-      return "Phu Thê";
-    case "Mão": case "Dậu":
-      return "Thiên Di";
+    case "TĂ½": case "Ngá»":
+      return "Má»‡nh";
+    case "Dáº§n": case "ThĂ¢n":
+      return "Quan Lá»™c";
+    case "Tuáº¥t": case "ThĂ¬n":
+      return "TĂ i Báº¡ch";
+    case "Sá»­u": case "MĂ¹i":
+      return "PhĂºc Äá»©c";
+    case "Tá»µ": case "Há»£i":
+      return "Phu ThĂª";
+    case "MĂ£o": case "Dáº­u":
+      return "ThiĂªn Di";
     default:
-      return "Mệnh"; // fallback an Mệnh nếu không xác định
+      return "Má»‡nh"; // fallback an Má»‡nh náº¿u khĂ´ng xĂ¡c Ä‘á»‹nh
   }
 }
  const cungMenh = anLop2_Menh({
@@ -861,7 +866,7 @@ const data = {
     lunar
   });
 
-// 🌟 Tạo lá số (có thêm thông tin cung Mệnh)
+// đŸŒŸ Táº¡o lĂ¡ sá»‘ (cĂ³ thĂªm thĂ´ng tin cung Má»‡nh)
 taoLaSoTrang({
   name, gender, menh,
   canChiNam: canY,
@@ -871,48 +876,48 @@ taoLaSoTrang({
   lunar,
   amduongMenh: menh,
   cungMenh,
-  cucSo: "" // để trống, sẽ cập nhật sau
+  cucSo: "" // Ä‘á»ƒ trá»‘ng, sáº½ cáº­p nháº­t sau
 });
 
 
-// ✅ Cập nhật dữ liệu toàn cục
+// âœ… Cáº­p nháº­t dá»¯ liá»‡u toĂ n cá»¥c
 window.dataGlobal = window.dataGlobal || {};
 window.dataGlobal.thangAm = (Array.isArray(lunar) && Number(lunar[1]))
   ? Number(lunar[1])
   : (document.getElementById("calendarType").value === "lunar"
       ? Number(document.getElementById("month").value)
       : 1);
-// ✅ Sau khi tạo xong DOM lá số, an lần lượt các lớp chuẩn thứ tự
+// âœ… Sau khi táº¡o xong DOM lĂ¡ sá»‘, an láº§n lÆ°á»£t cĂ¡c lá»›p chuáº©n thá»© tá»±
 setTimeout(() => {
   const data = window.dataGlobal;
   if (!data) return;
-// 🔧 Đảm bảo dataGlobal có dữ liệu Mệnh và Cục số
+// đŸ”§ Äáº£m báº£o dataGlobal cĂ³ dá»¯ liá»‡u Má»‡nh vĂ  Cá»¥c sá»‘
 if (!window.dataGlobal || Object.keys(window.dataGlobal).length === 0) {
-  window.dataGlobal = data; // giữ nguyên tham chiếu
+  window.dataGlobal = data; // giá»¯ nguyĂªn tham chiáº¿u
 }
 
-  // 🧩 Đảm bảo dữ liệu năm sinh có sẵn trong dataGlobal
+  // đŸ§© Äáº£m báº£o dá»¯ liá»‡u nÄƒm sinh cĂ³ sáºµn trong dataGlobal
   if (!window.dataGlobal.canChiNam || !window.dataGlobal.canChiNam.includes(" ")) {
     const canY = canChiYear(window.dataGlobal.lunar?.[2] || new Date().getFullYear());
     window.dataGlobal.canChiNam = canY;
-    console.log("⚙️ Bổ sung canChiNam vào dataGlobal:", canY);
+    console.log("â™ï¸ Bá»• sung canChiNam vĂ o dataGlobal:", canY);
   }
 
-// 🌟 1️⃣ Lớp cơ bản
+// đŸŒŸ 1ï¸âƒ£ Lá»›p cÆ¡ báº£n
 anLop1_ViTriCung(data);
 const cungMenh = anLop2_Menh(data);
-// Đồng bộ cung/ten Mệnh vừa an
+// Äá»“ng bá»™ cung/ten Má»‡nh vá»«a an
 if (cungMenh) {
   data.cungMenh = cungMenh;
   data.tenCungMenh = window.dataGlobal.tenCungMenh || cungMenh;
 }
 
-// ✅ Gán Cung Mệnh thật (có thể chưa có cungChucMap ngay)
+// âœ… GĂ¡n Cung Má»‡nh tháº­t (cĂ³ thá»ƒ chÆ°a cĂ³ cungChucMap ngay)
 const cungChucMapSafe = window.dataGlobal.cungChucMap || {};
 let tenCungMenh = Object.keys(cungChucMapSafe)
-  .find(k => cungChucMapSafe[k] === "MỆNH");
+  .find(k => cungChucMapSafe[k] === "Má»†NH");
 
-// 🔄 Fallback nếu chưa tìm được tên cung Mệnh
+// đŸ”„ Fallback náº¿u chÆ°a tĂ¬m Ä‘Æ°á»£c tĂªn cung Má»‡nh
 if (!tenCungMenh && typeof window.mapCung === "object") {
   const revMap = Object.fromEntries(Object.entries(window.mapCung).map(([k, v]) => [v, k]));
   if (window.dataGlobal.cungMenh && revMap[window.dataGlobal.cungMenh]) {
@@ -924,35 +929,35 @@ window.dataGlobal.tenCungMenh = tenCungMenh || window.dataGlobal.tenCungMenh || 
 if (tenCungMenh) window.dataGlobal.tenCungMenh = tenCungMenh;
 if (tenCungMenh) data.tenCungMenh = tenCungMenh;
 
-console.log("🧭 tenCungMenh:", window.dataGlobal.tenCungMenh);
+console.log("đŸ§­ tenCungMenh:", window.dataGlobal.tenCungMenh);
 
 
-// 🌟 Cập nhật lại phần hiển thị trung tâm
+// đŸŒŸ Cáº­p nháº­t láº¡i pháº§n hiá»ƒn thá»‹ trung tĂ¢m
 const elCucSo = document.querySelector("#cucSoText, .info-line b + span");
 if (elCucSo) {
-  const cucSoValue = data?.cucSo || window.dataGlobal?.cucSo || "(đang xác định)";
+  const cucSoValue = data?.cucSo || window.dataGlobal?.cucSo || "(Ä‘ang xĂ¡c Ä‘á»‹nh)";
   elCucSo.textContent = cucSoValue;
-  console.log("🟢 Đã cập nhật hiển thị Cục Số:", cucSoValue);
+  console.log("đŸŸ¢ ÄĂ£ cáº­p nháº­t hiá»ƒn thá»‹ Cá»¥c Sá»‘:", cucSoValue);
 }
 
 
 
 
-// 🌟 2️⃣ Chính tinh & Cục số (sau khi Mệnh đã sẵn sàng)
+// đŸŒŸ 2ï¸âƒ£ ChĂ­nh tinh & Cá»¥c sá»‘ (sau khi Má»‡nh Ä‘Ă£ sáºµn sĂ ng)
 setTimeout(() => {
-  // ⏳ Đợi tới khi có tenCungMenh thật
+  // â³ Äá»£i tá»›i khi cĂ³ tenCungMenh tháº­t
   const checkAndRunCucSo = () => {
     const data = window.dataGlobal;
     if (!data?.tenCungMenh || typeof data.tenCungMenh !== "string") {
-      console.log("⏸️ Đang đợi xác định tên Cung Mệnh...");
-      return setTimeout(checkAndRunCucSo, 800); // kiểm tra lại sau 0.2s
+      console.log("â¸ï¸ Äang Ä‘á»£i xĂ¡c Ä‘á»‹nh tĂªn Cung Má»‡nh...");
+      return setTimeout(checkAndRunCucSo, 800); // kiá»ƒm tra láº¡i sau 0.2s
     }
-    console.log("✅ Đã có tên cung Mệnh:", data.tenCungMenh);
-// 🧩 Bổ sung Cục Số nếu chưa có
+    console.log("âœ… ÄĂ£ cĂ³ tĂªn cung Má»‡nh:", data.tenCungMenh);
+// đŸ§© Bá»• sung Cá»¥c Sá»‘ náº¿u chÆ°a cĂ³
 if (!data.cucSo || data.cucSo === "") {
   data.cucSo = xacDinhCucSo(data.canChiNam, data.tenCungMenh);
   window.dataGlobal.cucSo = data.cucSo;
-  console.log(`🌀 Cục Số được gán trước khi gọi anLop4: ${data.cucSo}`);
+  console.log(`đŸŒ€ Cá»¥c Sá»‘ Ä‘Æ°á»£c gĂ¡n trÆ°á»›c khi gá»i anLop4: ${data.cucSo}`);
 }
 
     anLop4_CucSo(data);
@@ -961,36 +966,36 @@ if (!data.cucSo || data.cucSo === "") {
       anLop3_ChinhTinh(data);
     }
 
-    // 🌟 Cập nhật hiển thị trung tâm (nếu có)
+    // đŸŒŸ Cáº­p nháº­t hiá»ƒn thá»‹ trung tĂ¢m (náº¿u cĂ³)
     const elCucSo = document.querySelector("#cucSoText, .info-line b + span");
     if (elCucSo) {
-      elCucSo.textContent = data.cucSo || "(chưa xác định)";
-      console.log("🟢 Đã cập nhật hiển thị Cục Số:", elCucSo.textContent);
+      elCucSo.textContent = data.cucSo || "(chÆ°a xĂ¡c Ä‘á»‹nh)";
+      console.log("đŸŸ¢ ÄĂ£ cáº­p nháº­t hiá»ƒn thá»‹ Cá»¥c Sá»‘:", elCucSo.textContent);
     }
-    console.log("✅ Cục số và Ngũ hành đã được an xong");
+    console.log("âœ… Cá»¥c sá»‘ vĂ  NgÅ© hĂ nh Ä‘Ă£ Ä‘Æ°á»£c an xong");
   };
   checkAndRunCucSo();
 }, 300);
 
 
 
-// 🌟 3️⃣ Trung tinh (Cát + Hung) – nền tảng cho Tiểu tinh
+// đŸŒŸ 3ï¸âƒ£ Trung tinh (CĂ¡t + Hung) â€“ ná»n táº£ng cho Tiá»ƒu tinh
 setTimeout(() => {
   const data = window.dataGlobal;
   if (!data) return;
 
-  // 🧩 Đảm bảo cungChucMap tồn tại trước khi an Trung tinh
+  // đŸ§© Äáº£m báº£o cungChucMap tá»“n táº¡i trÆ°á»›c khi an Trung tinh
   if (!data.cungChucMap) {
     const mapMoi = anLop2_Menh(data);
     if (mapMoi) data.cungChucMap = mapMoi;
   }
 
-  // 🧩 Đồng bộ tên cung Mệnh sau khi anLop2_Menh
+  // đŸ§© Äá»“ng bá»™ tĂªn cung Má»‡nh sau khi anLop2_Menh
   if (!data.tenCungMenh && window.dataGlobal?.tenCungMenh) {
     data.tenCungMenh = window.dataGlobal.tenCungMenh;
   }
 
-  // 🧩 Đảm bảo có Cục Số + Chính Tinh trước khi an Trung tinh
+  // đŸ§© Äáº£m báº£o cĂ³ Cá»¥c Sá»‘ + ChĂ­nh Tinh trÆ°á»›c khi an Trung tinh
   if (!data.cucSo || data.cucSo === "") {
     const tenMenh = data.tenCungMenh || window.dataGlobal.tenCungMenh;
     const cuc = xacDinhCucSo(data.canChiNam, tenMenh);
@@ -1001,7 +1006,7 @@ setTimeout(() => {
     anLop3_ChinhTinh(data);
   }
 
-  console.log("🌀 Bắt đầu an Trung tinh...");
+  console.log("đŸŒ€ Báº¯t Ä‘áº§u an Trung tinh...");
   anLop6_TrungTinh(data);
 
 setTimeout(() => {
@@ -1014,24 +1019,24 @@ setTimeout(() => {
 
   anLop8_VongTrangSinh(data);
   enableCungHighlight();
-  console.log("✅ Trung tinh đã được an xong");
+  console.log("âœ… Trung tinh Ä‘Ă£ Ä‘Æ°á»£c an xong");
 }, 1500);
 
-// 🌟 4️⃣ Tiểu tinh (phụ thuộc Trung tinh)
+// đŸŒŸ 4ï¸âƒ£ Tiá»ƒu tinh (phá»¥ thuá»™c Trung tinh)
 setTimeout(() => {
   const data = window.dataGlobal;
   if (!data) {
-    console.warn("⚠️ Chưa có dataGlobal, bỏ qua an sao.");
+    console.warn("â ï¸ ChÆ°a cĂ³ dataGlobal, bá» qua an sao.");
     return;
   }
-  console.log("🌸 Bắt đầu an Tiểu tinh...");
+  console.log("đŸŒ¸ Báº¯t Ä‘áº§u an Tiá»ƒu tinh...");
   if (typeof anTieuTinh === "function") anTieuTinh(data);
   if (typeof taoNutTieuTinh === "function") taoNutTieuTinh();
-  console.log("✅ Tiểu tinh đã được an xong");
+  console.log("âœ… Tiá»ƒu tinh Ä‘Ă£ Ä‘Æ°á»£c an xong");
 }, 2000);
 
 
-// 🌟 5️⃣ Tuần & Triệt
+// đŸŒŸ 5ï¸âƒ£ Tuáº§n & Triá»‡t
 setTimeout(() => {
   const data = window.dataGlobal;
   if (!data) return;
@@ -1040,11 +1045,11 @@ setTimeout(() => {
   if (!canNam || !chiNam) return;
   const [t1, t2] = anTuan(canNam, chiNam);
   const [r1, r2] = anTriet(canNam);
-  if (t1 && t2) veThanhTuanTriet("TUẦN", t1, t2);
-  if (r1 && r2) veThanhTuanTriet("TRIỆT", r1, r2);
+  if (t1 && t2) veThanhTuanTriet("TUáº¦N", t1, t2);
+  if (r1 && r2) veThanhTuanTriet("TRIá»†T", r1, r2);
 }, 1700);
 
-// 🌟 6️⃣ Thêm chữ [THÂN] (chạy cuối cùng)
+// đŸŒŸ 6ï¸âƒ£ ThĂªm chá»¯ [THĂ‚N] (cháº¡y cuá»‘i cĂ¹ng)
 setTimeout(() => {
   const data = window.dataGlobal;
   if (!data) return;
@@ -1055,8 +1060,8 @@ setTimeout(() => {
   if (!cungThan) return;
 
   const CUNG_TO_CELL = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
   const cell = document.getElementById("cell" + CUNG_TO_CELL[cungThan]);
   if (!cell) return;
@@ -1073,7 +1078,7 @@ setTimeout(() => {
   if (!titleEl.querySelector(".than-label")) {
     const span = document.createElement("span");
     span.className = "than-label";
-    span.textContent = "[THÂN]";
+    span.textContent = "[THĂ‚N]";
     span.style.fontWeight = "bold";
     span.style.marginLeft = "3px";
     span.style.letterSpacing = "-0.3px";
@@ -1084,30 +1089,30 @@ setTimeout(() => {
   }
 ensureXemHanSection();
 
-  console.log("✅ Thêm [THÂN] tại", cungThan);
+  console.log("âœ… ThĂªm [THĂ‚N] táº¡i", cungThan);
 
-// 🌟 TỰ ĐỘNG AN SAO LƯU SAU KHI AN LÁ SỐ XONG
+// đŸŒŸ Tá»° Äá»˜NG AN SAO LÆ¯U SAU KHI AN LĂ Sá» XONG
 setTimeout(() => {
   const data = window.dataGlobal;
   if (!data) return;
 
   try {
-    // 🧹 Xóa sao Lưu cũ (nếu có)
+    // đŸ§¹ XĂ³a sao LÆ°u cÅ© (náº¿u cĂ³)
     if (typeof xoaSaoLuu === "function") xoaSaoLuu();
 
-    // 🌞 An sao theo 4 cấp vận (Đại / Tiểu / Nguyệt / Nhật)
+    // đŸŒ An sao theo 4 cáº¥p váº­n (Äáº¡i / Tiá»ƒu / Nguyá»‡t / Nháº­t)
     if (typeof anSaoLuu_DaiVan === "function") anSaoLuu_DaiVan(data);
     if (typeof anSaoLuu_TieuVan === "function") anSaoLuu_TieuVan(data);
     if (typeof anSaoLuu_NguyetVan === "function") anSaoLuu_NguyetVan(data);
     if (typeof anSaoLuu_NhatVan === "function") anSaoLuu_NhatVan(data);
 
-    // 🔁 Cập nhật hiển thị tick nhóm ẩn/hiện (nếu bảng đã có)
+    // đŸ” Cáº­p nháº­t hiá»ƒn thá»‹ tick nhĂ³m áº©n/hiá»‡n (náº¿u báº£ng Ä‘Ă£ cĂ³)
     if (typeof window.__capNhatHienThiSaoLuu === "function")
       window.__capNhatHienThiSaoLuu();
 
-    console.log("✨ Đã tự động an sao Lưu sau khi an lá số");
+    console.log("âœ¨ ÄĂ£ tá»± Ä‘á»™ng an sao LÆ°u sau khi an lĂ¡ sá»‘");
   } catch (err) {
-    console.error("⚠️ Lỗi khi tự động an sao Lưu:", err);
+    console.error("â ï¸ Lá»—i khi tá»± Ä‘á»™ng an sao LÆ°u:", err);
   }
 }, 1500);
 
@@ -1115,18 +1120,18 @@ setTimeout(() => {
 
 
 
-  // 🌙 Sau khi an xong toàn bộ lá số – kiểm tra & gắn lại khung Xem Hạn (Âm Lịch)
+  // đŸŒ™ Sau khi an xong toĂ n bá»™ lĂ¡ sá»‘ â€“ kiá»ƒm tra & gáº¯n láº¡i khung Xem Háº¡n (Ă‚m Lá»‹ch)
 
   if (!document.getElementById("xemHanSection")) {
     const hanDiv = document.createElement("div");
     hanDiv.innerHTML = `
       <div id="xemHanSection" style="text-align:center; margin-top:6px; font-family:'Segoe UI',sans-serif;">
         <h3 style="font-size:14px; margin-bottom:6px; display:flex; align-items:center; justify-content:center; gap:4px;">
-          <span style="font-size:16px;">🔮</span>
-          <span style="font-weight:600;">Xem Hạn (Âm Lịch)</span>
+          <span style="font-size:16px;">đŸ”®</span>
+          <span style="font-weight:600;">Xem Háº¡n (Ă‚m Lá»‹ch)</span>
         </h3>
         <div style="display:inline-flex; align-items:center; gap:3px; flex-wrap:wrap; justify-content:center; font-size:12px;">
-          <label for='luuNam'>Năm:</label>
+          <label for='luuNam'>NÄƒm:</label>
           <input type='number' id='luuNam' min='1900' max='2100'
                  style='width:60px;height:20px;text-align:center;border:1px solid #aaa;border-radius:3px;font-size:11px;'>
           <label for='luuThang'>Th:</label>
@@ -1135,13 +1140,13 @@ setTimeout(() => {
           <label for='luuNgay'>Ng:</label>
           <input type='number' id='luuNgay' min='1' max='30'
                  style='width:45px;height:20px;text-align:centdocument.getElementByIder;border:1px solid #aaa;border-radius:3px;font-size:11px;'>
-          <span id='tuoiAmLabel' style='margin-left:6px;font-weight:bold;color:#c00;font-size:12px;'>Tuổi: —</span>
+          <span id='tuoiAmLabel' style='margin-left:6px;font-weight:bold;color:#c00;font-size:12px;'>Tuá»•i: â€”</span>
         </div>
         <div style='margin-top:6px;'>
           <button id='btnToggleLuuVan'
                   style='background:#337ab7;color:white;border:none;border-radius:5px;
                          padding:3px 8px;font-size:11px;cursor:pointer;'>
-            Ẩn/Hiện Đại Vận & Tiểu Vận
+            áº¨n/Hiá»‡n Äáº¡i Váº­n & Tiá»ƒu Váº­n
           </button>
         </div>
       </div>
@@ -1149,7 +1154,7 @@ setTimeout(() => {
 
     document.body.appendChild(hanDiv);
 
-    // 🔗 Kích hoạt lại các sự kiện
+    // đŸ”— KĂ­ch hoáº¡t láº¡i cĂ¡c sá»± kiá»‡n
     document.getElementById("btnToggleLuuVan").addEventListener("click", () => {
       document.querySelectorAll(".layer-9,.layer-10").forEach(e => {
         e.style.display = (e.style.display === "none" ? "" : "none");
@@ -1159,12 +1164,12 @@ setTimeout(() => {
   ["luuNam","luuThang","luuNgay"].forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    el.removeEventListener("change", capNhatHan); // 🧹 xóa sự kiện cũ (nếu có)
-    el.addEventListener("change", capNhatHan);    // 🔁 gắn lại mới
+    el.removeEventListener("change", capNhatHan); // đŸ§¹ xĂ³a sá»± kiá»‡n cÅ© (náº¿u cĂ³)
+    el.addEventListener("change", capNhatHan);    // đŸ” gáº¯n láº¡i má»›i
   }
 });
 
-// ✅ Gắn lại sự kiện sau khi khung đã tạo xong
+// âœ… Gáº¯n láº¡i sá»± kiá»‡n sau khi khung Ä‘Ă£ táº¡o xong
 ["luuNam","luuThang","luuNgay"].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener("input",capNhatHan);
@@ -1176,13 +1181,13 @@ if(btn) btn.addEventListener("click",()=>{
   });
 });
 
-    console.log("🔁 Đã gắn lại khung Xem Hạn (Âm Lịch) sau khi an lá số");
+    console.log("đŸ” ÄĂ£ gáº¯n láº¡i khung Xem Háº¡n (Ă‚m Lá»‹ch) sau khi an lĂ¡ sá»‘");
   }
 
 
 }, 2100);	
-}); // ✅ đóng setTimeout bao ngoài
-}); // ✅ đóng event listener click
+}); // âœ… Ä‘Ă³ng setTimeout bao ngoĂ i
+}); // âœ… Ä‘Ă³ng event listener click
 
 
   
@@ -1190,44 +1195,44 @@ if(btn) btn.addEventListener("click",()=>{
 ["luuNam","luuThang","luuNgay"].forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    el.removeEventListener("change", capNhatHan); // 🧹 xóa sự kiện cũ (nếu có)
-    el.addEventListener("change", capNhatHan);    // 🔁 gắn lại mới
+    el.removeEventListener("change", capNhatHan); // đŸ§¹ xĂ³a sá»± kiá»‡n cÅ© (náº¿u cĂ³)
+    el.addEventListener("change", capNhatHan);    // đŸ” gáº¯n láº¡i má»›i
   }
 });
 
-  console.log("✅ Khung Xem Hạn (Âm Lịch) được gắn lại sau khi tạo lá số");
+  console.log("âœ… Khung Xem Háº¡n (Ă‚m Lá»‹ch) Ä‘Æ°á»£c gáº¯n láº¡i sau khi táº¡o lĂ¡ sá»‘");
 
 
 });
 
 // =====================================================
-// 🔁 CẬP NHẬT CAN CHI NĂM ÂM (tự động khi nhập năm)
+// đŸ” Cáº¬P NHáº¬T CAN CHI NÄ‚M Ă‚M (tá»± Ä‘á»™ng khi nháº­p nÄƒm)
 // =====================================================
 function showCanChiYear() {
   const yearInput = document.getElementById("monthYear");
   const label = document.getElementById("canChiLabel");
   const val = parseInt(yearInput.value);
   if (!isNaN(val)) {
-    label.textContent = canChiYear(val); // ✅ dùng hàm có sẵn của bạn
+    label.textContent = canChiYear(val); // âœ… dĂ¹ng hĂ m cĂ³ sáºµn cá»§a báº¡n
   } else {
     label.textContent = "";
   }
 }
 
 /* =======================================================
-   🔹 HÀM TOÀN CỤC: XÁC ĐỊNH CUNG MỆNH (chạy NGƯỢC chiều)
+   đŸ”¹ HĂ€M TOĂ€N Cá»¤C: XĂC Äá»NH CUNG Má»†NH (cháº¡y NGÆ¯á»¢C chiá»u)
    ======================================================= */
 function tinhCungMenh() {
   const cungChuc = document.getElementById("cungChucSelect").value;
   const viTriAn = document.getElementById("cungChucViTri").value;
   const ketQua = document.getElementById("ketQuaMenh");
 
-  // Thứ tự địa chi trong layout thật của lá số (THUẬN chiều kim đồng hồ)
-  const CUNG_LIST = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // Thá»© tá»± Ä‘á»‹a chi trong layout tháº­t cá»§a lĂ¡ sá»‘ (THUáº¬N chiá»u kim Ä‘á»“ng há»“)
+  const CUNG_LIST = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
 
-  // Thứ tự 12 cung chức (CHẠY NGƯỢC chiều kim đồng hồ)
-  const CUNG_CHUC = ["Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch","Tật Ách",
-                     "Thiên Di","Nô Bộc","Quan Lộc","Điền Trạch","Phúc Đức","Phụ Mẫu"];
+  // Thá»© tá»± 12 cung chá»©c (CHáº Y NGÆ¯á»¢C chiá»u kim Ä‘á»“ng há»“)
+  const CUNG_CHUC = ["Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch","Táº­t Ăch",
+                     "ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c","Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u"];
 
   const idxChuc = CUNG_CHUC.indexOf(cungChuc);
   const idxViTri = CUNG_LIST.indexOf(viTriAn);
@@ -1236,7 +1241,7 @@ function tinhCungMenh() {
     return;
   }
 
-  // ✅ Mệnh = vị trí an + idxChuc (vì cung chức chạy NGƯỢC chiều)
+  // âœ… Má»‡nh = vá»‹ trĂ­ an + idxChuc (vĂ¬ cung chá»©c cháº¡y NGÆ¯á»¢C chiá»u)
   const idxMenh = (idxViTri + idxChuc) % 12;
   const menhTai = CUNG_LIST[idxMenh];
 
@@ -1248,56 +1253,56 @@ function tinhCungMenh() {
 
 
 // =====================================================
-// 🔹 XÁC ĐỊNH CHI NĂM SINH + MỆNH ÂM/DƯƠNG TỪ VÒNG THÁI TUẾ
+// đŸ”¹ XĂC Äá»NH CHI NÄ‚M SINH + Má»†NH Ă‚M/DÆ¯Æ NG Tá»ª VĂ’NG THĂI TUáº¾
 // =====================================================
 function tinhChiNamThaiTue() {
   const sao = document.getElementById("thaiTueSelect").value;
   const viTriAn = document.getElementById("thaiTueViTri").value;
   const ketQua = document.getElementById("ketQuaChiNam");
 
-  // 12 cung theo chiều thuận
-  const CUNG_LIST = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // 12 cung theo chiá»u thuáº­n
+  const CUNG_LIST = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
 
-  // Bảng vị trí sao trong vòng Thái Tuế
+  // Báº£ng vá»‹ trĂ­ sao trong vĂ²ng ThĂ¡i Tuáº¿
   const TIEUTINH_DATA = [
-    { ten: "Thái Tuế", buoc: 0 },
-    { ten: "Thiếu Dương", buoc: 1 },
-    { ten: "Tang Môn", buoc: 2 },
-    { ten: "Thiếu Âm", buoc: 3 },
-    { ten: "Quan Phù", buoc: 4 },
-    { ten: "Tử Phù", buoc: 5 },
-    { ten: "Tuế Phá", buoc: 6 },
-    { ten: "Long Đức", buoc: 7 },
-    { ten: "Bạch Hổ", buoc: 8 },
-    { ten: "Phúc Đức", buoc: 9 },
-    { ten: "Điếu Khách", buoc: 10 },
-    { ten: "Trực Phù", buoc: 11 }
+    { ten: "ThĂ¡i Tuáº¿", buoc: 0 },
+    { ten: "Thiáº¿u DÆ°Æ¡ng", buoc: 1 },
+    { ten: "Tang MĂ´n", buoc: 2 },
+    { ten: "Thiáº¿u Ă‚m", buoc: 3 },
+    { ten: "Quan PhĂ¹", buoc: 4 },
+    { ten: "Tá»­ PhĂ¹", buoc: 5 },
+    { ten: "Tuáº¿ PhĂ¡", buoc: 6 },
+    { ten: "Long Äá»©c", buoc: 7 },
+    { ten: "Báº¡ch Há»•", buoc: 8 },
+    { ten: "PhĂºc Äá»©c", buoc: 9 },
+    { ten: "Äiáº¿u KhĂ¡ch", buoc: 10 },
+    { ten: "Trá»±c PhĂ¹", buoc: 11 }
   ];
 
-  // Tìm dữ liệu sao
+  // TĂ¬m dá»¯ liá»‡u sao
   const data = TIEUTINH_DATA.find(s => s.ten === sao);
   if (!data) return ketQua.textContent = "?";
 
   const idx = CUNG_LIST.indexOf(viTriAn);
   if (idx === -1) return ketQua.textContent = "?";
 
-  // Nếu sao này cách Thái Tuế "buoc" cung → Thái Tuế = idx - buoc (đếm nghịch)
+  // Náº¿u sao nĂ y cĂ¡ch ThĂ¡i Tuáº¿ "buoc" cung â†’ ThĂ¡i Tuáº¿ = idx - buoc (Ä‘áº¿m nghá»‹ch)
   const idxThaiTue = (idx - data.buoc + 12) % 12;
   const cungThaiTue = CUNG_LIST[idxThaiTue];
 
-  // Xác định Âm / Dương theo Địa Chi
-  const DUONG_CHI = ["Tý","Dần","Thìn","Ngọ","Thân","Tuất"];
-  const amDuong = DUONG_CHI.includes(cungThaiTue) ? "Dương" : "Âm";
+  // XĂ¡c Ä‘á»‹nh Ă‚m / DÆ°Æ¡ng theo Äá»‹a Chi
+  const DUONG_CHI = ["TĂ½","Dáº§n","ThĂ¬n","Ngá»","ThĂ¢n","Tuáº¥t"];
+  const amDuong = DUONG_CHI.includes(cungThaiTue) ? "DÆ°Æ¡ng" : "Ă‚m";
 
-  // Hiển thị kết quả
-ketQua.innerHTML = `${cungThaiTue}&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#444;">mệnh:</span> <b>${amDuong}</b>`;
+  // Hiá»ƒn thá»‹ káº¿t quáº£
+ketQua.innerHTML = `${cungThaiTue}&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#444;">má»‡nh:</span> <b>${amDuong}</b>`;
 document.getElementById("ketQuaChiNam").dataset.amduong = amDuong;
-window.menhAmDuong = amDuong; // "Âm" hoặc "Dương"
+window.menhAmDuong = amDuong; // "Ă‚m" hoáº·c "DÆ°Æ¡ng"
 
 }
 
 // =========================
-  // 1️⃣ Tính cục số
+  // 1ï¸âƒ£ TĂ­nh cá»¥c sá»‘
   // =========================
 function tinhCucSo() {
   const loaiCuc = document.getElementById("cucLoaiSelect").value;
@@ -1306,12 +1311,12 @@ function tinhCucSo() {
   const canCuc = document.getElementById("cucCanSelect").value;
   const ketQua = document.getElementById("ketQuaCuc");
 
-  // Lấy từ phần 1 & 2
+  // Láº¥y tá»« pháº§n 1 & 2
   const menhTai = document.getElementById("ketQuaMenh").dataset.menh || "?";
   const menhAmDuong = window.menhAmDuong || "?";
 
   if (!menhTai || menhTai === "?" || !viTriCuc || !cucSo) {
-    ketQua.textContent = `${loaiCuc} – Chưa xác định – Chưa xác định`;
+    ketQua.textContent = `${loaiCuc} â€“ ChÆ°a xĂ¡c Ä‘á»‹nh â€“ ChÆ°a xĂ¡c Ä‘á»‹nh`;
     return;
   }
 
@@ -1323,43 +1328,43 @@ function goiTrangSinhDuPhong() {
 }
 
 // =========================
-// 1️⃣ Xác định chiều thuận / nghịch (chuẩn theo từng loại Cục)
+// 1ï¸âƒ£ XĂ¡c Ä‘á»‹nh chiá»u thuáº­n / nghá»‹ch (chuáº©n theo tá»«ng loáº¡i Cá»¥c)
 // =========================
 const idxMenh = CUNG_THUAN.indexOf(menhTai);
 const idxCuc  = CUNG_THUAN.indexOf(viTriCuc);
 if (idxMenh === -1 || idxCuc === -1) {
-  ketQua.textContent = `${loaiCuc} – Chưa xác định – Chưa xác định`;
+  ketQua.textContent = `${loaiCuc} â€“ ChÆ°a xĂ¡c Ä‘á»‹nh â€“ ChÆ°a xĂ¡c Ä‘á»‹nh`;
   return;
 }
 
-// 🔸 Khởi số của từng loại cục
+// đŸ”¸ Khá»Ÿi sá»‘ cá»§a tá»«ng loáº¡i cá»¥c
 const BANG_KHOI_CUC = {
-  "Thủy nhị cục": 2,
-  "Mộc tam cục": 3,
-  "Kim tứ cục": 4,
-  "Thổ ngũ cục": 5,
-  "Hỏa lục cục": 6
+  "Thá»§y nhá»‹ cá»¥c": 2,
+  "Má»™c tam cá»¥c": 3,
+  "Kim tá»© cá»¥c": 4,
+  "Thá»• ngÅ© cá»¥c": 5,
+  "Há»a lá»¥c cá»¥c": 6
 };
 
-let chieu = "Không xác định";
+let chieu = "KhĂ´ng xĂ¡c Ä‘á»‹nh";
 if (!isNaN(cucSo)) {
-  // 🧮 Số bước dịch tùy loại cục
+  // đŸ§® Sá»‘ bÆ°á»›c dá»‹ch tĂ¹y loáº¡i cá»¥c
   const khoi = BANG_KHOI_CUC[loaiCuc] ?? 4;
   const buoc = Math.floor((cucSo - khoi) / 10) % 12;
 
-  // 🎯 Xác định vị trí hợp lệ nếu chạy thuận và nghịch
+  // đŸ¯ XĂ¡c Ä‘á»‹nh vá»‹ trĂ­ há»£p lá»‡ náº¿u cháº¡y thuáº­n vĂ  nghá»‹ch
   const viTriThuan = CUNG_THUAN[(idxMenh + buoc) % 12];
   const viTriNghich = CUNG_THUAN[(idxMenh - buoc + 12) % 12];
 
-  // 🚫 Giới hạn 10 trường hợp đặc biệt: 2–6 và 62–66 → không tính chiều
+  // đŸ« Giá»›i háº¡n 10 trÆ°á»ng há»£p Ä‘áº·c biá»‡t: 2â€“6 vĂ  62â€“66 â†’ khĂ´ng tĂ­nh chiá»u
   const CAM_TINH_CHIEU = [2, 3, 4, 5, 6, 62, 63, 64, 65, 66];
 
   if (CAM_TINH_CHIEU.includes(cucSo)) {
-    chieu = "Không xác định";
+    chieu = "KhĂ´ng xĂ¡c Ä‘á»‹nh";
   } else {
-    if (viTriCuc === viTriThuan) chieu = "Thuận";
-    else if (viTriCuc === viTriNghich) chieu = "Nghịch";
-    else chieu = "Không xác định";
+    if (viTriCuc === viTriThuan) chieu = "Thuáº­n";
+    else if (viTriCuc === viTriNghich) chieu = "Nghá»‹ch";
+    else chieu = "KhĂ´ng xĂ¡c Ä‘á»‹nh";
   }
 }
 
@@ -1368,19 +1373,19 @@ if (!isNaN(cucSo)) {
 
 
   // =========================
-  // 2️⃣ Xác định giới tính
+  // 2ï¸âƒ£ XĂ¡c Ä‘á»‹nh giá»›i tĂ­nh
   // =========================
-  let gioiTinh = "Chưa xác định";
-  if (chieu === "Thuận" && menhAmDuong === "Dương") gioiTinh = "Dương Nam";
-  else if (chieu === "Thuận" && menhAmDuong === "Âm") gioiTinh = "Âm Nữ";
-  else if (chieu === "Nghịch" && menhAmDuong === "Dương") gioiTinh = "Dương Nữ";
-  else if (chieu === "Nghịch" && menhAmDuong === "Âm") gioiTinh = "Âm Nam";
+  let gioiTinh = "ChÆ°a xĂ¡c Ä‘á»‹nh";
+  if (chieu === "Thuáº­n" && menhAmDuong === "DÆ°Æ¡ng") gioiTinh = "DÆ°Æ¡ng Nam";
+  else if (chieu === "Thuáº­n" && menhAmDuong === "Ă‚m") gioiTinh = "Ă‚m Ná»¯";
+  else if (chieu === "Nghá»‹ch" && menhAmDuong === "DÆ°Æ¡ng") gioiTinh = "DÆ°Æ¡ng Ná»¯";
+  else if (chieu === "Nghá»‹ch" && menhAmDuong === "Ă‚m") gioiTinh = "Ă‚m Nam";
 
 // =========================
-// 3️⃣ Đếm ngược Can + Chi để xác định Can Dần (chuẩn Tử Vi)
+// 3ï¸âƒ£ Äáº¿m ngÆ°á»£c Can + Chi Ä‘á»ƒ xĂ¡c Ä‘á»‹nh Can Dáº§n (chuáº©n Tá»­ Vi)
 // =========================
-const CAN_LIST = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
-const CHI_LIST = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+const CAN_LIST = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
+const CHI_LIST = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
 const idxCan = CAN_LIST.indexOf(canCuc);
 const idxChi = CHI_LIST.indexOf(viTriCuc);
@@ -1390,15 +1395,15 @@ if (idxCan !== -1 && idxChi !== -1) {
   let canIdx = idxCan;
   let chiIdx = idxChi;
 
-  // Nếu chi đang nhập đã là Dần → dùng luôn can hiện tại
-  if (viTriCuc === "Dần") {
+  // Náº¿u chi Ä‘ang nháº­p Ä‘Ă£ lĂ  Dáº§n â†’ dĂ¹ng luĂ´n can hiá»‡n táº¡i
+  if (viTriCuc === "Dáº§n") {
     canDan = canCuc;
   } else {
-    // Ngược lại, lùi cả Can và Chi cho tới khi gặp Dần
+    // NgÆ°á»£c láº¡i, lĂ¹i cáº£ Can vĂ  Chi cho tá»›i khi gáº·p Dáº§n
     do {
       canIdx = (canIdx - 1 + 10) % 10;
       chiIdx = (chiIdx - 1 + 12) % 12;
-    } while (CHI_LIST[chiIdx] !== "Dần");
+    } while (CHI_LIST[chiIdx] !== "Dáº§n");
 
     canDan = CAN_LIST[canIdx];
   }
@@ -1408,17 +1413,17 @@ if (idxCan !== -1 && idxChi !== -1) {
 
 
   // =========================
-  // 4️⃣ Tra bảng Can Dần -> Can năm sinh
+  // 4ï¸âƒ£ Tra báº£ng Can Dáº§n -> Can nÄƒm sinh
   // =========================
   const CAN_DAN_MAP = {
-    "Giáp": "Mậu / Quý",
-    "Nhâm": "Đinh / Nhâm",
-    "Canh": "Bính / Tân",
-    "Mậu": "Ất / Canh",
-    "Bính": "Giáp / Kỷ"
+    "GiĂ¡p": "Máº­u / QuĂ½",
+    "NhĂ¢m": "Äinh / NhĂ¢m",
+    "Canh": "BĂ­nh / TĂ¢n",
+    "Máº­u": "áº¤t / Canh",
+    "BĂ­nh": "GiĂ¡p / Ká»·"
   };
 
-  let canNamText = "Chưa xác định";
+  let canNamText = "ChÆ°a xĂ¡c Ä‘á»‹nh";
   if (canDan && CAN_DAN_MAP[canDan]) {
     canNamText = CAN_DAN_MAP[canDan];
   }
@@ -1426,16 +1431,16 @@ if (idxCan !== -1 && idxChi !== -1) {
 
 
 // =========================
-// 5️⃣ Hiển thị kết quả cuối
+// 5ï¸âƒ£ Hiá»ƒn thá»‹ káº¿t quáº£ cuá»‘i
 // =========================
-ketQua.innerHTML = `<b>${loaiCuc}</b> – ${chieu} – <b>${gioiTinh}</b> – Can năm: <b>${canNamText}</b>`;
+ketQua.innerHTML = `<b>${loaiCuc}</b> â€“ ${chieu} â€“ <b>${gioiTinh}</b> â€“ Can nÄƒm: <b>${canNamText}</b>`;
 
 // =========================
-// 6️⃣ Gọi Vòng Tràng Sinh dự phòng nếu cần
+// 6ï¸âƒ£ Gá»i VĂ²ng TrĂ ng Sinh dá»± phĂ²ng náº¿u cáº§n
 // =========================
 const groupTrangSinh = document.getElementById("vongTrangSinhGroup");
-if (typeof chieu !== "undefined" && chieu === "Không xác định") {
-  const gioiTinhText = gioiTinh || "Chưa xác định";
+if (typeof chieu !== "undefined" && chieu === "KhĂ´ng xĂ¡c Ä‘á»‹nh") {
+  const gioiTinhText = gioiTinh || "ChÆ°a xĂ¡c Ä‘á»‹nh";
   xacDinhTrangSinhDuPhong(loaiCuc, gioiTinhText, menhAmDuong);
 } else {
   groupTrangSinh.style.display = "none";
@@ -1444,13 +1449,13 @@ if (typeof chieu !== "undefined" && chieu === "Không xác định") {
 
 
 
-// Gọi lại khi thay đổi các giá trị liên quan
+// Gá»i láº¡i khi thay Ä‘á»•i cĂ¡c giĂ¡ trá»‹ liĂªn quan
 ["cucLoaiSelect","cucSoSelect","cucViTriSelect","cucCanSelect"].forEach(id=>{
   document.getElementById(id).addEventListener("change", tinhCucSo);
 });
 
 // =====================================================
-// 🔹 HÀM TRUNG GIAN: GỌI TỰ ĐỘNG VÒNG TRÀNG SINH DỰ PHÒNG
+// đŸ”¹ HĂ€M TRUNG GIAN: Gá»ŒI Tá»° Äá»˜NG VĂ’NG TRĂ€NG SINH Dá»° PHĂ’NG
 // =====================================================
 function goiTrangSinhDuPhong() {
   const loaiCuc = document.getElementById("cucLoaiSelect").value;
@@ -1460,7 +1465,7 @@ function goiTrangSinhDuPhong() {
 }
 
 // =====================================================
-// 3️⃣.1 VÒNG TRÀNG SINH (TỰ XÁC ĐỊNH CHIỀU & SUY GIỚI TÍNH)
+// 3ï¸âƒ£.1 VĂ’NG TRĂ€NG SINH (Tá»° XĂC Äá»NH CHIá»€U & SUY GIá»I TĂNH)
 // =====================================================
 function xacDinhTrangSinhDuPhong(loaiCuc, gioiTinh, menhAmDuong) {
   const ketQua = document.getElementById("ketQuaTrangSinh");
@@ -1469,87 +1474,87 @@ function xacDinhTrangSinhDuPhong(loaiCuc, gioiTinh, menhAmDuong) {
   const cungCucSo = document.getElementById("cucViTriSelect").value;
   group.style.display = "block";
 
-  // 🟢 1️⃣ Kiểm tra đầu vào
+  // đŸŸ¢ 1ï¸âƒ£ Kiá»ƒm tra Ä‘áº§u vĂ o
   if (!loaiCuc || !cungCucSo || !saoChon) {
-    ketQua.innerHTML = `⚠️ Vui lòng chọn đủ: Cục, Sao và Vị trí Cục Số.`;
+    ketQua.innerHTML = `â ï¸ Vui lĂ²ng chá»n Ä‘á»§: Cá»¥c, Sao vĂ  Vá»‹ trĂ­ Cá»¥c Sá»‘.`;
     return;
   }
 
-  // 🟢 2️⃣ Bảng khởi Tràng Sinh theo loại Cục
+  // đŸŸ¢ 2ï¸âƒ£ Báº£ng khá»Ÿi TrĂ ng Sinh theo loáº¡i Cá»¥c
   const TRANG_SINH_KHOI = {
-    "Kim tứ cục": "Tỵ",
-    "Mộc tam cục": "Hợi",
-    "Hỏa lục cục": "Dần",
-    "Thủy nhị cục": "Thân",
-    "Thổ ngũ cục": "Thân"
+    "Kim tá»© cá»¥c": "Tá»µ",
+    "Má»™c tam cá»¥c": "Há»£i",
+    "Há»a lá»¥c cá»¥c": "Dáº§n",
+    "Thá»§y nhá»‹ cá»¥c": "ThĂ¢n",
+    "Thá»• ngÅ© cá»¥c": "ThĂ¢n"
   };
   const cungKhoi = TRANG_SINH_KHOI[loaiCuc];
   if (!cungKhoi) {
-    ketQua.innerHTML = `⚠️ Không xác định được cung khởi Tràng Sinh.`;
+    ketQua.innerHTML = `â ï¸ KhĂ´ng xĂ¡c Ä‘á»‹nh Ä‘Æ°á»£c cung khá»Ÿi TrĂ ng Sinh.`;
     return;
   }
 
-  // 🟢 3️⃣ Chuỗi sao trong vòng Tràng Sinh (thứ tự cố định)
+  // đŸŸ¢ 3ï¸âƒ£ Chuá»—i sao trong vĂ²ng TrĂ ng Sinh (thá»© tá»± cá»‘ Ä‘á»‹nh)
   const SAO_VONG = [
-    "Tràng Sinh","Mộc Dục","Quan Đới","Lâm Quan",
-    "Đế Vượng","Suy","Bệnh","Tử","Mộ","Tuyệt","Thai","Dưỡng"
+    "TrĂ ng Sinh","Má»™c Dá»¥c","Quan Äá»›i","LĂ¢m Quan",
+    "Äáº¿ VÆ°á»£ng","Suy","Bá»‡nh","Tá»­","Má»™","Tuyá»‡t","Thai","DÆ°á»¡ng"
   ];
 
-  // 🟢 4️⃣ Thứ tự 12 cung thuận theo Tử Vi
-const CUNG_THUAN_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // đŸŸ¢ 4ï¸âƒ£ Thá»© tá»± 12 cung thuáº­n theo Tá»­ Vi
+const CUNG_THUAN_TUVI = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
 
   const idxKhoi = CUNG_THUAN.indexOf(cungKhoi);
   const idxCuc = CUNG_THUAN.indexOf(cungCucSo);
   if (idxKhoi === -1 || idxCuc === -1) {
-    ketQua.innerHTML = `⚠️ Cung không hợp lệ.`;
+    ketQua.innerHTML = `â ï¸ Cung khĂ´ng há»£p lá»‡.`;
     return;
   }
 
-  // 🟢 5️⃣ Tính sao tại cung Cục Số nếu vòng đi thuận hoặc nghịch
+  // đŸŸ¢ 5ï¸âƒ£ TĂ­nh sao táº¡i cung Cá»¥c Sá»‘ náº¿u vĂ²ng Ä‘i thuáº­n hoáº·c nghá»‹ch
   const diffThuan = (idxCuc - idxKhoi + 12) % 12;
   const diffNghich = (idxKhoi - idxCuc + 12) % 12;
   const saoThuThuan = SAO_VONG[diffThuan];
   const saoThuNghich = SAO_VONG[diffNghich];
 
-  // 🟢 6️⃣ So sánh sao chọn với hai hướng để xác định chiều
+  // đŸŸ¢ 6ï¸âƒ£ So sĂ¡nh sao chá»n vá»›i hai hÆ°á»›ng Ä‘á»ƒ xĂ¡c Ä‘á»‹nh chiá»u
   let chieu = "?";
-  if (saoChon === saoThuThuan) chieu = "Thuận";
-  else if (saoChon === saoThuNghich) chieu = "Nghịch";
-  else chieu = "Không xác định";
+  if (saoChon === saoThuThuan) chieu = "Thuáº­n";
+  else if (saoChon === saoThuNghich) chieu = "Nghá»‹ch";
+  else chieu = "KhĂ´ng xĂ¡c Ä‘á»‹nh";
 
-  // 🟢 7️⃣ Nếu sao nằm ở Tràng Sinh hoặc Bệnh → vô định
-  if (["Tràng Sinh","Bệnh"].includes(saoChon)) {
+  // đŸŸ¢ 7ï¸âƒ£ Náº¿u sao náº±m á»Ÿ TrĂ ng Sinh hoáº·c Bá»‡nh â†’ vĂ´ Ä‘á»‹nh
+  if (["TrĂ ng Sinh","Bá»‡nh"].includes(saoChon)) {
     ketQua.innerHTML = `
-      Tràng Sinh khởi tại <b>${cungKhoi}</b> → Cục Số tại <b>${cungCucSo}</b><br>
-      Sao <b>${saoChon}</b> thuộc vị trí vô định → 
-      <span style="color:#a00;">Không xác định giới tính</span>.
+      TrĂ ng Sinh khá»Ÿi táº¡i <b>${cungKhoi}</b> â†’ Cá»¥c Sá»‘ táº¡i <b>${cungCucSo}</b><br>
+      Sao <b>${saoChon}</b> thuá»™c vá»‹ trĂ­ vĂ´ Ä‘á»‹nh â†’ 
+      <span style="color:#a00;">KhĂ´ng xĂ¡c Ä‘á»‹nh giá»›i tĂ­nh</span>.
     `;
-    return { chieu: "Không xác định", gioiTinh: "Không xác định", cungKhoi, cungCucSo, sao: saoChon };
+    return { chieu: "KhĂ´ng xĂ¡c Ä‘á»‹nh", gioiTinh: "KhĂ´ng xĂ¡c Ä‘á»‹nh", cungKhoi, cungCucSo, sao: saoChon };
   }
 
-  // 🟢 8️⃣ Suy giới tính theo chiều + Âm Dương Mệnh
-  let gioiTinhSuy = "Không xác định";
-  if (chieu === "Thuận" && menhAmDuong === "Dương") gioiTinhSuy = "Nam";
-  else if (chieu === "Nghịch" && menhAmDuong === "Dương") gioiTinhSuy = "Nữ";
-  else if (chieu === "Thuận" && menhAmDuong === "Âm") gioiTinhSuy = "Nữ";
-  else if (chieu === "Nghịch" && menhAmDuong === "Âm") gioiTinhSuy = "Nam";
+  // đŸŸ¢ 8ï¸âƒ£ Suy giá»›i tĂ­nh theo chiá»u + Ă‚m DÆ°Æ¡ng Má»‡nh
+  let gioiTinhSuy = "KhĂ´ng xĂ¡c Ä‘á»‹nh";
+  if (chieu === "Thuáº­n" && menhAmDuong === "DÆ°Æ¡ng") gioiTinhSuy = "Nam";
+  else if (chieu === "Nghá»‹ch" && menhAmDuong === "DÆ°Æ¡ng") gioiTinhSuy = "Ná»¯";
+  else if (chieu === "Thuáº­n" && menhAmDuong === "Ă‚m") gioiTinhSuy = "Ná»¯";
+  else if (chieu === "Nghá»‹ch" && menhAmDuong === "Ă‚m") gioiTinhSuy = "Nam";
 
-  // 🟢 9️⃣ Hiển thị kết quả
+  // đŸŸ¢ 9ï¸âƒ£ Hiá»ƒn thá»‹ káº¿t quáº£
   let detail = "";
-  if (chieu === "Thuận" || chieu === "Nghịch") {
-    detail = `Cung này ứng với sao <b>${saoChon}</b> trong vòng Tràng Sinh → 
-              <b>${chieu} hành</b> → 
-              <span style="color:#006400;">Giới tính: <b>${gioiTinhSuy}</b></span>`;
+  if (chieu === "Thuáº­n" || chieu === "Nghá»‹ch") {
+    detail = `Cung nĂ y á»©ng vá»›i sao <b>${saoChon}</b> trong vĂ²ng TrĂ ng Sinh â†’ 
+              <b>${chieu} hĂ nh</b> â†’ 
+              <span style="color:#006400;">Giá»›i tĂ­nh: <b>${gioiTinhSuy}</b></span>`;
   } else {
-    detail = `Sao <b>${saoChon}</b> không trùng vị trí nào trong vòng Tràng Sinh của ${loaiCuc}. 
-              <span style="color:#a00;">Không xác định chiều & giới tính.</span>`;
+    detail = `Sao <b>${saoChon}</b> khĂ´ng trĂ¹ng vá»‹ trĂ­ nĂ o trong vĂ²ng TrĂ ng Sinh cá»§a ${loaiCuc}. 
+              <span style="color:#a00;">KhĂ´ng xĂ¡c Ä‘á»‹nh chiá»u & giá»›i tĂ­nh.</span>`;
   }
 
   ketQua.innerHTML = `
-    Tràng Sinh khởi tại <b>${cungKhoi}</b> → Cục Số tại <b>${cungCucSo}</b><br>${detail}
+    TrĂ ng Sinh khá»Ÿi táº¡i <b>${cungKhoi}</b> â†’ Cá»¥c Sá»‘ táº¡i <b>${cungCucSo}</b><br>${detail}
   `;
 
-  // 🟢 10️⃣ Trả ra kết quả để dùng tiếp
+  // đŸŸ¢ 10ï¸âƒ£ Tráº£ ra káº¿t quáº£ Ä‘á»ƒ dĂ¹ng tiáº¿p
   return { chieu, gioiTinh: gioiTinhSuy, cungKhoi, cungCucSo, sao: saoChon };
 }
 
@@ -1558,37 +1563,37 @@ const CUNG_THUAN_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","D
 
 
 // =====================================================
-// 🔹 KHỞI TẠO DANH SÁCH SAO TRÀNG SINH (12 SAO)
+// đŸ”¹ KHá»I Táº O DANH SĂCH SAO TRĂ€NG SINH (12 SAO)
 // =====================================================
 function khoiTaoVongTrangSinh() {
   const trangSinhSelect = document.getElementById("trangSinhSelect");
   if (!trangSinhSelect) return;
 
   const SAO_TRANG_SINH = [
-    "Tràng Sinh",
-    "Mộc Dục",
-    "Quan Đới",
-    "Lâm Quan",
-    "Đế Vượng",
+    "TrĂ ng Sinh",
+    "Má»™c Dá»¥c",
+    "Quan Äá»›i",
+    "LĂ¢m Quan",
+    "Äáº¿ VÆ°á»£ng",
     "Suy",
-    "Bệnh",
-    "Tử",
-    "Mộ",
-    "Tuyệt",
+    "Bá»‡nh",
+    "Tá»­",
+    "Má»™",
+    "Tuyá»‡t",
     "Thai",
-    "Dưỡng"
+    "DÆ°á»¡ng"
   ];
 
-  // Xóa hết tùy chọn cũ (nếu có)
+  // XĂ³a háº¿t tĂ¹y chá»n cÅ© (náº¿u cĂ³)
   trangSinhSelect.innerHTML = "";
 
-  // Thêm tùy chọn trống đầu tiên
+  // ThĂªm tĂ¹y chá»n trá»‘ng Ä‘áº§u tiĂªn
   const optEmpty = document.createElement("option");
   optEmpty.value = "";
-  optEmpty.textContent = "— Chọn sao —";
+  optEmpty.textContent = "â€” Chá»n sao â€”";
   trangSinhSelect.appendChild(optEmpty);
 
-  // Thêm 12 sao vào dropdown
+  // ThĂªm 12 sao vĂ o dropdown
   SAO_TRANG_SINH.forEach(sao => {
     const opt = document.createElement("option");
     opt.value = sao;
@@ -1597,114 +1602,114 @@ function khoiTaoVongTrangSinh() {
   });
 }
 
-// Gọi hàm khởi tạo khi trang load
+// Gá»i hĂ m khá»Ÿi táº¡o khi trang load
 window.addEventListener("DOMContentLoaded", khoiTaoVongTrangSinh);
 
 
 
 
 // =====================================================
-// 4️⃣ VÒNG BÁC SĨ – TRA NGƯỢC CAN NĂM SINH
+// 4ï¸âƒ£ VĂ’NG BĂC SÄ¨ â€“ TRA NGÆ¯á»¢C CAN NÄ‚M SINH
 // =====================================================
 function xacDinhBacSi() {
   const ketQua = document.getElementById("ketQuaCanNam");
   if (!ketQua) return;
 
-  // 🟢 1️⃣ Lấy dữ liệu nhập
+  // đŸŸ¢ 1ï¸âƒ£ Láº¥y dá»¯ liá»‡u nháº­p
   const saoChon = document.getElementById("bacSiSelect").value;
   const cungSao = document.getElementById("bacSiViTri").value;
   if (!saoChon || !cungSao) {
-    ketQua.innerHTML = `⚠️ Vui lòng chọn đủ Sao và Vị trí an.`;
+    ketQua.innerHTML = `â ï¸ Vui lĂ²ng chá»n Ä‘á»§ Sao vĂ  Vá»‹ trĂ­ an.`;
     return;
   }
 
-  // 🟢 2️⃣ Lấy chiều thuận/nghịch từ phần 3 hoặc 3.1 (ưu tiên có giá trị trước)
+  // đŸŸ¢ 2ï¸âƒ£ Láº¥y chiá»u thuáº­n/nghá»‹ch tá»« pháº§n 3 hoáº·c 3.1 (Æ°u tiĂªn cĂ³ giĂ¡ trá»‹ trÆ°á»›c)
   let chieu = "?";
   const ketQuaCuc = document.getElementById("ketQuaCuc")?.textContent || "";
   const ketQuaTrangSinh = document.getElementById("ketQuaTrangSinh")?.textContent || "";
 
-  if (ketQuaCuc.includes("Thuận") || ketQuaTrangSinh.includes("Thuận")) chieu = "Thuận";
-  else if (ketQuaCuc.includes("Nghịch") || ketQuaTrangSinh.includes("Nghịch")) chieu = "Nghịch";
+  if (ketQuaCuc.includes("Thuáº­n") || ketQuaTrangSinh.includes("Thuáº­n")) chieu = "Thuáº­n";
+  else if (ketQuaCuc.includes("Nghá»‹ch") || ketQuaTrangSinh.includes("Nghá»‹ch")) chieu = "Nghá»‹ch";
 
   if (chieu === "?") {
-    ketQua.innerHTML = `⚠️ Chưa có dữ liệu chiều thuận/nghịch từ phần Cục.`;
+    ketQua.innerHTML = `â ï¸ ChÆ°a cĂ³ dá»¯ liá»‡u chiá»u thuáº­n/nghá»‹ch tá»« pháº§n Cá»¥c.`;
     return;
   }
 
-  // 🟢 3️⃣ Mảng sao & mảng cung
+  // đŸŸ¢ 3ï¸âƒ£ Máº£ng sao & máº£ng cung
   const SAO_VONG_BACSI = [
-    "Bác Sĩ","Lực Sĩ","Thanh Long","Tiểu Hao","Tướng Quân",
-    "Tấu Thư","Phi Liêm","Hỷ Thần","Bệnh Phù","Đại Hao","Phục Binh","Quan Phủ"
+    "BĂ¡c SÄ©","Lá»±c SÄ©","Thanh Long","Tiá»ƒu Hao","TÆ°á»›ng QuĂ¢n",
+    "Táº¥u ThÆ°","Phi LiĂªm","Há»· Tháº§n","Bá»‡nh PhĂ¹","Äáº¡i Hao","Phá»¥c Binh","Quan Phá»§"
   ];
 
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
 
   const idxSao = SAO_VONG_BACSI.indexOf(saoChon);
   const idxCung = CUNG_THUAN.indexOf(cungSao);
   if (idxSao === -1 || idxCung === -1) {
-    ketQua.innerHTML = `⚠️ Dữ liệu sao hoặc cung không hợp lệ.`;
+    ketQua.innerHTML = `â ï¸ Dá»¯ liá»‡u sao hoáº·c cung khĂ´ng há»£p lá»‡.`;
     return;
   }
 
-  // 🟢 4️⃣ Xác định hướng đếm để tìm Bác Sĩ
-  // Nếu vòng gốc đi thuận → đếm ngược để tra ngược
-  // Nếu vòng gốc đi nghịch → đếm thuận để tra ngược
-  const buoc = idxSao; // số bước từ Bác Sĩ đến sao đang chọn
+  // đŸŸ¢ 4ï¸âƒ£ XĂ¡c Ä‘á»‹nh hÆ°á»›ng Ä‘áº¿m Ä‘á»ƒ tĂ¬m BĂ¡c SÄ©
+  // Náº¿u vĂ²ng gá»‘c Ä‘i thuáº­n â†’ Ä‘áº¿m ngÆ°á»£c Ä‘á»ƒ tra ngÆ°á»£c
+  // Náº¿u vĂ²ng gá»‘c Ä‘i nghá»‹ch â†’ Ä‘áº¿m thuáº­n Ä‘á»ƒ tra ngÆ°á»£c
+  const buoc = idxSao; // sá»‘ bÆ°á»›c tá»« BĂ¡c SÄ© Ä‘áº¿n sao Ä‘ang chá»n
   let idxBacSi;
-if (chieu === "Thuận") idxBacSi = (idxCung - buoc + 12) % 12;
+if (chieu === "Thuáº­n") idxBacSi = (idxCung - buoc + 12) % 12;
 else idxBacSi = (idxCung + buoc) % 12;
 
 
   const cungBacSi = CUNG_THUAN[idxBacSi];
 
-  // 🟢 5️⃣ Tra bảng Lộc Tồn (vị trí an Bác Sĩ)
+  // đŸŸ¢ 5ï¸âƒ£ Tra báº£ng Lá»™c Tá»“n (vá»‹ trĂ­ an BĂ¡c SÄ©)
   const LOC_TON_MAP = {
-    "Giáp":"Dần","Ất":"Mão","Bính":"Tỵ","Đinh":"Ngọ","Mậu":"Tỵ",
-    "Kỷ":"Ngọ","Canh":"Thân","Tân":"Dậu","Nhâm":"Hợi","Quý":"Tý"
+    "GiĂ¡p":"Dáº§n","áº¤t":"MĂ£o","BĂ­nh":"Tá»µ","Äinh":"Ngá»","Máº­u":"Tá»µ",
+    "Ká»·":"Ngá»","Canh":"ThĂ¢n","TĂ¢n":"Dáº­u","NhĂ¢m":"Há»£i","QuĂ½":"TĂ½"
   };
 
-  // Tìm tất cả Can có Lộc Tồn trùng cung Bác Sĩ
+  // TĂ¬m táº¥t cáº£ Can cĂ³ Lá»™c Tá»“n trĂ¹ng cung BĂ¡c SÄ©
   const canNamList = [];
   for (const [can, cung] of Object.entries(LOC_TON_MAP)) {
     if (cung === cungBacSi) canNamList.push(can);
   }
 
-  // 🟢 6️⃣ Lấy kết quả Can năm từ phần 3 (Cục số)
+  // đŸŸ¢ 6ï¸âƒ£ Láº¥y káº¿t quáº£ Can nÄƒm tá»« pháº§n 3 (Cá»¥c sá»‘)
 const ketQuaCucText = document.getElementById("ketQuaCuc")?.textContent || "";
 let canPhan3 = [];
-if (ketQuaCucText.includes("Can năm")) {
-  const match = ketQuaCucText.match(/Can năm:\s*([A-Za-zÀ-ỹ\/\s]+)/);
+if (ketQuaCucText.includes("Can nÄƒm")) {
+  const match = ketQuaCucText.match(/Can nÄƒm:\s*([A-Za-zĂ€-á»¹\/\s]+)/);
   if (match && match[1]) {
     canPhan3 = match[1].split("/").map(s => s.trim());
   }
 }
 
-// 🟢 7️⃣ Tính giao giữa hai kết quả (phần 3 & phần 4)
+// đŸŸ¢ 7ï¸âƒ£ TĂ­nh giao giá»¯a hai káº¿t quáº£ (pháº§n 3 & pháº§n 4)
 const giaoCan = canNamList.filter(c => canPhan3.includes(c));
 
-// 🟢 8️⃣ Hiển thị kết quả tổng hợp
+// đŸŸ¢ 8ï¸âƒ£ Hiá»ƒn thá»‹ káº¿t quáº£ tá»•ng há»£p
 let html = `
-  Bác Sĩ an tại <b>${cungBacSi}</b> →
-  Chiều <b>${chieu}</b> →
-  Sao <b>${saoChon}</b> tại <b>${cungSao}</b><br>
-  ⮕ <span style="color:#006400;">Can năm sinh (vòng Bác Sĩ): <b>${canNamList.join(" / ")}</b></span><br>
+  BĂ¡c SÄ© an táº¡i <b>${cungBacSi}</b> â†’
+  Chiá»u <b>${chieu}</b> â†’
+  Sao <b>${saoChon}</b> táº¡i <b>${cungSao}</b><br>
+  â®• <span style="color:#006400;">Can nÄƒm sinh (vĂ²ng BĂ¡c SÄ©): <b>${canNamList.join(" / ")}</b></span><br>
 `;
 
 if (canPhan3.length > 0) {
-  html += `<span style="color:#444;">Can năm (vòng Cục): <b>${canPhan3.join(" / ")}</b></span><br>`;
+  html += `<span style="color:#444;">Can nÄƒm (vĂ²ng Cá»¥c): <b>${canPhan3.join(" / ")}</b></span><br>`;
 }
 
 if (giaoCan.length > 0) {
-  html += `<span style="color:#b22222;">✅ Kết quả giao: <b>${giaoCan.join(" / ")}</b></span>`;
+  html += `<span style="color:#b22222;">âœ… Káº¿t quáº£ giao: <b>${giaoCan.join(" / ")}</b></span>`;
 } else {
-  html += `<span style="color:#a00;">⚠️ Không trùng giữa hai vòng – cần xem lại dữ kiện.</span>`;
+  html += `<span style="color:#a00;">â ï¸ KhĂ´ng trĂ¹ng giá»¯a hai vĂ²ng â€“ cáº§n xem láº¡i dá»¯ kiá»‡n.</span>`;
 }
 
 ketQua.innerHTML = html;
-window.ketQuaBacSi = { giaoCan, cungBacSi, chieu }; // để phần tra ngược lấy được
+window.ketQuaBacSi = { giaoCan, cungBacSi, chieu }; // Ä‘á»ƒ pháº§n tra ngÆ°á»£c láº¥y Ä‘Æ°á»£c
 
 
-// 🟢 9️⃣ Trả kết quả ra ngoài (để có thể dùng cho bước sau)
+// đŸŸ¢ 9ï¸âƒ£ Tráº£ káº¿t quáº£ ra ngoĂ i (Ä‘á»ƒ cĂ³ thá»ƒ dĂ¹ng cho bÆ°á»›c sau)
 return { 
   chieu, 
   sao: saoChon, 
@@ -1712,74 +1717,74 @@ return {
   cungBacSi, 
   canNamList, 
   canPhan3, 
-  giaoCan // ← thêm dòng này để lưu luôn kết quả giao
+  giaoCan // â† thĂªm dĂ²ng nĂ y Ä‘á»ƒ lÆ°u luĂ´n káº¿t quáº£ giao
 };
 }
 
-// 🟢 10️⃣ Gán sự kiện onchange cho dropdown để hiển thị kết quả ngay
+// đŸŸ¢ 10ï¸âƒ£ GĂ¡n sá»± kiá»‡n onchange cho dropdown Ä‘á»ƒ hiá»ƒn thá»‹ káº¿t quáº£ ngay
 ["bacSiSelect","bacSiViTri"].forEach(id=>{
   const el = document.getElementById(id);
   if (el) el.addEventListener("change", xacDinhBacSi);
 });
 
 /* ==========================================================
-   🔹 TRA NGƯỢC TỬ VI – THIÊN PHỦ (chuẩn trục Dần–Thân)
+   đŸ”¹ TRA NGÆ¯á»¢C Tá»¬ VI â€“ THIĂN PHá»¦ (chuáº©n trá»¥c Dáº§nâ€“ThĂ¢n)
    ========================================================== */
 
-const CUNG_THUAN_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-const CUNG_CHUC_RUT_GON = ["Mệnh","Huynh","Phu","Tử","Tài","Tật","Di","Nô","Quan","Điền","Phúc","Phụ"];
+const CUNG_THUAN_TUVI = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+const CUNG_CHUC_RUT_GON = ["Má»‡nh","Huynh","Phu","Tá»­","TĂ i","Táº­t","Di","NĂ´","Quan","Äiá»n","PhĂºc","Phá»¥"];
 
-// 🌟 Vòng sao cố định
+// đŸŒŸ VĂ²ng sao cá»‘ Ä‘á»‹nh
 const PATTERN_TU_VI = [
-  "Tử Vi","Thiên Cơ",null,"Thái Dương","Vũ Khúc","Thiên Đồng",
-  null,null,"Liêm Trinh",null,null,null
+  "Tá»­ Vi","ThiĂªn CÆ¡",null,"ThĂ¡i DÆ°Æ¡ng","VÅ© KhĂºc","ThiĂªn Äá»“ng",
+  null,null,"LiĂªm Trinh",null,null,null
 ];
 const PATTERN_THIEN_PHU = [
-  "Thiên Phủ","Thái Âm","Tham Lang","Cự Môn","Thiên Tướng",
-  "Thiên Lương","Thất Sát",null,null,null,"Phá Quân",null
+  "ThiĂªn Phá»§","ThĂ¡i Ă‚m","Tham Lang","Cá»± MĂ´n","ThiĂªn TÆ°á»›ng",
+  "ThiĂªn LÆ°Æ¡ng","Tháº¥t SĂ¡t",null,null,null,"PhĂ¡ QuĂ¢n",null
 ];
 
-// 🌟 Bảng ngày sinh âm theo cục
+// đŸŒŸ Báº£ng ngĂ y sinh Ă¢m theo cá»¥c
 const BANG_TU_VI_TRA_NGUOC = {
-  "Thủy nhị cục": [
-    "Sửu","Dần","Dần","Mão","Mão","Thìn","Thìn","Tỵ","Tỵ","Ngọ",
-    "Ngọ","Mùi","Mùi","Thân","Thân","Dậu","Dậu","Tuất","Tuất","Hợi",
-    "Hợi","Tý","Tý","Sửu","Sửu","Dần","Dần","Mão","Mão","Thìn"
+  "Thá»§y nhá»‹ cá»¥c": [
+    "Sá»­u","Dáº§n","Dáº§n","MĂ£o","MĂ£o","ThĂ¬n","ThĂ¬n","Tá»µ","Tá»µ","Ngá»",
+    "Ngá»","MĂ¹i","MĂ¹i","ThĂ¢n","ThĂ¢n","Dáº­u","Dáº­u","Tuáº¥t","Tuáº¥t","Há»£i",
+    "Há»£i","TĂ½","TĂ½","Sá»­u","Sá»­u","Dáº§n","Dáº§n","MĂ£o","MĂ£o","ThĂ¬n"
   ],
-  "Mộc tam cục": [
-    "Thìn","Sửu","Dần","Tỵ","Dần","Mão","Ngọ","Mão","Thìn","Mùi",
-    "Thìn","Tỵ","Thân","Tỵ","Ngọ","Dậu","Ngọ","Mùi","Tuất","Mùi",
-    "Thân","Hợi","Thân","Dậu","Tý","Dậu","Tuất","Sửu","Tuất","Hợi"
+  "Má»™c tam cá»¥c": [
+    "ThĂ¬n","Sá»­u","Dáº§n","Tá»µ","Dáº§n","MĂ£o","Ngá»","MĂ£o","ThĂ¬n","MĂ¹i",
+    "ThĂ¬n","Tá»µ","ThĂ¢n","Tá»µ","Ngá»","Dáº­u","Ngá»","MĂ¹i","Tuáº¥t","MĂ¹i",
+    "ThĂ¢n","Há»£i","ThĂ¢n","Dáº­u","TĂ½","Dáº­u","Tuáº¥t","Sá»­u","Tuáº¥t","Há»£i"
   ],
-  "Kim tứ cục": [
-    "Hợi","Thìn","Sửu","Dần","Tý","Tỵ","Dần","Mão","Sửu","Ngọ",
-    "Mão","Thìn","Dần","Mùi","Thìn","Tỵ","Mão","Thân","Tỵ","Ngọ",
-    "Thìn","Dậu","Ngọ","Mùi","Tỵ","Tuất","Mùi","Thân","Ngọ","Hợi"
+  "Kim tá»© cá»¥c": [
+    "Há»£i","ThĂ¬n","Sá»­u","Dáº§n","TĂ½","Tá»µ","Dáº§n","MĂ£o","Sá»­u","Ngá»",
+    "MĂ£o","ThĂ¬n","Dáº§n","MĂ¹i","ThĂ¬n","Tá»µ","MĂ£o","ThĂ¢n","Tá»µ","Ngá»",
+    "ThĂ¬n","Dáº­u","Ngá»","MĂ¹i","Tá»µ","Tuáº¥t","MĂ¹i","ThĂ¢n","Ngá»","Há»£i"
   ],
-  "Thổ ngũ cục": [
-    "Ngọ","Hợi","Thìn","Sửu","Dần","Mùi","Tý","Tỵ","Dần","Mão",
-    "Thân","Sửu","Ngọ","Mão","Thìn","Dậu","Dần","Mùi","Thìn","Tỵ",
-    "Tuất","Mão","Thân","Tỵ","Ngọ","Hợi","Thìn","Dậu","Ngọ","Mùi"
+  "Thá»• ngÅ© cá»¥c": [
+    "Ngá»","Há»£i","ThĂ¬n","Sá»­u","Dáº§n","MĂ¹i","TĂ½","Tá»µ","Dáº§n","MĂ£o",
+    "ThĂ¢n","Sá»­u","Ngá»","MĂ£o","ThĂ¬n","Dáº­u","Dáº§n","MĂ¹i","ThĂ¬n","Tá»µ",
+    "Tuáº¥t","MĂ£o","ThĂ¢n","Tá»µ","Ngá»","Há»£i","ThĂ¬n","Dáº­u","Ngá»","MĂ¹i"
   ],
-  "Hỏa lục cục": [
-    "Dậu","Ngọ","Hợi","Thìn","Sửu","Dần","Tuất","Mùi","Tý","Tỵ",
-    "Dần","Mão","Hợi","Thân","Sửu","Ngọ","Mão","Thìn","Tý","Dậu",
-    "Dần","Mùi","Thìn","Tỵ","Sửu","Tuất","Mão","Thân","Tỵ","Ngọ"
+  "Há»a lá»¥c cá»¥c": [
+    "Dáº­u","Ngá»","Há»£i","ThĂ¬n","Sá»­u","Dáº§n","Tuáº¥t","MĂ¹i","TĂ½","Tá»µ",
+    "Dáº§n","MĂ£o","Há»£i","ThĂ¢n","Sá»­u","Ngá»","MĂ£o","ThĂ¬n","TĂ½","Dáº­u",
+    "Dáº§n","MĂ¹i","ThĂ¬n","Tá»µ","Sá»­u","Tuáº¥t","MĂ£o","ThĂ¢n","Tá»µ","Ngá»"
   ]
 };
 
 /* ==========================================================
-   🔸 HÀM TÌM CUNG ĐỐI XỨNG QUA TRỤC DẦN–THÂN
+   đŸ”¸ HĂ€M TĂŒM CUNG Äá»I Xá»¨NG QUA TRá»¤C Dáº¦Nâ€“THĂ‚N
    ========================================================== */
 function getPhuTheoTuVi(cungTuVi) {
-  const idx = CUNG_THUAN_TUVI.indexOf(cungTuVi) + 1; // 1–12
-  if (idx === 1 || idx === 7) return cungTuVi; // Dần hoặc Thân => trùng
+  const idx = CUNG_THUAN_TUVI.indexOf(cungTuVi) + 1; // 1â€“12
+  if (idx === 1 || idx === 7) return cungTuVi; // Dáº§n hoáº·c ThĂ¢n => trĂ¹ng
   const doiXung = 14 - idx;
   return CUNG_THUAN_TUVI[(doiXung - 1 + 12) % 12];
 }
 
 /* ==========================================================
-   🔸 HÀM XÁC ĐỊNH TOÀN BỘ VÒNG TỬ VI – THIÊN PHỦ
+   đŸ”¸ HĂ€M XĂC Äá»NH TOĂ€N Bá»˜ VĂ’NG Tá»¬ VI â€“ THIĂN PHá»¦
    ========================================================== */
 function xacDinhTuViTuSao() {
   const saoChon = document.getElementById("tuviSelect").value.trim();
@@ -1787,7 +1792,7 @@ function xacDinhTuViTuSao() {
   const loaiCuc = document.getElementById("cucLoaiSelect").value;
   const ketQua = document.getElementById("ketQuaChinhTinh");
   if (!saoChon || !cungSao || !loaiCuc) {
-    ketQua.innerHTML = "<i>⚠️ Vui lòng chọn đủ dữ kiện ở phần 1,3,5.</i>";
+    ketQua.innerHTML = "<i>â ï¸ Vui lĂ²ng chá»n Ä‘á»§ dá»¯ kiá»‡n á»Ÿ pháº§n 1,3,5.</i>";
     return;
   }
 
@@ -1796,34 +1801,34 @@ function xacDinhTuViTuSao() {
 
   let idxTuVi, idxPhu, cungTuVi, cungPhu;
 
-  // 🌟 1️⃣ Nếu sao thuộc vòng TỬ VI → chạy NGHỊCH
+  // đŸŒŸ 1ï¸âƒ£ Náº¿u sao thuá»™c vĂ²ng Tá»¬ VI â†’ cháº¡y NGHá»CH
   if (PATTERN_TU_VI.includes(saoChon)) {
     const offset = PATTERN_TU_VI.indexOf(saoChon);
     idxTuVi = (idxCung - offset + 12) % 12;
     cungTuVi = CUNG_THUAN_TUVI[idxTuVi];
-    cungPhu = getPhuTheoTuVi(cungTuVi); // dùng trục Dần–Thân
+    cungPhu = getPhuTheoTuVi(cungTuVi); // dĂ¹ng trá»¥c Dáº§nâ€“ThĂ¢n
     idxPhu = CUNG_THUAN_TUVI.indexOf(cungPhu);
   }
 
-  // 🌟 2️⃣ Nếu sao thuộc vòng THIÊN PHỦ → chạy THUẬN
-// 🌟 2️⃣ Nếu sao thuộc vòng THIÊN PHỦ → chạy NGHỊCH (vì tra ngược)
+  // đŸŒŸ 2ï¸âƒ£ Náº¿u sao thuá»™c vĂ²ng THIĂN PHá»¦ â†’ cháº¡y THUáº¬N
+// đŸŒŸ 2ï¸âƒ£ Náº¿u sao thuá»™c vĂ²ng THIĂN PHá»¦ â†’ cháº¡y NGHá»CH (vĂ¬ tra ngÆ°á»£c)
 else if (PATTERN_THIEN_PHU.includes(saoChon)) {
   const offset = PATTERN_THIEN_PHU.indexOf(saoChon);
-  idxPhu = (idxCung - offset + 12) % 12; // 🔁 lùi thay vì cộng
+  idxPhu = (idxCung - offset + 12) % 12; // đŸ” lĂ¹i thay vĂ¬ cá»™ng
   cungPhu = CUNG_THUAN_TUVI[idxPhu];
-  cungTuVi = getPhuTheoTuVi(cungPhu); // đối xứng trục Dần–Thân
+  cungTuVi = getPhuTheoTuVi(cungPhu); // Ä‘á»‘i xá»©ng trá»¥c Dáº§nâ€“ThĂ¢n
   idxTuVi = CUNG_THUAN_TUVI.indexOf(cungTuVi);
 }
 
 
   else {
-    ketQua.innerHTML = "⚠️ Sao không thuộc chòm Tử Vi – Thiên Phủ.";
+    ketQua.innerHTML = "â ï¸ Sao khĂ´ng thuá»™c chĂ²m Tá»­ Vi â€“ ThiĂªn Phá»§.";
     return;
   }
 
 
 
-  // 🌟 3️⃣ Tra bảng ngày sinh âm có thể
+  // đŸŒŸ 3ï¸âƒ£ Tra báº£ng ngĂ y sinh Ă¢m cĂ³ thá»ƒ
 const arrNgay = BANG_TU_VI_TRA_NGUOC[loaiCuc] || [];
 const ngaySinhCoThe = [];
 arrNgay.forEach((c, i) => { if (c === cungTuVi) ngaySinhCoThe.push(i + 1); });
@@ -1831,7 +1836,7 @@ arrNgay.forEach((c, i) => { if (c === cungTuVi) ngaySinhCoThe.push(i + 1); });
 window.ngayChinhTinh = ngaySinhCoThe;
 
 
-// 🌟 4️⃣ An sao cho 12 cung
+// đŸŒŸ 4ï¸âƒ£ An sao cho 12 cung
 const chinhTinhTheoCung = Array(12).fill().map(() => []);
 PATTERN_TU_VI.forEach((s, i) => {
   if (s) chinhTinhTheoCung[(idxTuVi - i + 12) % 12].push(s);
@@ -1840,17 +1845,17 @@ PATTERN_THIEN_PHU.forEach((s, i) => {
   if (s) chinhTinhTheoCung[(idxPhu + i) % 12].push(s);
 });
 
-// 🌟 5️⃣ Hiển thị kết quả
+// đŸŒŸ 5ï¸âƒ£ Hiá»ƒn thá»‹ káº¿t quáº£
 let html = `
-<p><b>TỬ VI</b> tại <b>${cungTuVi}</b> – <b>THIÊN PHỦ</b> tại <b>${cungPhu}</b><br>
-➜ Ngày sinh âm có thể: <b>${ngaySinhCoThe.join(", ") || "?"}</b></p>
+<p><b>Tá»¬ VI</b> táº¡i <b>${cungTuVi}</b> â€“ <b>THIĂN PHá»¦</b> táº¡i <b>${cungPhu}</b><br>
+âœ NgĂ y sinh Ă¢m cĂ³ thá»ƒ: <b>${ngaySinhCoThe.join(", ") || "?"}</b></p>
 <hr style="margin:6px 0;">`;
 
-// 🔹 1️⃣ Lấy vị trí Mệnh thật từ phần 1
-const menhThucTe = document.getElementById("ketQuaMenh")?.dataset?.menh || "Dần";
+// đŸ”¹ 1ï¸âƒ£ Láº¥y vá»‹ trĂ­ Má»‡nh tháº­t tá»« pháº§n 1
+const menhThucTe = document.getElementById("ketQuaMenh")?.dataset?.menh || "Dáº§n";
 const idxMenhThucTe = CUNG_THUAN.indexOf(menhThucTe);
 
-// 🔹 2️⃣ Tạo thứ tự 12 cung bắt đầu từ Mệnh thật → chạy NGHỊCH chiều kim đồng hồ
+// đŸ”¹ 2ï¸âƒ£ Táº¡o thá»© tá»± 12 cung báº¯t Ä‘áº§u tá»« Má»‡nh tháº­t â†’ cháº¡y NGHá»CH chiá»u kim Ä‘á»“ng há»“
 const CUNG_HIEN_THI = [];
 const CUNG_CHUC_HIEN_THI = [];
 
@@ -1859,17 +1864,17 @@ for (let i = 0; i < 12; i++) {
   CUNG_HIEN_THI.push(CUNG_THUAN[idx]);
 }
 
-// 🔹 Cung chức chạy thuận (Mệnh → Phụ → Phúc → Điền → Quan → Nô → Di → Tật → Tài → Tử → Phu → Huynh)
-const CUNG_CHUC_THUAN = ["Mệnh","Phụ","Phúc","Điền","Quan","Nô","Di","Tật","Tài","Tử","Phu","Huynh"];
+// đŸ”¹ Cung chá»©c cháº¡y thuáº­n (Má»‡nh â†’ Phá»¥ â†’ PhĂºc â†’ Äiá»n â†’ Quan â†’ NĂ´ â†’ Di â†’ Táº­t â†’ TĂ i â†’ Tá»­ â†’ Phu â†’ Huynh)
+const CUNG_CHUC_THUAN = ["Má»‡nh","Phá»¥","PhĂºc","Äiá»n","Quan","NĂ´","Di","Táº­t","TĂ i","Tá»­","Phu","Huynh"];
 CUNG_CHUC_HIEN_THI.push(...CUNG_CHUC_THUAN);
 
-// 🔹 3️⃣ Ráp sao đúng vị trí hiển thị theo Mệnh thật
+// đŸ”¹ 3ï¸âƒ£ RĂ¡p sao Ä‘Ăºng vá»‹ trĂ­ hiá»ƒn thá»‹ theo Má»‡nh tháº­t
 const chinhTinhTheoCung_HienThi = CUNG_HIEN_THI.map(cung => {
   const idxGoc = CUNG_THUAN.indexOf(cung);
   return chinhTinhTheoCung[idxGoc];
 });
 
-// 🔹 4️⃣ In bảng (Mệnh luôn ở cột đầu)
+// đŸ”¹ 4ï¸âƒ£ In báº£ng (Má»‡nh luĂ´n á»Ÿ cá»™t Ä‘áº§u)
 html += `
 <div style="
   font-family:'Times New Roman';
@@ -1892,46 +1897,46 @@ ketQua.innerHTML = html;
 
 }
 
-// Gắn sự kiện onchange
+// Gáº¯n sá»± kiá»‡n onchange
 ["tuviSelect","phuSelect","chinhViTri"].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener("change", xacDinhTuViTuSao);
 });
 
 // ===========================================================
-// 🔹 BẢNG TRA NGƯỢC THÁNG SINH (từ vị trí sao → tháng sinh âm)
+// đŸ”¹ Báº¢NG TRA NGÆ¯á»¢C THĂNG SINH (tá»« vá»‹ trĂ­ sao â†’ thĂ¡ng sinh Ă¢m)
 // ===========================================================
 const BANG_THANG_SINH_SAO = {
-  "Tả Phụ":  { "Thìn":1,"Tỵ":2,"Ngọ":3,"Mùi":4,"Thân":5,"Dậu":6,"Tuất":7,"Hợi":8,"Tý":9,"Sửu":10,"Dần":11,"Mão":12 },
-  "Hữu Bật": { "Tuất":1,"Dậu":2,"Thân":3,"Mùi":4,"Ngọ":5,"Tỵ":6,"Thìn":7,"Mão":8,"Dần":9,"Sửu":10,"Tý":11,"Hợi":12 },
-  "Thiên Hình": { "Dậu":1,"Tuất":2,"Hợi":3,"Tý":4,"Sửu":5,"Dần":6,"Mão":7,"Thìn":8,"Tỵ":9,"Ngọ":10,"Mùi":11,"Thân":12 },
-  "Thiên Riêu": { "Sửu":1,"Dần":2,"Mão":3,"Thìn":4,"Tỵ":5,"Ngọ":6,"Mùi":7,"Thân":8,"Dậu":9,"Tuất":10,"Hợi":11,"Tý":12 },
-  "Thiên Y":    { "Sửu":1,"Dần":2,"Mão":3,"Thìn":4,"Tỵ":5,"Ngọ":6,"Mùi":7,"Thân":8,"Dậu":9,"Tuất":10,"Hợi":11,"Tý":12 },
-  "Thiên Giải": { "Thân":1,"Dậu":2,"Tuất":3,"Hợi":4,"Tý":5,"Sửu":6,"Dần":7,"Mão":8,"Thìn":9,"Tỵ":10,"Ngọ":11,"Mùi":12 },
-  "Địa Giải":   { "Mùi":1,"Thân":2,"Dậu":3,"Tuất":4,"Hợi":5,"Tý":6,"Sửu":7,"Dần":8,"Mão":9,"Thìn":10,"Tỵ":11,"Ngọ":12 }
+  "Táº£ Phá»¥":  { "ThĂ¬n":1,"Tá»µ":2,"Ngá»":3,"MĂ¹i":4,"ThĂ¢n":5,"Dáº­u":6,"Tuáº¥t":7,"Há»£i":8,"TĂ½":9,"Sá»­u":10,"Dáº§n":11,"MĂ£o":12 },
+  "Há»¯u Báº­t": { "Tuáº¥t":1,"Dáº­u":2,"ThĂ¢n":3,"MĂ¹i":4,"Ngá»":5,"Tá»µ":6,"ThĂ¬n":7,"MĂ£o":8,"Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12 },
+  "ThiĂªn HĂ¬nh": { "Dáº­u":1,"Tuáº¥t":2,"Há»£i":3,"TĂ½":4,"Sá»­u":5,"Dáº§n":6,"MĂ£o":7,"ThĂ¬n":8,"Tá»µ":9,"Ngá»":10,"MĂ¹i":11,"ThĂ¢n":12 },
+  "ThiĂªn RiĂªu": { "Sá»­u":1,"Dáº§n":2,"MĂ£o":3,"ThĂ¬n":4,"Tá»µ":5,"Ngá»":6,"MĂ¹i":7,"ThĂ¢n":8,"Dáº­u":9,"Tuáº¥t":10,"Há»£i":11,"TĂ½":12 },
+  "ThiĂªn Y":    { "Sá»­u":1,"Dáº§n":2,"MĂ£o":3,"ThĂ¬n":4,"Tá»µ":5,"Ngá»":6,"MĂ¹i":7,"ThĂ¢n":8,"Dáº­u":9,"Tuáº¥t":10,"Há»£i":11,"TĂ½":12 },
+  "ThiĂªn Giáº£i": { "ThĂ¢n":1,"Dáº­u":2,"Tuáº¥t":3,"Há»£i":4,"TĂ½":5,"Sá»­u":6,"Dáº§n":7,"MĂ£o":8,"ThĂ¬n":9,"Tá»µ":10,"Ngá»":11,"MĂ¹i":12 },
+  "Äá»‹a Giáº£i":   { "MĂ¹i":1,"ThĂ¢n":2,"Dáº­u":3,"Tuáº¥t":4,"Há»£i":5,"TĂ½":6,"Sá»­u":7,"Dáº§n":8,"MĂ£o":9,"ThĂ¬n":10,"Tá»µ":11,"Ngá»":12 }
 };
 
 // ===========================================================
-// 🔹 BẢNG TRA GIỜ SINH (từ tháng + cung Mệnh → Giờ sinh)
+// đŸ”¹ Báº¢NG TRA GIá»œ SINH (tá»« thĂ¡ng + cung Má»‡nh â†’ Giá» sinh)
 // ===========================================================
 const BANG_GIO_MENH = {
-  1: ["Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão"],
-  2: ["Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn"],
-  3: ["Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ"],
-  4: ["Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ"],
-  5: ["Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi"],
-  6: ["Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân"],
-  7: ["Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu"],
-  8: ["Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất"],
-  9: ["Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi"],
-  10:["Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý"],
-  11:["Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu"],
-  12:["Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần"]
+  1: ["Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o"],
+  2: ["MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n"],
+  3: ["ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ"],
+  4: ["Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»"],
+  5: ["Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i"],
+  6: ["MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n"],
+  7: ["ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u"],
+  8: ["Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t"],
+  9: ["Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i"],
+  10:["Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½"],
+  11:["TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u"],
+  12:["Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n"]
 };
-const GIO_LIST = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+const GIO_LIST = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
 // ===========================================================
-// 🔹 HÀM TRA GIỜ SINH TỪ THÁNG + CUNG MỆNH
+// đŸ”¹ HĂ€M TRA GIá»œ SINH Tá»ª THĂNG + CUNG Má»†NH
 // ===========================================================
 function timGioSinhTheoMenh(thang, menhCung) {
   const hang = BANG_GIO_MENH[thang];
@@ -1941,25 +1946,25 @@ function timGioSinhTheoMenh(thang, menhCung) {
 }
 
 // ===========================================================
-// 🔹 KHỞI TẠO DROPDOWN & TRA NGƯỢC THÁNG + GIỜ
+// đŸ”¹ KHá»I Táº O DROPDOWN & TRA NGÆ¯á»¢C THĂNG + GIá»œ
 // ===========================================================
 function khoiTaoSaoThang() {
   const selectSao = document.getElementById("saoThangSelect");
   const selectViTri = document.getElementById("saoThangViTri");
   if (!selectSao || !selectViTri) return;
 
-  // Danh sách sao
+  // Danh sĂ¡ch sao
   const saoList = Object.keys(BANG_THANG_SINH_SAO);
-  selectSao.innerHTML = '<option value="">— Chọn Sao —</option>';
+  selectSao.innerHTML = '<option value="">â€” Chá»n Sao â€”</option>';
   saoList.forEach(s=>{
     const opt=document.createElement("option");
     opt.value=s; opt.textContent=s;
     selectSao.appendChild(opt);
   });
 
-  // Danh sách 12 cung
-  const cungList=["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  selectViTri.innerHTML='<option value="">— Chọn Cung —</option>';
+  // Danh sĂ¡ch 12 cung
+  const cungList=["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  selectViTri.innerHTML='<option value="">â€” Chá»n Cung â€”</option>';
   cungList.forEach(c=>{
     const opt=document.createElement("option");
     opt.value=c; opt.textContent=c;
@@ -1968,11 +1973,11 @@ function khoiTaoSaoThang() {
 
   selectSao.addEventListener("change", xacDinhThangSinhTuSao);
   selectViTri.addEventListener("change", xacDinhThangSinhTuSao);
-  console.log("✅ Sự kiện onchange đã được gắn thành công.");
+  console.log("âœ… Sá»± kiá»‡n onchange Ä‘Ă£ Ä‘Æ°á»£c gáº¯n thĂ nh cĂ´ng.");
 }
 
 // ===========================================================
-// 🔹 HÀM XÁC ĐỊNH THÁNG & GIỜ SINH
+// đŸ”¹ HĂ€M XĂC Äá»NH THĂNG & GIá»œ SINH
 // ===========================================================
 function xacDinhThangSinhTuSao() {
   const sao = document.getElementById("saoThangSelect").value;
@@ -1982,60 +1987,60 @@ function xacDinhThangSinhTuSao() {
 
   if (!box) return;
   if (!sao || !cung) {
-    box.innerHTML = '<i>⚠️ Vui lòng chọn đủ Tên sao và Vị trí an.</i>';
+    box.innerHTML = '<i>â ï¸ Vui lĂ²ng chá»n Ä‘á»§ TĂªn sao vĂ  Vá»‹ trĂ­ an.</i>';
     return;
   }
 
   const thang = BANG_THANG_SINH_SAO[sao]?.[cung];
   if (!thang) {
-    box.innerHTML = `❌ Sao <b>${sao}</b> an tại <b>${cung}</b> chưa có dữ liệu tháng sinh.`;
+    box.innerHTML = `âŒ Sao <b>${sao}</b> an táº¡i <b>${cung}</b> chÆ°a cĂ³ dá»¯ liá»‡u thĂ¡ng sinh.`;
     return;
   }
 
-  // Tính giờ sinh (nếu biết cung Mệnh thật)
+  // TĂ­nh giá» sinh (náº¿u biáº¿t cung Má»‡nh tháº­t)
   let gioSinh = null;
   if (menhCung) {
     gioSinh = timGioSinhTheoMenh(thang, menhCung);
   }
 
-  let html = `✅ Sao <b>${sao}</b> an tại <b>${cung}</b> → 
-  <span style="color:#006400;">Tháng sinh âm lịch là <b>tháng ${thang}</b></span>`;
+  let html = `âœ… Sao <b>${sao}</b> an táº¡i <b>${cung}</b> â†’ 
+  <span style="color:#006400;">ThĂ¡ng sinh Ă¢m lá»‹ch lĂ  <b>thĂ¡ng ${thang}</b></span>`;
 
   if (gioSinh)
-    html += `<br>🕒 Giờ sinh phù hợp theo Mệnh (${menhCung}) là: <b style="color:#b22222;">Giờ ${gioSinh}</b>`;
+    html += `<br>đŸ•’ Giá» sinh phĂ¹ há»£p theo Má»‡nh (${menhCung}) lĂ : <b style="color:#b22222;">Giá» ${gioSinh}</b>`;
   else
-    html += `<br><i>⚠️ Chưa xác định được cung Mệnh nên chưa tra được Giờ sinh.</i>`;
+    html += `<br><i>â ï¸ ChÆ°a xĂ¡c Ä‘á»‹nh Ä‘Æ°á»£c cung Má»‡nh nĂªn chÆ°a tra Ä‘Æ°á»£c Giá» sinh.</i>`;
 
 
-// ✅ Lưu biến toàn cục để phần 7 truy cập
+// âœ… LÆ°u biáº¿n toĂ n cá»¥c Ä‘á»ƒ pháº§n 7 truy cáº­p
 window.thangSinhGlobal = thang;
 window.gioSinhGlobal = gioSinh;
 
   box.innerHTML = html;
 }
 
-// Gọi khi trang tải xong
+// Gá»i khi trang táº£i xong
 window.addEventListener("load", khoiTaoSaoThang);
 
-const CUNG_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-const GIO_CHI   = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+const CUNG_TUVI = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+const GIO_CHI   = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
 // =======================================================
-// 🔹 TẠO DROPDOWN 1 SAO (Ân Quang / Thiên Quý / Tam Thai / Bát Tọa)
+// đŸ”¹ Táº O DROPDOWN 1 SAO (Ă‚n Quang / ThiĂªn QuĂ½ / Tam Thai / BĂ¡t Tá»a)
 // =======================================================
 function khoiTaoSaoNgay() {
   const saoSelect = document.getElementById("saoNgaySelect");
   const viTriSelect = document.getElementById("saoNgayViTri");
   if (!saoSelect || !viTriSelect) return;
 
-  saoSelect.innerHTML = `<option value="">— Chọn Sao —</option>
-    <option value="An Quang">Ân Quang</option>
-    <option value="Thien Quy">Thiên Quý</option>
+  saoSelect.innerHTML = `<option value="">â€” Chá»n Sao â€”</option>
+    <option value="An Quang">Ă‚n Quang</option>
+    <option value="Thien Quy">ThiĂªn QuĂ½</option>
     <option value="Tam Thai">Tam Thai</option>
-    <option value="Bat Toa">Bát Tọa</option>`;
+    <option value="Bat Toa">BĂ¡t Tá»a</option>`;
 
-  viTriSelect.innerHTML = `<option value="">— Chọn Cung —</option>`;
-  ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"].forEach(c=>{
+  viTriSelect.innerHTML = `<option value="">â€” Chá»n Cung â€”</option>`;
+  ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"].forEach(c=>{
     const opt=document.createElement("option");
     opt.value=c; opt.textContent=c;
     viTriSelect.appendChild(opt);
@@ -2050,30 +2055,30 @@ function traNgayTuMotSao() {
   const cung = document.getElementById("saoNgayViTri").value;
   const box  = document.getElementById("ketQuaNgaySinh");
   if (!sao || !cung) {
-    box.innerHTML = "<i>⚠️ Vui lòng chọn Sao và Vị trí an.</i>";
+    box.innerHTML = "<i>â ï¸ Vui lĂ²ng chá»n Sao vĂ  Vá»‹ trĂ­ an.</i>";
     return;
   }
 
-  // ✅ Lấy tháng & giờ từ phần 6
+  // âœ… Láº¥y thĂ¡ng & giá» tá»« pháº§n 6
   const gioSinh = window.gioSinhGlobal || null;
   const thangSinh = window.thangSinhGlobal || null;
   const menhCung = document.getElementById("ketQuaMenh")?.dataset?.menh || "?";
 
   if (!gioSinh || !thangSinh) {
-    box.innerHTML = "<i>⚠️ Chưa có dữ liệu tháng và giờ sinh (hãy tra Sao theo tháng trước).</i>";
+    box.innerHTML = "<i>â ï¸ ChÆ°a cĂ³ dá»¯ liá»‡u thĂ¡ng vĂ  giá» sinh (hĂ£y tra Sao theo thĂ¡ng trÆ°á»›c).</i>";
     return;
   }
 
-  // ✅ Chuẩn bị biến toàn cục
+  // âœ… Chuáº©n bá»‹ biáº¿n toĂ n cá»¥c
   let ketQuaText = "";
-  let ngayList = [];   // 👈 khai báo ngay đây để toàn hàm dùng được
+  let ngayList = [];   // đŸ‘ˆ khai bĂ¡o ngay Ä‘Ă¢y Ä‘á»ƒ toĂ n hĂ m dĂ¹ng Ä‘Æ°á»£c
 
-  // === ÂN QUANG ===
+  // === Ă‚N QUANG ===
   if (sao === "An Quang") {
-    const CUNG_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-    const GIO_CHI   = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+    const CUNG_TUVI = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+    const GIO_CHI   = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
-    const posTuat = CUNG_TUVI.indexOf("Tuất");
+    const posTuat = CUNG_TUVI.indexOf("Tuáº¥t");
     const gioIndex = GIO_CHI.indexOf(gioSinh);
     const posAnQuang = CUNG_TUVI.indexOf(cung);
 
@@ -2085,20 +2090,20 @@ function traNgayTuMotSao() {
     for (let i = ngay; i <= 30; i += 12) ngayList.push(i);
 
     ketQuaText = `
-      📅 Sao <b>Ân Quang</b> an tại <b>${cung}</b><br>
-      ➜ <span style="color:#006400;">Ngày sinh âm lịch có thể là <b>${ngayList.join(", ")}</b></span>
-      <br><small>(Giờ ${gioSinh}, tháng ${thangSinh})</small>
+      đŸ“… Sao <b>Ă‚n Quang</b> an táº¡i <b>${cung}</b><br>
+      âœ <span style="color:#006400;">NgĂ y sinh Ă¢m lá»‹ch cĂ³ thá»ƒ lĂ  <b>${ngayList.join(", ")}</b></span>
+      <br><small>(Giá» ${gioSinh}, thĂ¡ng ${thangSinh})</small>
     `;
   }
 
-  // === THIÊN QUÝ ===
+  // === THIĂN QUĂ ===
   else if (sao === "Thien Quy") {
-    const CUNG_THUAN = ["Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão"];
-    const GIO_CHI   = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+    const CUNG_THUAN = ["ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o"];
+    const GIO_CHI   = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
     const gioIndex = GIO_CHI.indexOf(gioSinh);
     const posThienQuy = CUNG_THUAN.indexOf(cung);
-    const posVanKhuc = (CUNG_THUAN.indexOf("Thìn") + gioIndex) % 12;
+    const posVanKhuc = (CUNG_THUAN.indexOf("ThĂ¬n") + gioIndex) % 12;
     const kc = (posVanKhuc - posThienQuy + 12) % 12;
     let ngay = kc + 2;
     if (ngay > 12) ngay -= 12;
@@ -2106,71 +2111,71 @@ function traNgayTuMotSao() {
     for (let i = ngay; i <= 30; i += 12) ngayList.push(i);
 
     ketQuaText = `
-      📅 Sao <b>Thiên Quý</b> an tại <b>${cung}</b><br>
-      ➜ <span style="color:#006400;">Ngày sinh âm lịch có thể là <b>${ngayList.join(", ")}</b></span>
-      <br><small>(Giờ ${gioSinh}, tháng ${thangSinh})</small>
+      đŸ“… Sao <b>ThiĂªn QuĂ½</b> an táº¡i <b>${cung}</b><br>
+      âœ <span style="color:#006400;">NgĂ y sinh Ă¢m lá»‹ch cĂ³ thá»ƒ lĂ  <b>${ngayList.join(", ")}</b></span>
+      <br><small>(Giá» ${gioSinh}, thĂ¡ng ${thangSinh})</small>
     `;
   }
 
   // === TAM THAI ===
   else if (sao === "Tam Thai") {
-    const VONG_TT = ["Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão"];
-    const posTaPhu = (VONG_TT.indexOf("Thìn") + (thangSinh - 1)) % 12;
+    const VONG_TT = ["ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o"];
+    const posTaPhu = (VONG_TT.indexOf("ThĂ¬n") + (thangSinh - 1)) % 12;
     const posTT = VONG_TT.indexOf(cung);
     const kc = (posTT - posTaPhu + 12) % 12;
     const ngay = kc + 1;
     for (let i = ngay; i <= 30; i += 12) ngayList.push(i);
 
     ketQuaText = `
-      📅 Sao <b>Tam Thai</b> an tại <b>${cung}</b><br>
-      ➜ <span style="color:#006400;">Ngày sinh âm lịch có thể là <b>${ngayList.join(", ")}</b></span>
-      <br><small>(Giờ ${gioSinh}, tháng ${thangSinh})</small>
+      đŸ“… Sao <b>Tam Thai</b> an táº¡i <b>${cung}</b><br>
+      âœ <span style="color:#006400;">NgĂ y sinh Ă¢m lá»‹ch cĂ³ thá»ƒ lĂ  <b>${ngayList.join(", ")}</b></span>
+      <br><small>(Giá» ${gioSinh}, thĂ¡ng ${thangSinh})</small>
     `;
   }
 
-  // === BÁT TỌA ===
+  // === BĂT Tá»ŒA ===
   else if (sao === "Bat Toa") {
-    const VONG_BT = ["Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu"];
-    const posHuuBat = (VONG_BT.indexOf("Tuất") - (thangSinh - 1) + 12*10) % 12;
+    const VONG_BT = ["Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u"];
+    const posHuuBat = (VONG_BT.indexOf("Tuáº¥t") - (thangSinh - 1) + 12*10) % 12;
     const posBT = VONG_BT.indexOf(cung);
     const kc = (posHuuBat - posBT + 12) % 12;
     const ngay = kc + 1;
     for (let i = ngay; i <= 30; i += 12) ngayList.push(i);
 
     ketQuaText = `
-      📅 Sao <b>Bát Tọa</b> an tại <b>${cung}</b><br>
-      ➜ <span style="color:#006400;">Ngày sinh âm lịch có thể là <b>${ngayList.join(", ")}</b></span>
-      <br><small>(Giờ ${gioSinh}, tháng ${thangSinh})</small>
+      đŸ“… Sao <b>BĂ¡t Tá»a</b> an táº¡i <b>${cung}</b><br>
+      âœ <span style="color:#006400;">NgĂ y sinh Ă¢m lá»‹ch cĂ³ thá»ƒ lĂ  <b>${ngayList.join(", ")}</b></span>
+      <br><small>(Giá» ${gioSinh}, thĂ¡ng ${thangSinh})</small>
     `;
   }
 
-  // === Nếu chưa có công thức
+  // === Náº¿u chÆ°a cĂ³ cĂ´ng thá»©c
   else {
-    ketQuaText = `<i>⚠️ Sao ${sao} chưa có công thức tra ngược.</i>`;
+    ketQuaText = `<i>â ï¸ Sao ${sao} chÆ°a cĂ³ cĂ´ng thá»©c tra ngÆ°á»£c.</i>`;
   }
 
-  // ✅ In kết quả phần 7
+  // âœ… In káº¿t quáº£ pháº§n 7
   box.innerHTML = ketQuaText;
 
-  // ✅ Lưu lại danh sách ngày của phần 7
+  // âœ… LÆ°u láº¡i danh sĂ¡ch ngĂ y cá»§a pháº§n 7
   window.ngayAnQuang = ngayList;
 
-  // ✅ So khớp giao với phần 5 (Chính tinh)
+  // âœ… So khá»›p giao vá»›i pháº§n 5 (ChĂ­nh tinh)
   if (window.ngayChinhTinh && window.ngayChinhTinh.length && window.ngayAnQuang.length) {
     const ngayTrung = window.ngayAnQuang.filter(n => window.ngayChinhTinh.includes(n));
     if (ngayTrung.length > 0) {
       box.innerHTML += `
         <p style="margin-top:6px;">
-          🔹 <b>Giao với ngày phần Chính Tinh:</b>
+          đŸ”¹ <b>Giao vá»›i ngĂ y pháº§n ChĂ­nh Tinh:</b>
           <b style="color:#007700;">${ngayTrung.join(", ")}</b>
         </p>`;
     } else {
       box.innerHTML += `
         <p style="margin-top:6px;color:#888;">
-          ⚠️ Không có ngày trùng giữa phần Chính Tinh và Ân Quang / Thiên Quý.
+          â ï¸ KhĂ´ng cĂ³ ngĂ y trĂ¹ng giá»¯a pháº§n ChĂ­nh Tinh vĂ  Ă‚n Quang / ThiĂªn QuĂ½.
         </p>`;
     }
-	// ✅ Lưu toàn cục để phần tra ngược tổng hợp
+	// âœ… LÆ°u toĂ n cá»¥c Ä‘á»ƒ pháº§n tra ngÆ°á»£c tá»•ng há»£p
 window.ngayGiaoChinhTinh = ngayTrung;
 
   }
@@ -2181,27 +2186,27 @@ window.ngayGiaoChinhTinh = ngayTrung;
 window.addEventListener("load", khoiTaoSaoNgay);
 
 /* =======================================================
-   🔹 KHỞI TẠO DỮ LIỆU & HÀM PHÂN TÍCH
+   đŸ”¹ KHá»I Táº O Dá»® LIá»†U & HĂ€M PHĂ‚N TĂCH
    ======================================================= */
 document.addEventListener("DOMContentLoaded", ()=>{
-  const CUNG_LIST = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const CUNG_CHUC = ["Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch","Tật Ách","Thiên Di","Nô Bộc","Quan Lộc","Điền Trạch","Phúc Đức","Phụ Mẫu"];
-  const CUC_LOAI = ["Thủy nhị cục","Mộc tam cục","Kim tứ cục","Thổ ngũ cục","Hỏa lục cục"];
-  const CAN_LIST = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
-  const THAI_TUE = ["Thái Tuế","Thiếu Dương","Tang Môn","Thiếu Âm","Quan Phù","Tử Phù","Tuế Phá","Long Đức","Bạch Hổ","Phúc Đức","Điếu Khách","Trực Phù"];
-  const BAC_SI = ["Bác Sĩ","Lực Sĩ","Thanh Long","Tiểu Hao","Tướng Quân","Tấu Thư","Phi Liêm","Hỷ Thần","Bệnh Phù","Đại Hao","Phục Binh","Quan Phủ"];
-  const TU_VI_HE = ["Tử Vi","Thiên Phủ","Thiên Cơ","Thái Dương","Liêm Trinh","Cự Môn","Thiên Tướng","Thiên Lương","Thất Sát","Vũ Khúc","Tham Lang","Thiên Đồng","Phá Quân","Thái Âm"];
-  const PHU_HE = ["Không",...TU_VI_HE];
-  const SAO_THANG = ["Tả Phù","Hữu Bật","Thiên Hình","Thiên Riêu","Thiên Y","Thiên Giải","Địa Giải"];
-  const SAO_GIO = ["Văn Xương","Văn Khúc","Địa Không","Địa Kiếp","Thai Phụ","Phong Cáo","Linh Tinh","Hỏa Tinh"];
-  const SAO_NGAY = ["Ân Quang","Thiên Quý","Tam Thai","Bát Tọa"];
+  const CUNG_LIST = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const CUNG_CHUC = ["Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch","Táº­t Ăch","ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c","Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u"];
+  const CUC_LOAI = ["Thá»§y nhá»‹ cá»¥c","Má»™c tam cá»¥c","Kim tá»© cá»¥c","Thá»• ngÅ© cá»¥c","Há»a lá»¥c cá»¥c"];
+  const CAN_LIST = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
+  const THAI_TUE = ["ThĂ¡i Tuáº¿","Thiáº¿u DÆ°Æ¡ng","Tang MĂ´n","Thiáº¿u Ă‚m","Quan PhĂ¹","Tá»­ PhĂ¹","Tuáº¿ PhĂ¡","Long Äá»©c","Báº¡ch Há»•","PhĂºc Äá»©c","Äiáº¿u KhĂ¡ch","Trá»±c PhĂ¹"];
+  const BAC_SI = ["BĂ¡c SÄ©","Lá»±c SÄ©","Thanh Long","Tiá»ƒu Hao","TÆ°á»›ng QuĂ¢n","Táº¥u ThÆ°","Phi LiĂªm","Há»· Tháº§n","Bá»‡nh PhĂ¹","Äáº¡i Hao","Phá»¥c Binh","Quan Phá»§"];
+  const TU_VI_HE = ["Tá»­ Vi","ThiĂªn Phá»§","ThiĂªn CÆ¡","ThĂ¡i DÆ°Æ¡ng","LiĂªm Trinh","Cá»± MĂ´n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","Tháº¥t SĂ¡t","VÅ© KhĂºc","Tham Lang","ThiĂªn Äá»“ng","PhĂ¡ QuĂ¢n","ThĂ¡i Ă‚m"];
+  const PHU_HE = ["KhĂ´ng",...TU_VI_HE];
+  const SAO_THANG = ["Táº£ PhĂ¹","Há»¯u Báº­t","ThiĂªn HĂ¬nh","ThiĂªn RiĂªu","ThiĂªn Y","ThiĂªn Giáº£i","Äá»‹a Giáº£i"];
+  const SAO_GIO = ["VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p","Thai Phá»¥","Phong CĂ¡o","Linh Tinh","Há»a Tinh"];
+  const SAO_NGAY = ["Ă‚n Quang","ThiĂªn QuĂ½","Tam Thai","BĂ¡t Tá»a"];
 
  const CUC_SO_MAP = {
-  "Thủy nhị cục": [2,12,22,32,42,52,62,72,82,92,102,112],
-  "Mộc tam cục": [3,13,23,33,43,53,63,73,83,93,103,113],
-  "Kim tứ cục": [4,14,24,34,44,54,64,74,84,94,104,114],
-  "Thổ ngũ cục": [5,15,25,35,45,55,65,75,85,95,105,115],
-  "Hỏa lục cục": [6,16,26,36,46,56,66,76,86,96,106,116]
+  "Thá»§y nhá»‹ cá»¥c": [2,12,22,32,42,52,62,72,82,92,102,112],
+  "Má»™c tam cá»¥c": [3,13,23,33,43,53,63,73,83,93,103,113],
+  "Kim tá»© cá»¥c": [4,14,24,34,44,54,64,74,84,94,104,114],
+  "Thá»• ngÅ© cá»¥c": [5,15,25,35,45,55,65,75,85,95,105,115],
+  "Há»a lá»¥c cá»¥c": [6,16,26,36,46,56,66,76,86,96,106,116]
 };
 
 
@@ -2211,13 +2216,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
     el.innerHTML = arr.map(x=>`<option>${x}</option>`).join("");
   }
 
-  // --- Khởi tạo dropdown ---
+  // --- Khá»Ÿi táº¡o dropdown ---
   fillSelect("cungChucSelect", CUNG_CHUC);
   fillSelect("cungChucViTri", CUNG_LIST);
   fillSelect("thaiTueSelect", THAI_TUE);
   fillSelect("thaiTueViTri", CUNG_LIST);
   fillSelect("cucLoaiSelect", CUC_LOAI);
-  fillSelect("cucSoSelect", CUC_SO_MAP["Thủy nhị cục"]);
+  fillSelect("cucSoSelect", CUC_SO_MAP["Thá»§y nhá»‹ cá»¥c"]);
   fillSelect("cucViTriSelect", CUNG_LIST);
   fillSelect("cucCanSelect", CAN_LIST);
   fillSelect("bacSiSelect", BAC_SI);
@@ -2230,49 +2235,49 @@ document.addEventListener("DOMContentLoaded", ()=>{
   fillSelect("saoNgaySelect", SAO_NGAY);
   fillSelect("saoNgayViTri", CUNG_LIST);
 
-  // --- Tự khởi tạo hiển thị mệnh lần đầu ---
+  // --- Tá»± khá»Ÿi táº¡o hiá»ƒn thá»‹ má»‡nh láº§n Ä‘áº§u ---
   tinhCungMenh();
 
-  // --- Khi đổi loại cục ---
+  // --- Khi Ä‘á»•i loáº¡i cá»¥c ---
   document.getElementById("cucLoaiSelect").addEventListener("change",(e)=>{
     const loai = e.target.value;
     fillSelect("cucSoSelect", CUC_SO_MAP[loai] || []);
   });
 
-  // --- Chính tinh phụ thuộc chính tinh 1 ---
+  // --- ChĂ­nh tinh phá»¥ thuá»™c chĂ­nh tinh 1 ---
   window.updateChinhTinhPhu = function(){
     const s1 = document.getElementById("tuviSelect").value;
     const DOI_TINH_MAP = {
-      "Tử Vi": ["Thiên Phủ","Thiên Tướng","Thất Sát","Phá Quân","Tham Lang"],
-      "Thiên Phủ": ["Tử Vi","Vũ Khúc","Liêm Trinh"],
-      "Thái Dương": ["Thái Âm","Cự Môn","Thiên Lương"],
-      "Thái Âm": ["Thái Dương","Thiên Cơ","Thiên Đồng"],
-      "Liêm Trinh": ["Thất Sát","Thiên Phủ","Tham Lang","Phá Quân","Thiên Tướng"],
-      "Vũ Khúc": ["Thiên Tướng","Thiên Phủ","Tham Lang","Thất Sát","Phá Quân"]
+      "Tá»­ Vi": ["ThiĂªn Phá»§","ThiĂªn TÆ°á»›ng","Tháº¥t SĂ¡t","PhĂ¡ QuĂ¢n","Tham Lang"],
+      "ThiĂªn Phá»§": ["Tá»­ Vi","VÅ© KhĂºc","LiĂªm Trinh"],
+      "ThĂ¡i DÆ°Æ¡ng": ["ThĂ¡i Ă‚m","Cá»± MĂ´n","ThiĂªn LÆ°Æ¡ng"],
+      "ThĂ¡i Ă‚m": ["ThĂ¡i DÆ°Æ¡ng","ThiĂªn CÆ¡","ThiĂªn Äá»“ng"],
+      "LiĂªm Trinh": ["Tháº¥t SĂ¡t","ThiĂªn Phá»§","Tham Lang","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng"],
+      "VÅ© KhĂºc": ["ThiĂªn TÆ°á»›ng","ThiĂªn Phá»§","Tham Lang","Tháº¥t SĂ¡t","PhĂ¡ QuĂ¢n"]
     };
-    const allowed = ["Không", ...(DOI_TINH_MAP[s1] || [])];
+    const allowed = ["KhĂ´ng", ...(DOI_TINH_MAP[s1] || [])];
     fillSelect("phuSelect", allowed);
   };
 
   // =====================================================
-  // 🧮 PHÂN TÍCH TRA NGƯỢC LÁ SỐ
+  // đŸ§® PHĂ‚N TĂCH TRA NGÆ¯á»¢C LĂ Sá»
   // =====================================================
   document.getElementById("btnPhanTich").addEventListener("click",()=>{
-  // 👉 LẤY DỮ LIỆU NĂM SINH TỪ PHẦN 2 VÀ 4
-const chiNam = document.getElementById("ketQuaChiNam")?.textContent.split("mệnh:")[0].trim() || "?";
+  // đŸ‘‰ Láº¤Y Dá»® LIá»†U NÄ‚M SINH Tá»ª PHáº¦N 2 VĂ€ 4
+const chiNam = document.getElementById("ketQuaChiNam")?.textContent.split("má»‡nh:")[0].trim() || "?";
 const canNam = (window.ketQuaBacSi?.giaoCan?.[0]) || "?";
 const namSinhText = `${canNam} ${chiNam}`;
 // =====================================================
-// 🔹 QUY ĐỔI CAN CHI → CÁC NĂM DƯƠNG LỊCH (1900–2100)
+// đŸ”¹ QUY Äá»”I CAN CHI â†’ CĂC NÄ‚M DÆ¯Æ NG Lá»CH (1900â€“2100)
 // =====================================================
-const CAN = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
-const CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+const CAN = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
+const CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
-// Tạo bảng 60 năm Can Chi
+// Táº¡o báº£ng 60 nÄƒm Can Chi
 function taoBangCanChi() {
   const danhSach = [];
   let canIndex = 0, chiIndex = 0;
-  for (let nam = 1864; nam <= 2100; nam++) { // 1864 = Giáp Tý
+  for (let nam = 1864; nam <= 2100; nam++) { // 1864 = GiĂ¡p TĂ½
     const canChi = CAN[canIndex] + " " + CHI[chiIndex];
     danhSach.push({ nam, canChi });
     canIndex = (canIndex + 1) % 10;
@@ -2283,7 +2288,7 @@ function taoBangCanChi() {
 
 const BANG_CAN_CHI = taoBangCanChi();
 
-// Hàm tìm các năm Dương lịch tương ứng
+// HĂ m tĂ¬m cĂ¡c nÄƒm DÆ°Æ¡ng lá»‹ch tÆ°Æ¡ng á»©ng
 function timNamTheoCanChi(canChi) {
   return BANG_CAN_CHI
     .filter(x => x.canChi === canChi && x.nam >= 1900 && x.nam <= 2100)
@@ -2303,40 +2308,40 @@ const namDuongTuongUng = timNamTheoCanChi(namSinhText);
     const saoNgay = saoNgaySelect.value, viTriSaoNgay = saoNgayViTri.value;
 
 
-    const THAI_TUE_CUNG = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-    const DIA_CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-    // 🔹 Ưu tiên lấy giới tính đã tính từ phần 3 (Cục số)
-// 🔹 Ưu tiên lấy giới tính đã tính từ phần 3 (Cục số)
+    const THAI_TUE_CUNG = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+    const DIA_CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+    // đŸ”¹ Æ¯u tiĂªn láº¥y giá»›i tĂ­nh Ä‘Ă£ tĂ­nh tá»« pháº§n 3 (Cá»¥c sá»‘)
+// đŸ”¹ Æ¯u tiĂªn láº¥y giá»›i tĂ­nh Ä‘Ă£ tĂ­nh tá»« pháº§n 3 (Cá»¥c sá»‘)
 let amDuongText = "";
 const ketQuaCucText = document.getElementById("ketQuaCuc")?.textContent || "";
 
-// Tách riêng phần giới tính (chỉ lấy cụm Dương/Âm Nam/Nữ)
-const matchGioiTinh = ketQuaCucText.match(/(Dương|Âm)\s+(Nam|Nữ)/);
+// TĂ¡ch riĂªng pháº§n giá»›i tĂ­nh (chá»‰ láº¥y cá»¥m DÆ°Æ¡ng/Ă‚m Nam/Ná»¯)
+const matchGioiTinh = ketQuaCucText.match(/(DÆ°Æ¡ng|Ă‚m)\s+(Nam|Ná»¯)/);
 if (matchGioiTinh) {
   amDuongText = `${matchGioiTinh[1]} ${matchGioiTinh[2]}`;
 }
 
-// Nếu phần 3 chưa có, lấy dự phòng từ phần 3.1 (Tràng Sinh)
+// Náº¿u pháº§n 3 chÆ°a cĂ³, láº¥y dá»± phĂ²ng tá»« pháº§n 3.1 (TrĂ ng Sinh)
 if (!amDuongText) {
   const trangSinhText = document.getElementById("ketQuaTrangSinh")?.textContent || "";
 
-  // Nếu có sẵn Dương/Âm Nam/Nữ thì lấy luôn
-  const matchTrangSinh = trangSinhText.match(/(Dương|Âm)\s+(Nam|Nữ)/);
+  // Náº¿u cĂ³ sáºµn DÆ°Æ¡ng/Ă‚m Nam/Ná»¯ thĂ¬ láº¥y luĂ´n
+  const matchTrangSinh = trangSinhText.match(/(DÆ°Æ¡ng|Ă‚m)\s+(Nam|Ná»¯)/);
   if (matchTrangSinh) {
     amDuongText = `${matchTrangSinh[1]} ${matchTrangSinh[2]}`;
   } else {
-    // Nếu chỉ có "Giới tính: Nam/Nữ" thì suy ra Âm Dương dựa theo chữ "Thuận"/"Nghịch"
-    const matchGioiTinh = trangSinhText.match(/Giới\s*tính\s*[:：]?\s*(Nam|Nữ)/i);
-    const matchChieu = trangSinhText.match(/(Thuận|Nghịch)/i);
+    // Náº¿u chá»‰ cĂ³ "Giá»›i tĂ­nh: Nam/Ná»¯" thĂ¬ suy ra Ă‚m DÆ°Æ¡ng dá»±a theo chá»¯ "Thuáº­n"/"Nghá»‹ch"
+    const matchGioiTinh = trangSinhText.match(/Giá»›i\s*tĂ­nh\s*[:ï¼]?\s*(Nam|Ná»¯)/i);
+    const matchChieu = trangSinhText.match(/(Thuáº­n|Nghá»‹ch)/i);
     if (matchGioiTinh) {
       const gioi = matchGioiTinh[1];
       const chieu = matchChieu ? matchChieu[1] : "";
-      // ⚙️ Quy tắc chuẩn Tử Vi: Thuận → Dương Nam / Âm Nữ ; Nghịch → Âm Nam / Dương Nữ
+      // â™ï¸ Quy táº¯c chuáº©n Tá»­ Vi: Thuáº­n â†’ DÆ°Æ¡ng Nam / Ă‚m Ná»¯ ; Nghá»‹ch â†’ Ă‚m Nam / DÆ°Æ¡ng Ná»¯
       let amDuong = "";
-      if (chieu === "Thuận" && gioi === "Nam") amDuong = "Dương";
-      else if (chieu === "Thuận" && gioi === "Nữ") amDuong = "Âm";
-      else if (chieu === "Nghịch" && gioi === "Nam") amDuong = "Âm";
-      else if (chieu === "Nghịch" && gioi === "Nữ") amDuong = "Dương";
+      if (chieu === "Thuáº­n" && gioi === "Nam") amDuong = "DÆ°Æ¡ng";
+      else if (chieu === "Thuáº­n" && gioi === "Ná»¯") amDuong = "Ă‚m";
+      else if (chieu === "Nghá»‹ch" && gioi === "Nam") amDuong = "Ă‚m";
+      else if (chieu === "Nghá»‹ch" && gioi === "Ná»¯") amDuong = "DÆ°Æ¡ng";
 
       amDuongText = `${amDuong} ${gioi}`.trim();
     }
@@ -2346,84 +2351,84 @@ if (!amDuongText) {
 
 
 
-// Nếu vẫn không có, lấy cách cũ theo Âm Dương mệnh
+// Náº¿u váº«n khĂ´ng cĂ³, láº¥y cĂ¡ch cÅ© theo Ă‚m DÆ°Æ¡ng má»‡nh
 if (!amDuongText) {
-  const isDuong = ["Dần","Ngọ","Tuất","Thân","Tý","Thìn"].includes(viTriThaiTue);
-  amDuongText = isDuong ? "Dương Nam / Âm Nữ" : "Dương Nữ / Âm Nam";
+  const isDuong = ["Dáº§n","Ngá»","Tuáº¥t","ThĂ¢n","TĂ½","ThĂ¬n"].includes(viTriThaiTue);
+  amDuongText = isDuong ? "DÆ°Æ¡ng Nam / Ă‚m Ná»¯" : "DÆ°Æ¡ng Ná»¯ / Ă‚m Nam";
 }
 
 
 
     const CUC_MAP = {
-      "Thủy nhị cục":"Thủy Nhị Cục",
-      "Mộc tam cục":"Mộc Tam Cục",
-      "Kim tứ cục":"Kim Tứ Cục",
-      "Thổ ngũ cục":"Thổ Ngũ Cục",
-      "Hỏa lục cục":"Hỏa Lục Cục"
+      "Thá»§y nhá»‹ cá»¥c":"Thá»§y Nhá»‹ Cá»¥c",
+      "Má»™c tam cá»¥c":"Má»™c Tam Cá»¥c",
+      "Kim tá»© cá»¥c":"Kim Tá»© Cá»¥c",
+      "Thá»• ngÅ© cá»¥c":"Thá»• NgÅ© Cá»¥c",
+      "Há»a lá»¥c cá»¥c":"Há»a Lá»¥c Cá»¥c"
     };
     const cucSo = CUC_MAP[loaiCuc] || loaiCuc;
 
     const LOC_TON_MAP = {
-      "Tỵ": ["Bính","Mậu"], "Ngọ": ["Đinh","Kỷ"], "Mùi": ["Canh","Ất"],
-      "Thân": ["Tân","Bính"], "Dậu": ["Nhâm","Đinh"], "Tuất": ["Quý","Mậu"],
-      "Hợi": ["Giáp","Kỷ"], "Tý": ["Ất","Canh"], "Sửu": ["Bính","Tân"],
-      "Dần": ["Đinh","Nhâm"], "Mão": ["Mậu","Quý"], "Thìn": ["Kỷ","Giáp"]
+      "Tá»µ": ["BĂ­nh","Máº­u"], "Ngá»": ["Äinh","Ká»·"], "MĂ¹i": ["Canh","áº¤t"],
+      "ThĂ¢n": ["TĂ¢n","BĂ­nh"], "Dáº­u": ["NhĂ¢m","Äinh"], "Tuáº¥t": ["QuĂ½","Máº­u"],
+      "Há»£i": ["GiĂ¡p","Ká»·"], "TĂ½": ["áº¤t","Canh"], "Sá»­u": ["BĂ­nh","TĂ¢n"],
+      "Dáº§n": ["Äinh","NhĂ¢m"], "MĂ£o": ["Máº­u","QuĂ½"], "ThĂ¬n": ["Ká»·","GiĂ¡p"]
     };
 
-    // TODO: Tính công thức chi tiết Tháng / Ngày / Giờ
-  // 🗓️ Lấy tháng sinh & giờ sinh từ phần 6 (nếu đã có)
+    // TODO: TĂ­nh cĂ´ng thá»©c chi tiáº¿t ThĂ¡ng / NgĂ y / Giá»
+  // đŸ—“ï¸ Láº¥y thĂ¡ng sinh & giá» sinh tá»« pháº§n 6 (náº¿u Ä‘Ă£ cĂ³)
 const thangTuSao = window.thangSinhGlobal || null;
 const gioTuSao = window.gioSinhGlobal || null;
 
 let thangSinh = "";
 if (thangTuSao) {
-  thangSinh = `Tháng sinh âm lịch là <b>tháng ${thangTuSao}</b>`;
+  thangSinh = `ThĂ¡ng sinh Ă¢m lá»‹ch lĂ  <b>thĂ¡ng ${thangTuSao}</b>`;
 } else {
-  thangSinh = `Đang tính theo sao tháng (${saoThang || "?"} tại ${viTriSaoThang || "?"})`;
+  thangSinh = `Äang tĂ­nh theo sao thĂ¡ng (${saoThang || "?"} táº¡i ${viTriSaoThang || "?"})`;
 }
 
-// 📅 Lấy ngày sinh từ phần 7 (nếu đã có)
-// 📅 Lấy ngày sinh từ phần 7 (nếu đã có)
+// đŸ“… Láº¥y ngĂ y sinh tá»« pháº§n 7 (náº¿u Ä‘Ă£ cĂ³)
+// đŸ“… Láº¥y ngĂ y sinh tá»« pháº§n 7 (náº¿u Ä‘Ă£ cĂ³)
 let ngaySinh = "";
 const ngayList = window.ngayAnQuang || [];
 const ngayGiao = window.ngayGiaoChinhTinh || [];
 
 if (ngayGiao.length > 0) {
-  // Ưu tiên lấy ngày giao vì đây là kết quả chính xác nhất
-  ngaySinh = `Ngày âm lịch là <b>${ngayGiao[0]}</b>`;
+  // Æ¯u tiĂªn láº¥y ngĂ y giao vĂ¬ Ä‘Ă¢y lĂ  káº¿t quáº£ chĂ­nh xĂ¡c nháº¥t
+  ngaySinh = `NgĂ y Ă¢m lá»‹ch lĂ  <b>${ngayGiao[0]}</b>`;
 } else if (ngayList.length > 0) {
-  // Nếu chưa có giao thì hiển thị danh sách dự đoán
-  ngaySinh = `Ngày âm lịch có thể là ${ngayList.join(", ")}`;
+  // Náº¿u chÆ°a cĂ³ giao thĂ¬ hiá»ƒn thá»‹ danh sĂ¡ch dá»± Ä‘oĂ¡n
+  ngaySinh = `NgĂ y Ă¢m lá»‹ch cĂ³ thá»ƒ lĂ  ${ngayList.join(", ")}`;
 } else {
-  ngaySinh = `Đang tính theo sao ngày (${saoNgay || "?"} tại ${viTriSaoNgay || "?"})`;
+  ngaySinh = `Äang tĂ­nh theo sao ngĂ y (${saoNgay || "?"} táº¡i ${viTriSaoNgay || "?"})`;
 }
 
-const gioSinh = gioTuSao ? `Giờ ${gioTuSao}` : "?";
+const gioSinh = gioTuSao ? `Giá» ${gioTuSao}` : "?";
 
 
   const ketQua = `
-📜 KẾT QUẢ TRA NGƯỢC
-──────────────────────────────
-• Năm sinh: ${namSinhText}
-  ↳ Năm Dương lịch tương ứng: ${namDuongTuongUng.join(", ")}
-• Giới tính: ${amDuongText}
-• Tháng sinh: ${thangSinh}
-• Ngày sinh: ${ngaySinh}
-• Giờ sinh: ${gioSinh}
-──────────────────────────────`;
+đŸ“œ Káº¾T QUáº¢ TRA NGÆ¯á»¢C
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+â€¢ NÄƒm sinh: ${namSinhText}
+  â†³ NÄƒm DÆ°Æ¡ng lá»‹ch tÆ°Æ¡ng á»©ng: ${namDuongTuongUng.join(", ")}
+â€¢ Giá»›i tĂ­nh: ${amDuongText}
+â€¢ ThĂ¡ng sinh: ${thangSinh}
+â€¢ NgĂ y sinh: ${ngaySinh}
+â€¢ Giá» sinh: ${gioSinh}
+â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€`;
 document.getElementById("traNguocKetQua").innerHTML = ketQua;
 
   });
 });
 
 /* =====================================================
-   📅 PHẦN 5: BẢNG KHỞI THÁNG & CHI TIẾT THÁNG ÂM
+   đŸ“… PHáº¦N 5: Báº¢NG KHá»I THĂNG & CHI TIáº¾T THĂNG Ă‚M
    -----------------------------------------------------
-   - Dropdown năm có thể cuộn, gõ
-   - Mặc định hiển thị năm 2025 khi mở trang
+   - Dropdown nÄƒm cĂ³ thá»ƒ cuá»™n, gĂµ
+   - Máº·c Ä‘á»‹nh hiá»ƒn thá»‹ nÄƒm 2025 khi má»Ÿ trang
    ===================================================== */
 
-// 🧭 Khởi tạo dropdown năm (1900–2100)
+// đŸ§­ Khá»Ÿi táº¡o dropdown nÄƒm (1900â€“2100)
 function initYearDropdown() {
   const sel = document.getElementById("monthYear");
   sel.innerHTML = "";
@@ -2431,27 +2436,27 @@ function initYearDropdown() {
     const opt = document.createElement("option");
     opt.value = y;
     opt.textContent = y;
-    if (y === 2025) opt.selected = true; // 🟢 Năm mặc định
+    if (y === 2025) opt.selected = true; // đŸŸ¢ NÄƒm máº·c Ä‘á»‹nh
     sel.appendChild(opt);
   }
 }
 
-// 🟢 Khi đổi năm → cập nhật bảng
+// đŸŸ¢ Khi Ä‘á»•i nÄƒm â†’ cáº­p nháº­t báº£ng
 function updateMonthTable() {
   const nam = parseInt(document.getElementById("monthYear").value);
   if (!isNaN(nam)) createMonthTable(nam);
 }
 
-// ===== BẢNG KHỞI THÁNG =====
+// ===== Báº¢NG KHá»I THĂNG =====
 function createMonthTable(nam) {
   const canChiNam = canChiYear(nam);
   const [can] = canChiNam.split(" ");
   const leap = getLeapMonthOfYear(nam, TZ);
 
-  document.getElementById("canChiLabel").textContent = "Năm: " + canChiNam;
+  document.getElementById("canChiLabel").textContent = "NÄƒm: " + canChiNam;
 
-  const header = ["<tr><th>Tháng</th>"];
-  const start  = ["<tr><td>Khởi</td>"];
+  const header = ["<tr><th>ThĂ¡ng</th>"];
+  const start  = ["<tr><td>Khá»Ÿi</td>"];
   const cc     = ["<tr><td>Can Chi</td>"];
 
   function add(thang, isLeap) {
@@ -2459,7 +2464,7 @@ function createMonthTable(nam) {
     if (!s || s[0] === 0) return;
     const cT = CAN_THANG[can][thang - 1];
     const ch = CHI[(thang + 1) % 12];
-    const lb = isLeap ? `${thang} (nhuận)` : thang;
+    const lb = isLeap ? `${thang} (nhuáº­n)` : thang;
     header.push(`<th style="cursor:pointer;">${lb}</th>`);
     start.push(`<td>${s[0]}/${s[1]}</td>`);
     cc.push(`<td>${cT} ${ch}</td>`);
@@ -2482,7 +2487,7 @@ function createMonthTable(nam) {
   attachMonthClick(nam);
 }
 
-// ===== XỬ LÝ CLICK TRÊN BẢNG =====
+// ===== Xá»¬ LĂ CLICK TRĂN Báº¢NG =====
 function attachMonthClick(nam) {
   const table = document.getElementById("monthTable");
   if (!table) return;
@@ -2497,35 +2502,35 @@ function attachMonthClick(nam) {
         if (cell) cell.style.background = "#fdd";
       }
       const text = h.textContent.trim();
-      const match = text.match(/^(\d+)(?:\s*\(nhuận\))?$/);
+      const match = text.match(/^(\d+)(?:\s*\(nhuáº­n\))?$/);
       if (!match) return;
       const thang = parseInt(match[1]);
-      const isLeap = text.includes("nhuận") ? 1 : 0;
+      const isLeap = text.includes("nhuáº­n") ? 1 : 0;
       showMonthDetail(thang, nam, isLeap);
     });
   });
 }
 
-// ===== HIỂN THỊ CHI TIẾT TỪNG THÁNG =====
+// ===== HIá»‚N THá» CHI TIáº¾T Tá»ªNG THĂNG =====
 function showMonthDetail(thang, nam, isLeap = 0) {
   const canChiNam = canChiYear(nam);
 
-  // 🪶 Tính Can Chi tháng
+  // đŸª¶ TĂ­nh Can Chi thĂ¡ng
   const [canNam] = canChiNam.split(" ");
   const cT = CAN_THANG[canNam][thang - 1];
   const chiThang = CHI[(thang + 1) % 12];
   const canChiThang = `${cT} ${chiThang}`;
 
-  // 🪶 Tiêu đề có thêm Can Chi tháng
+  // đŸª¶ TiĂªu Ä‘á» cĂ³ thĂªm Can Chi thĂ¡ng
   let html = `
     <h3 style="text-align:center;margin:10px 0;">
-      Chi tiết tháng ${thang}${isLeap ? " (nhuận)" : ""} – Tháng ${canChiThang} – ${canChiNam} (${nam})
+      Chi tiáº¿t thĂ¡ng ${thang}${isLeap ? " (nhuáº­n)" : ""} â€“ ThĂ¡ng ${canChiThang} â€“ ${canChiNam} (${nam})
     </h3>
     <table style="width:100%;border-collapse:collapse;text-align:center;">
   `;
 
-  let dRow = "<tr><th>Ngày</th>";
-  let sRow = "<tr><th>Dương</th>";
+  let dRow = "<tr><th>NgĂ y</th>";
+  let sRow = "<tr><th>DÆ°Æ¡ng</th>";
   let cRow = "<tr><th>Can Chi</th>";
 
   let a11 = getLunarMonth11(nam - 1, TZ);
@@ -2542,7 +2547,7 @@ function showMonthDetail(thang, nam, isLeap = 0) {
   const mNext = getNewMoonDay(k + off + 1, TZ);
   const days = mNext - mStart;
 
-  // 🧮 Duyệt từng ngày trong tháng
+  // đŸ§® Duyá»‡t tá»«ng ngĂ y trong thĂ¡ng
   for (let d = 1; d <= days; d++) {
     const s = convertLunarToSolar(d, thang, nam, isLeap, TZ);
     const ccD = canChiDay(s[2], s[1], s[0]);
@@ -2554,8 +2559,8 @@ function showMonthDetail(thang, nam, isLeap = 0) {
     if (d % 10 === 0 || d === days) {
       dRow += "</tr>"; sRow += "</tr>"; cRow += "</tr>";
       html += dRow + sRow + cRow;
-      dRow = "<tr><th>Ngày</th>"; 
-      sRow = "<tr><th>Dương</th>"; 
+      dRow = "<tr><th>NgĂ y</th>"; 
+      sRow = "<tr><th>DÆ°Æ¡ng</th>"; 
       cRow = "<tr><th>Can Chi</th>";
     }
   }
@@ -2563,7 +2568,7 @@ function showMonthDetail(thang, nam, isLeap = 0) {
   html += "</table>";
   document.getElementById("monthDetail").innerHTML = html;
 
-  // 🎯 Cho phép click chọn ngày → tô đỏ 3 ô cùng cột
+  // đŸ¯ Cho phĂ©p click chá»n ngĂ y â†’ tĂ´ Ä‘á» 3 Ă´ cĂ¹ng cá»™t
   const table = document.querySelector("#monthDetail table");
   if (table) {
     const cells = table.querySelectorAll("td");
@@ -2584,12 +2589,12 @@ function showMonthDetail(thang, nam, isLeap = 0) {
 }
 
 
-// ===== TẠO DROPDOWN NĂM VÀ TỰ HIỂN THỊ MẶC ĐỊNH =====
+// ===== Táº O DROPDOWN NÄ‚M VĂ€ Tá»° HIá»‚N THá» Máº¶C Äá»NH =====
 function initYearDropdown() {
   const container = document.getElementById("monthYear");
   if (!container) return;
 
-  // Tạo dropdown nếu chưa có
+  // Táº¡o dropdown náº¿u chÆ°a cĂ³
   const select = document.createElement("select");
   select.id = "yearSelect";
   select.style.width = "100px";
@@ -2603,21 +2608,21 @@ function initYearDropdown() {
 
   container.replaceWith(select);
 
-  // Khi đổi năm → cập nhật Can Chi và tạo lại bảng
+  // Khi Ä‘á»•i nÄƒm â†’ cáº­p nháº­t Can Chi vĂ  táº¡o láº¡i báº£ng
   select.addEventListener("input", () => {
     const year = parseInt(select.value);
     const canChi = canChiYear(year);
-    document.getElementById("canChiLabel").textContent = `Năm: ${canChi}`;
+    document.getElementById("canChiLabel").textContent = `NÄƒm: ${canChi}`;
     createMonthTable(year);
   });
 
-  // Gọi mặc định năm 2025
+  // Gá»i máº·c Ä‘á»‹nh nÄƒm 2025
   const canChi = canChiYear(2025);
-  document.getElementById("canChiLabel").textContent = `Năm: ${canChi}`;
+  document.getElementById("canChiLabel").textContent = `NÄƒm: ${canChi}`;
   createMonthTable(2025);
 }
 
-// 🚀 Khi tải trang
+// đŸ€ Khi táº£i trang
 document.addEventListener("DOMContentLoaded", () => {
   initYearDropdown();
 });
@@ -2633,43 +2638,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // =====================================================
-// 🌟 LỚP 1 – VỊ TRÍ CUNG (phiên bản chuẩn theo layout mới)
+// đŸŒŸ Lá»P 1 â€“ Vá» TRĂ CUNG (phiĂªn báº£n chuáº©n theo layout má»›i)
 // -----------------------------------------------------
 function anLop1_ViTriCung(data) {
   const CAN_THANG = {
-    "Giáp":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
-    "Ất":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
-    "Bính":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
-    "Đinh":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
-    "Mậu":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"],
-    "Kỷ":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
-    "Canh":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
-    "Tân":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
-    "Nhâm":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
-    "Quý":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"]
+    "GiĂ¡p":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+    "áº¤t":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+    "BĂ­nh":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+    "Äinh":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+    "Máº­u":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"],
+    "Ká»·":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+    "Canh":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+    "TĂ¢n":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+    "NhĂ¢m":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+    "QuĂ½":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"]
   };
 
-  // Lấy Thiên Can năm sinh
+  // Láº¥y ThiĂªn Can nÄƒm sinh
   const canNam = data.canChiNam.split(" ")[0];
-  const canThangList = CAN_THANG[canNam] || CAN_THANG["Giáp"];
+  const canThangList = CAN_THANG[canNam] || CAN_THANG["GiĂ¡p"];
 
-  // 🔹 Bản đồ vòng 12 cung (chuẩn bạn xác nhận)
+  // đŸ”¹ Báº£n Ä‘á»“ vĂ²ng 12 cung (chuáº©n báº¡n xĂ¡c nháº­n)
   const cungMap = [
-    { cell: 9,  chi: "Dần",  idx: 0 },
-    { cell: 7,  chi: "Mão",  idx: 1 },
-    { cell: 5,  chi: "Thìn", idx: 2 },
-    { cell: 1,  chi: "Tỵ",   idx: 3 },
-    { cell: 2,  chi: "Ngọ",  idx: 4 },
-    { cell: 3,  chi: "Mùi",  idx: 5 },
-    { cell: 4,  chi: "Thân", idx: 6 },
-    { cell: 6,  chi: "Dậu",  idx: 7 },
-    { cell: 8,  chi: "Tuất", idx: 8 },
-    { cell: 12, chi: "Hợi",  idx: 9 },
-    { cell: 11, chi: "Tý",   idx: 10 },
-    { cell: 10, chi: "Sửu",  idx: 11 }
+    { cell: 9,  chi: "Dáº§n",  idx: 0 },
+    { cell: 7,  chi: "MĂ£o",  idx: 1 },
+    { cell: 5,  chi: "ThĂ¬n", idx: 2 },
+    { cell: 1,  chi: "Tá»µ",   idx: 3 },
+    { cell: 2,  chi: "Ngá»",  idx: 4 },
+    { cell: 3,  chi: "MĂ¹i",  idx: 5 },
+    { cell: 4,  chi: "ThĂ¢n", idx: 6 },
+    { cell: 6,  chi: "Dáº­u",  idx: 7 },
+    { cell: 8,  chi: "Tuáº¥t", idx: 8 },
+    { cell: 12, chi: "Há»£i",  idx: 9 },
+    { cell: 11, chi: "TĂ½",   idx: 10 },
+    { cell: 10, chi: "Sá»­u",  idx: 11 }
   ];
 
-  // 🔹 Gán dữ liệu (tháng 1 = Dần)
+  // đŸ”¹ GĂ¡n dá»¯ liá»‡u (thĂ¡ng 1 = Dáº§n)
   cungMap.forEach(c => {
     const can = canThangList[c.idx];
     const vietTat = (can ? can[0] : "?") + ". " + c.chi;
@@ -2682,19 +2687,19 @@ function anLop1_ViTriCung(data) {
   });
 }
 const CUNG_TO_CELL = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
 // =====================================================
-// 🌟 LỚP 2 – MỆNH (Tự động an theo tháng âm & giờ sinh, có hỗ trợ <THÂN>)
+// đŸŒŸ Lá»P 2 â€“ Má»†NH (Tá»± Ä‘á»™ng an theo thĂ¡ng Ă¢m & giá» sinh, cĂ³ há»— trá»£ <THĂ‚N>)
 // -----------------------------------------------------
 function anLop2_Menh(data) {
   const CUNG_CHUC = [
-    "MỆNH","HUYNH ĐỆ","PHU THÊ","TỬ TỨC","TÀI BẠCH","TẬT ÁCH",
-    "THIÊN DI","NÔ BỘC","QUAN LỘC","ĐIỀN TRẠCH","PHÚC ĐỨC","PHỤ MẪU"
+    "Má»†NH","HUYNH Äá»†","PHU THĂ","Tá»¬ Tá»¨C","TĂ€I Báº CH","Táº¬T ĂCH",
+    "THIĂN DI","NĂ” Bá»˜C","QUAN Lá»˜C","ÄIá»€N TRáº CH","PHĂC Äá»¨C","PHá»¤ MáºªU"
   ];
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const GIO_CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const GIO_CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
   const thangAm = parseInt(data.lunar[1]);
   const gioChi = data.canChiGio?.split(" ")[1];
@@ -2715,7 +2720,7 @@ function anLop2_Menh(data) {
 
   
 
-  // ✅ Không dùng innerHTML — chỉ cập nhật hoặc thêm phần tử con
+  // âœ… KhĂ´ng dĂ¹ng innerHTML â€” chá»‰ cáº­p nháº­t hoáº·c thĂªm pháº§n tá»­ con
   Object.entries(cungChucMap).forEach(([tenCung, tenChuc]) => {
     const cell = document.getElementById("cell" + CUNG_TO_CELL[tenCung]);
     if (!cell) return;
@@ -2727,7 +2732,7 @@ function anLop2_Menh(data) {
       cell.appendChild(layer2);
     }
 
-    // Giữ nguyên DOM, chỉ cập nhật text nếu cần
+    // Giá»¯ nguyĂªn DOM, chá»‰ cáº­p nháº­t text náº¿u cáº§n
     let tenEl = layer2.querySelector(".ten-cung");
     if (!tenEl) {
       tenEl = document.createElement("div");
@@ -2735,7 +2740,7 @@ function anLop2_Menh(data) {
       layer2.appendChild(tenEl);
     }
     tenEl.textContent = tenChuc;
-// thêm định danh để tra cứu
+// thĂªm Ä‘á»‹nh danh Ä‘á»ƒ tra cá»©u
 tenEl.setAttribute("data-sao", tenChuc);
 tenEl.style.pointerEvents = "auto";
 tenEl.style.cursor = "pointer";
@@ -2744,21 +2749,21 @@ tenEl.style.cursor = "pointer";
 
 
 
-// 🟢 tô màu tên cung theo hành của cung
+// đŸŸ¢ tĂ´ mĂ u tĂªn cung theo hĂ nh cá»§a cung
 const hanh = nguHanhCuaCung(tenCung);
 const colorByHanh = {
-  "Hỏa": "#ff4d4d",
-  "Thổ": "#e69500",
-  "Mộc": "#007a29",
+  "Há»a": "#ff4d4d",
+  "Thá»•": "#e69500",
+  "Má»™c": "#007a29",
   "Kim": "#000000",
-  "Thủy": "#004cff"
+  "Thá»§y": "#004cff"
 }[hanh] || "#000";
 
 
 
 tenEl.style.color = colorByHanh;
 
-    // Cập nhật style
+    // Cáº­p nháº­t style
     Object.assign(layer2.style, {
       zIndex: "10",
       position: "absolute",
@@ -2773,7 +2778,7 @@ tenEl.style.color = colorByHanh;
     });
   });
 
-  // ✅ Ghi lại map để an Thân sau này
+  // âœ… Ghi láº¡i map Ä‘á»ƒ an ThĂ¢n sau nĂ y
   window.dataGlobal.cungChucMap = cungChucMap;
 window.dataGlobal.tenCungMenh = cungMenh;
 
@@ -2788,16 +2793,16 @@ window.dataGlobal.tenCungMenh = cungMenh;
 
 
 // =====================================================
-// 🌟 AN CUNG THÂN – Theo 6 quy tắc giờ sinh
+// đŸŒŸ AN CUNG THĂ‚N â€“ Theo 6 quy táº¯c giá» sinh
 // -----------------------------------------------------
 function xacDinhCungThan(gioChi, cungChucMap) {
   const quyTac = {
-    "Tý": "MỆNH", "Ngọ": "MỆNH",
-    "Dần": "QUAN LỘC", "Thân": "QUAN LỘC",
-    "Tuất": "TÀI BẠCH", "Thìn": "TÀI BẠCH",
-    "Sửu": "PHÚC ĐỨC", "Mùi": "PHÚC ĐỨC",
-    "Tỵ": "PHU THÊ", "Hợi": "PHU THÊ",
-    "Mão": "THIÊN DI", "Dậu": "THIÊN DI"
+    "TĂ½": "Má»†NH", "Ngá»": "Má»†NH",
+    "Dáº§n": "QUAN Lá»˜C", "ThĂ¢n": "QUAN Lá»˜C",
+    "Tuáº¥t": "TĂ€I Báº CH", "ThĂ¬n": "TĂ€I Báº CH",
+    "Sá»­u": "PHĂC Äá»¨C", "MĂ¹i": "PHĂC Äá»¨C",
+    "Tá»µ": "PHU THĂ", "Há»£i": "PHU THĂ",
+    "MĂ£o": "THIĂN DI", "Dáº­u": "THIĂN DI"
   };
   const tenCung = quyTac[gioChi];
   if (!tenCung) return null;
@@ -2813,8 +2818,8 @@ function anThan(data, cungMap) {
   if (!cungThan) return;
 
   const CUNG_TO_CELL = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
 
   const cell = document.getElementById("cell" + CUNG_TO_CELL[cungThan]);
@@ -2823,12 +2828,12 @@ function anThan(data, cungMap) {
   const layer2 = cell.querySelector(".layer-2");
   if (!layer2) return;
 
-  // Không ghi đè nội dung, chỉ thêm 1 span
+  // KhĂ´ng ghi Ä‘Ă¨ ná»™i dung, chá»‰ thĂªm 1 span
   if (!layer2.querySelector(".than-label")) {
     const span = document.createElement("span");
    span.className = "than-label";
-span.textContent = " <THÂN>";
-span.setAttribute("data-sao", "An Thân");
+span.textContent = " <THĂ‚N>";
+span.setAttribute("data-sao", "An ThĂ¢n");
 span.style.pointerEvents = "auto";
 span.style.cursor = "pointer";
 
@@ -2845,7 +2850,7 @@ span.style.cursor = "pointer";
 
 
 
-// 🌟 Hàm xác định Cục Số chuẩn theo Can Năm & Cung Mệnh
+// đŸŒŸ HĂ m xĂ¡c Ä‘á»‹nh Cá»¥c Sá»‘ chuáº©n theo Can NÄƒm & Cung Má»‡nh
 function xacDinhCucSo(canChiNam, cungMenh) {
  window.CUC_SO_TINH_ROI = null;
 
@@ -2855,128 +2860,128 @@ function xacDinhCucSo(canChiNam, cungMenh) {
     .replace(/[ \s]+/g, " ")
     .trim()
     .split(" ")[0]
-    .replace(/[^A-Za-zÀ-ỹĐđ]/g, "");
+    .replace(/[^A-Za-zĂ€-á»¹ÄÄ‘]/g, "");
 
   const chi = (typeof cungMenh === "string") ? cungMenh.trim() : "";
 
   const bangCuc = {
-    "Giáp": { "Tý-Sửu": "Thủy nhị cục", "Dần-Mão": "Hỏa lục cục", "Thìn-Tỵ": "Mộc tam cục", "Ngọ-Mùi": "Thổ ngũ cục", "Thân-Dậu": "Kim tứ cục", "Tuất-Hợi": "Hỏa lục cục" },
-    "Kỷ":   { "Tý-Sửu": "Thủy nhị cục", "Dần-Mão": "Hỏa lục cục", "Thìn-Tỵ": "Mộc tam cục", "Ngọ-Mùi": "Thổ ngũ cục", "Thân-Dậu": "Kim tứ cục", "Tuất-Hợi": "Hỏa lục cục" },
-    "Ất":   { "Tý-Sửu": "Hỏa lục cục", "Dần-Mão": "Thổ ngũ cục", "Thìn-Tỵ": "Kim tứ cục", "Ngọ-Mùi": "Mộc tam cục", "Thân-Dậu": "Thủy nhị cục", "Tuất-Hợi": "Thổ ngũ cục" },
-    "Canh": { "Tý-Sửu": "Hỏa lục cục", "Dần-Mão": "Thổ ngũ cục", "Thìn-Tỵ": "Kim tứ cục", "Ngọ-Mùi": "Mộc tam cục", "Thân-Dậu": "Thủy nhị cục", "Tuất-Hợi": "Thổ ngũ cục" },
-    "Bính": { "Tý-Sửu": "Thổ ngũ cục", "Dần-Mão": "Mộc tam cục", "Thìn-Tỵ": "Thủy nhị cục", "Ngọ-Mùi": "Kim tứ cục", "Thân-Dậu": "Hỏa lục cục", "Tuất-Hợi": "Mộc tam cục" },
-    "Tân":  { "Tý-Sửu": "Thổ ngũ cục", "Dần-Mão": "Mộc tam cục", "Thìn-Tỵ": "Thủy nhị cục", "Ngọ-Mùi": "Kim tứ cục", "Thân-Dậu": "Hỏa lục cục", "Tuất-Hợi": "Mộc tam cục" },
-    "Đinh": { "Tý-Sửu": "Mộc tam cục", "Dần-Mão": "Kim tứ cục", "Thìn-Tỵ": "Hỏa lục cục", "Ngọ-Mùi": "Thủy nhị cục", "Thân-Dậu": "Thổ ngũ cục", "Tuất-Hợi": "Kim tứ cục" },
-    "Nhâm": { "Tý-Sửu": "Mộc tam cục", "Dần-Mão": "Kim tứ cục", "Thìn-Tỵ": "Hỏa lục cục", "Ngọ-Mùi": "Thủy nhị cục", "Thân-Dậu": "Thổ ngũ cục", "Tuất-Hợi": "Kim tứ cục" },
-    "Mậu":  { "Tý-Sửu": "Kim tứ cục", "Dần-Mão": "Thủy nhị cục", "Thìn-Tỵ": "Thổ ngũ cục", "Ngọ-Mùi": "Hỏa lục cục", "Thân-Dậu": "Mộc tam cục", "Tuất-Hợi": "Thủy nhị cục" },
-    "Quý":  { "Tý-Sửu": "Kim tứ cục", "Dần-Mão": "Thủy nhị cục", "Thìn-Tỵ": "Thổ ngũ cục", "Ngọ-Mùi": "Hỏa lục cục", "Thân-Dậu": "Mộc tam cục", "Tuất-Hợi": "Thủy nhị cục" }
+    "GiĂ¡p": { "TĂ½-Sá»­u": "Thá»§y nhá»‹ cá»¥c", "Dáº§n-MĂ£o": "Há»a lá»¥c cá»¥c", "ThĂ¬n-Tá»µ": "Má»™c tam cá»¥c", "Ngá»-MĂ¹i": "Thá»• ngÅ© cá»¥c", "ThĂ¢n-Dáº­u": "Kim tá»© cá»¥c", "Tuáº¥t-Há»£i": "Há»a lá»¥c cá»¥c" },
+    "Ká»·":   { "TĂ½-Sá»­u": "Thá»§y nhá»‹ cá»¥c", "Dáº§n-MĂ£o": "Há»a lá»¥c cá»¥c", "ThĂ¬n-Tá»µ": "Má»™c tam cá»¥c", "Ngá»-MĂ¹i": "Thá»• ngÅ© cá»¥c", "ThĂ¢n-Dáº­u": "Kim tá»© cá»¥c", "Tuáº¥t-Há»£i": "Há»a lá»¥c cá»¥c" },
+    "áº¤t":   { "TĂ½-Sá»­u": "Há»a lá»¥c cá»¥c", "Dáº§n-MĂ£o": "Thá»• ngÅ© cá»¥c", "ThĂ¬n-Tá»µ": "Kim tá»© cá»¥c", "Ngá»-MĂ¹i": "Má»™c tam cá»¥c", "ThĂ¢n-Dáº­u": "Thá»§y nhá»‹ cá»¥c", "Tuáº¥t-Há»£i": "Thá»• ngÅ© cá»¥c" },
+    "Canh": { "TĂ½-Sá»­u": "Há»a lá»¥c cá»¥c", "Dáº§n-MĂ£o": "Thá»• ngÅ© cá»¥c", "ThĂ¬n-Tá»µ": "Kim tá»© cá»¥c", "Ngá»-MĂ¹i": "Má»™c tam cá»¥c", "ThĂ¢n-Dáº­u": "Thá»§y nhá»‹ cá»¥c", "Tuáº¥t-Há»£i": "Thá»• ngÅ© cá»¥c" },
+    "BĂ­nh": { "TĂ½-Sá»­u": "Thá»• ngÅ© cá»¥c", "Dáº§n-MĂ£o": "Má»™c tam cá»¥c", "ThĂ¬n-Tá»µ": "Thá»§y nhá»‹ cá»¥c", "Ngá»-MĂ¹i": "Kim tá»© cá»¥c", "ThĂ¢n-Dáº­u": "Há»a lá»¥c cá»¥c", "Tuáº¥t-Há»£i": "Má»™c tam cá»¥c" },
+    "TĂ¢n":  { "TĂ½-Sá»­u": "Thá»• ngÅ© cá»¥c", "Dáº§n-MĂ£o": "Má»™c tam cá»¥c", "ThĂ¬n-Tá»µ": "Thá»§y nhá»‹ cá»¥c", "Ngá»-MĂ¹i": "Kim tá»© cá»¥c", "ThĂ¢n-Dáº­u": "Há»a lá»¥c cá»¥c", "Tuáº¥t-Há»£i": "Má»™c tam cá»¥c" },
+    "Äinh": { "TĂ½-Sá»­u": "Má»™c tam cá»¥c", "Dáº§n-MĂ£o": "Kim tá»© cá»¥c", "ThĂ¬n-Tá»µ": "Há»a lá»¥c cá»¥c", "Ngá»-MĂ¹i": "Thá»§y nhá»‹ cá»¥c", "ThĂ¢n-Dáº­u": "Thá»• ngÅ© cá»¥c", "Tuáº¥t-Há»£i": "Kim tá»© cá»¥c" },
+    "NhĂ¢m": { "TĂ½-Sá»­u": "Má»™c tam cá»¥c", "Dáº§n-MĂ£o": "Kim tá»© cá»¥c", "ThĂ¬n-Tá»µ": "Há»a lá»¥c cá»¥c", "Ngá»-MĂ¹i": "Thá»§y nhá»‹ cá»¥c", "ThĂ¢n-Dáº­u": "Thá»• ngÅ© cá»¥c", "Tuáº¥t-Há»£i": "Kim tá»© cá»¥c" },
+    "Máº­u":  { "TĂ½-Sá»­u": "Kim tá»© cá»¥c", "Dáº§n-MĂ£o": "Thá»§y nhá»‹ cá»¥c", "ThĂ¬n-Tá»µ": "Thá»• ngÅ© cá»¥c", "Ngá»-MĂ¹i": "Há»a lá»¥c cá»¥c", "ThĂ¢n-Dáº­u": "Má»™c tam cá»¥c", "Tuáº¥t-Há»£i": "Thá»§y nhá»‹ cá»¥c" },
+    "QuĂ½":  { "TĂ½-Sá»­u": "Kim tá»© cá»¥c", "Dáº§n-MĂ£o": "Thá»§y nhá»‹ cá»¥c", "ThĂ¬n-Tá»µ": "Thá»• ngÅ© cá»¥c", "Ngá»-MĂ¹i": "Há»a lá»¥c cá»¥c", "ThĂ¢n-Dáº­u": "Má»™c tam cá»¥c", "Tuáº¥t-Há»£i": "Thá»§y nhá»‹ cá»¥c" }
   };
 
   const nhomCung = {
-    "Tý": "Tý-Sửu", "Sửu": "Tý-Sửu",
-    "Dần": "Dần-Mão", "Mão": "Dần-Mão",
-    "Thìn": "Thìn-Tỵ", "Tỵ": "Thìn-Tỵ",
-    "Ngọ": "Ngọ-Mùi", "Mùi": "Ngọ-Mùi",
-    "Thân": "Thân-Dậu", "Dậu": "Thân-Dậu",
-    "Tuất": "Tuất-Hợi", "Hợi": "Tuất-Hợi"
+    "TĂ½": "TĂ½-Sá»­u", "Sá»­u": "TĂ½-Sá»­u",
+    "Dáº§n": "Dáº§n-MĂ£o", "MĂ£o": "Dáº§n-MĂ£o",
+    "ThĂ¬n": "ThĂ¬n-Tá»µ", "Tá»µ": "ThĂ¬n-Tá»µ",
+    "Ngá»": "Ngá»-MĂ¹i", "MĂ¹i": "Ngá»-MĂ¹i",
+    "ThĂ¢n": "ThĂ¢n-Dáº­u", "Dáº­u": "ThĂ¢n-Dáº­u",
+    "Tuáº¥t": "Tuáº¥t-Há»£i", "Há»£i": "Tuáº¥t-Há»£i"
   };
 
   const nhom = nhomCung[chi];
   const cuc = bangCuc[can]?.[nhom] || "";
 
-  console.log(`🌀 Cục số xác định: ${canChiNam} – ${cungMenh} → ${cuc}`);
-  window.CUC_SO_TINH_ROI = cuc; // ✅ lưu kết quả để lần sau bỏ qua
+  console.log(`đŸŒ€ Cá»¥c sá»‘ xĂ¡c Ä‘á»‹nh: ${canChiNam} â€“ ${cungMenh} â†’ ${cuc}`);
+  window.CUC_SO_TINH_ROI = cuc; // âœ… lÆ°u káº¿t quáº£ Ä‘á»ƒ láº§n sau bá» qua
   return cuc;
 }
 
 
 // =====================================================
-// 🌟 DỮ LIỆU HỖ TRỢ CHO LỚP 3 – CHÍNH TINH
+// đŸŒŸ Dá»® LIá»†U Há»– TRá»¢ CHO Lá»P 3 â€“ CHĂNH TINH
 // -----------------------------------------------------
 
-// 1️⃣ Bảng tra Cung Tử Vi theo Cục và Ngày sinh (chuẩn theo quy tắc bạn đưa)
+// 1ï¸âƒ£ Báº£ng tra Cung Tá»­ Vi theo Cá»¥c vĂ  NgĂ y sinh (chuáº©n theo quy táº¯c báº¡n Ä‘Æ°a)
 const BANG_TU_VI = {
-  "Thủy nhị cục": [
-    "Sửu","Dần","Dần","Mão","Mão","Thìn","Thìn","Tỵ","Tỵ","Ngọ",
-    "Ngọ","Mùi","Mùi","Thân","Thân","Dậu","Dậu","Tuất","Tuất","Hợi",
-    "Hợi","Tý","Tý","Sửu","Sửu","Dần","Dần","Mão","Mão","Thìn"
+  "Thá»§y nhá»‹ cá»¥c": [
+    "Sá»­u","Dáº§n","Dáº§n","MĂ£o","MĂ£o","ThĂ¬n","ThĂ¬n","Tá»µ","Tá»µ","Ngá»",
+    "Ngá»","MĂ¹i","MĂ¹i","ThĂ¢n","ThĂ¢n","Dáº­u","Dáº­u","Tuáº¥t","Tuáº¥t","Há»£i",
+    "Há»£i","TĂ½","TĂ½","Sá»­u","Sá»­u","Dáº§n","Dáº§n","MĂ£o","MĂ£o","ThĂ¬n"
   ],
 
-  "Mộc tam cục": [
-    "Thìn","Sửu","Dần","Tỵ","Dần","Mão","Ngọ","Mão","Thìn","Mùi",
-    "Thìn","Tỵ","Thân","Tỵ","Ngọ","Dậu","Ngọ","Mùi","Tuất","Mùi",
-    "Thân","Hợi","Thân","Dậu","Tý","Dậu","Tuất","Sửu","Tuất","Hợi"
+  "Má»™c tam cá»¥c": [
+    "ThĂ¬n","Sá»­u","Dáº§n","Tá»µ","Dáº§n","MĂ£o","Ngá»","MĂ£o","ThĂ¬n","MĂ¹i",
+    "ThĂ¬n","Tá»µ","ThĂ¢n","Tá»µ","Ngá»","Dáº­u","Ngá»","MĂ¹i","Tuáº¥t","MĂ¹i",
+    "ThĂ¢n","Há»£i","ThĂ¢n","Dáº­u","TĂ½","Dáº­u","Tuáº¥t","Sá»­u","Tuáº¥t","Há»£i"
   ],
 
-  "Kim tứ cục": [
-    "Hợi","Thìn","Sửu","Dần","Tý","Tỵ","Dần","Mão","Sửu","Ngọ",
-    "Mão","Thìn","Dần","Mùi","Thìn","Tỵ","Mão","Thân","Tỵ","Ngọ",
-    "Thìn","Dậu","Ngọ","Mùi","Tỵ","Tuất","Mùi","Thân","Ngọ","Hợi"
+  "Kim tá»© cá»¥c": [
+    "Há»£i","ThĂ¬n","Sá»­u","Dáº§n","TĂ½","Tá»µ","Dáº§n","MĂ£o","Sá»­u","Ngá»",
+    "MĂ£o","ThĂ¬n","Dáº§n","MĂ¹i","ThĂ¬n","Tá»µ","MĂ£o","ThĂ¢n","Tá»µ","Ngá»",
+    "ThĂ¬n","Dáº­u","Ngá»","MĂ¹i","Tá»µ","Tuáº¥t","MĂ¹i","ThĂ¢n","Ngá»","Há»£i"
   ],
 
-  "Thổ ngũ cục": [
-    "Ngọ","Hợi","Thìn","Sửu","Dần","Mùi","Tý","Tỵ","Dần","Mão",
-    "Thân","Sửu","Ngọ","Mão","Thìn","Dậu","Dần","Mùi","Thìn","Tỵ",
-    "Tuất","Mão","Thân","Tỵ","Ngọ","Hợi","Thìn","Dậu","Ngọ","Mùi"
+  "Thá»• ngÅ© cá»¥c": [
+    "Ngá»","Há»£i","ThĂ¬n","Sá»­u","Dáº§n","MĂ¹i","TĂ½","Tá»µ","Dáº§n","MĂ£o",
+    "ThĂ¢n","Sá»­u","Ngá»","MĂ£o","ThĂ¬n","Dáº­u","Dáº§n","MĂ¹i","ThĂ¬n","Tá»µ",
+    "Tuáº¥t","MĂ£o","ThĂ¢n","Tá»µ","Ngá»","Há»£i","ThĂ¬n","Dáº­u","Ngá»","MĂ¹i"
   ],
 
-  "Hỏa lục cục": [
-    "Dậu","Ngọ","Hợi","Thìn","Sửu","Dần","Tuất","Mùi","Tý","Tỵ",
-    "Dần","Mão","Hợi","Thân","Sửu","Ngọ","Mão","Thìn","Tý","Dậu",
-    "Dần","Mùi","Thìn","Tỵ","Sửu","Tuất","Mão","Thân","Tỵ","Ngọ"
+  "Há»a lá»¥c cá»¥c": [
+    "Dáº­u","Ngá»","Há»£i","ThĂ¬n","Sá»­u","Dáº§n","Tuáº¥t","MĂ¹i","TĂ½","Tá»µ",
+    "Dáº§n","MĂ£o","Há»£i","ThĂ¢n","Sá»­u","Ngá»","MĂ£o","ThĂ¬n","TĂ½","Dáº­u",
+    "Dáº§n","MĂ¹i","ThĂ¬n","Tá»µ","Sá»­u","Tuáº¥t","MĂ£o","ThĂ¢n","Tá»µ","Ngá»"
   ]
 };
 
-// 2️⃣ Cặp Tử Vi – Thiên Phủ (theo trục Dần–Thân, không phải đối cung)
+// 2ï¸âƒ£ Cáº·p Tá»­ Vi â€“ ThiĂªn Phá»§ (theo trá»¥c Dáº§nâ€“ThĂ¢n, khĂ´ng pháº£i Ä‘á»‘i cung)
 const CAP_TU_VI_PHU = {
-  "Dần": "Dần", "Mão": "Sửu", "Thìn": "Tý", "Tỵ": "Hợi",
-  "Ngọ": "Tuất", "Mùi": "Dậu", "Thân": "Thân", "Dậu": "Mùi",
-  "Tuất": "Ngọ", "Hợi": "Tỵ", "Tý": "Thìn", "Sửu": "Mão"
+  "Dáº§n": "Dáº§n", "MĂ£o": "Sá»­u", "ThĂ¬n": "TĂ½", "Tá»µ": "Há»£i",
+  "Ngá»": "Tuáº¥t", "MĂ¹i": "Dáº­u", "ThĂ¢n": "ThĂ¢n", "Dáº­u": "MĂ¹i",
+  "Tuáº¥t": "Ngá»", "Há»£i": "Tá»µ", "TĂ½": "ThĂ¬n", "Sá»­u": "MĂ£o"
 };
 
-// 3️⃣ Màu sắc theo hành Chính Tinh
+// 3ï¸âƒ£ MĂ u sáº¯c theo hĂ nh ChĂ­nh Tinh
 const HANH_CHINH_TINH = {
-  // 🟠 Thổ
-  "TỬ VI": "#e69500", "THIÊN PHỦ": "#e69500",
-  // 🌿 Mộc
-  "THIÊN CƠ": "#007a29", "THIÊN LƯƠNG": "#007a29",
-  // 🔥 Hỏa
-  "LIÊM TRINH": "#ff4d4d", "THÁI DƯƠNG": "#ff4d4d",
-  // 💧 Thủy
-  "CỰ MÔN": "#004cff", "THIÊN TƯỚNG": "#004cff",
-  "PHÁ QUÂN": "#004cff", "THIÊN ĐỒNG": "#004cff",
-  "THÁI ÂM": "#004cff", "THAM LANG": "#004cff",
-  // ⚫ Kim
-  "THẤT SÁT": "#000000", "VŨ KHÚC": "#000000"
+  // đŸŸ  Thá»•
+  "Tá»¬ VI": "#e69500", "THIĂN PHá»¦": "#e69500",
+  // đŸŒ¿ Má»™c
+  "THIĂN CÆ ": "#007a29", "THIĂN LÆ¯Æ NG": "#007a29",
+  // đŸ”¥ Há»a
+  "LIĂM TRINH": "#ff4d4d", "THĂI DÆ¯Æ NG": "#ff4d4d",
+  // đŸ’§ Thá»§y
+  "Cá»° MĂ”N": "#004cff", "THIĂN TÆ¯á»NG": "#004cff",
+  "PHĂ QUĂ‚N": "#004cff", "THIĂN Äá»’NG": "#004cff",
+  "THĂI Ă‚M": "#004cff", "THAM LANG": "#004cff",
+  // â« Kim
+  "THáº¤T SĂT": "#000000", "VÅ¨ KHĂC": "#000000"
 };
 
 
 
-// Cho phép dùng chung ở các phần khác (VD: tra ngược)
+// Cho phĂ©p dĂ¹ng chung á»Ÿ cĂ¡c pháº§n khĂ¡c (VD: tra ngÆ°á»£c)
 window.BANG_TU_VI = BANG_TU_VI;
 window.CAP_TU_VI_PHU = CAP_TU_VI_PHU;
 
 
 // =====================================================
-// 🌟 LỚP 3 – CHÍNH TINH (DEBUG FULL, HỖ TRỢ lunar dạng mảng + object)
+// đŸŒŸ Lá»P 3 â€“ CHĂNH TINH (DEBUG FULL, Há»– TRá»¢ lunar dáº¡ng máº£ng + object)
 // -----------------------------------------------------
 function anLop3_ChinhTinh(data) {
-    console.log("🔵 [CT] Bắt đầu AN CHÍNH TINH...");
-    console.log("🔵 [CT] data.lunar:", data.lunar);
-    console.log("🔵 [CT] data.cucSo:", data.cucSo);
+    console.log("đŸ”µ [CT] Báº¯t Ä‘áº§u AN CHĂNH TINH...");
+    console.log("đŸ”µ [CT] data.lunar:", data.lunar);
+    console.log("đŸ”µ [CT] data.cucSo:", data.cucSo);
 
-    // Nếu đang gọi lại do các lớp khác → KHÔNG RESET
+    // Náº¿u Ä‘ang gá»i láº¡i do cĂ¡c lá»›p khĂ¡c â†’ KHĂ”NG RESET
 if (window.__DANG_AN_LOP3__) {
-        console.warn("⛔ anLop3 đang chạy → bỏ qua yêu cầu lặp");
+        console.warn("â›” anLop3 Ä‘ang cháº¡y â†’ bá» qua yĂªu cáº§u láº·p");
         return;
     }
 
     window.__DANG_AN_LOP3__ = true;
-    console.log("🔵 [CT] Bắt đầu AN CHÍNH TINH...");
+    console.log("đŸ”µ [CT] Báº¯t Ä‘áº§u AN CHĂNH TINH...");
 
-    // Reset map đúng chỗ (chỉ lần đầu)
+    // Reset map Ä‘Ăºng chá»— (chá»‰ láº§n Ä‘áº§u)
     window.saoToCung = {};
-    // 🔍 Hỗ trợ cả 2 dạng:
+    // đŸ” Há»— trá»£ cáº£ 2 dáº¡ng:
     //  - data.lunar = [ngay, thang]
     //  - data.lunar = { ngay: x, thang: y }
     let ngayAmRaw = 0;
@@ -2986,82 +2991,82 @@ if (window.__DANG_AN_LOP3__) {
         ngayAmRaw = data.lunar.ngay;
     }
     const ngayAm = parseInt(ngayAmRaw, 10);
-    console.log("🟣 [CT] ngayAm =", ngayAm);
+    console.log("đŸŸ£ [CT] ngayAm =", ngayAm);
 
     let cucSo = data.cucSo?.trim();
-    console.log("🟣 [CT] cucSo =", cucSo);
+    console.log("đŸŸ£ [CT] cucSo =", cucSo);
 
-    // 🔄 Fallback nếu chưa có Cục số
+    // đŸ”„ Fallback náº¿u chÆ°a cĂ³ Cá»¥c sá»‘
     if ((!cucSo || cucSo === "") && typeof xacDinhCucSo === "function") {
         const tenMenh = data.tenCungMenh || window.dataGlobal?.tenCungMenh || "";
         cucSo = xacDinhCucSo(data.canChiNam, tenMenh);
         data.cucSo = cucSo;
         window.dataGlobal.cucSo = cucSo;
-        console.log("🌀 [CT] Bổ sung Cục Số:", cucSo);
+        console.log("đŸŒ€ [CT] Bá»• sung Cá»¥c Sá»‘:", cucSo);
     }
 
     if (!cucSo || !BANG_TU_VI[cucSo]) {
-        console.warn("❌ [CT] Không tìm thấy bảng TỬ VI cho cục số:", cucSo);
+        console.warn("âŒ [CT] KhĂ´ng tĂ¬m tháº¥y báº£ng Tá»¬ VI cho cá»¥c sá»‘:", cucSo);
         window.__DANG_AN_LOP3__ = false;
         return;
     }
 
-    // 🧹 Dọn toàn bộ layer-3 trước khi an lại để tránh trùng sao
+    // đŸ§¹ Dá»n toĂ n bá»™ layer-3 trÆ°á»›c khi an láº¡i Ä‘á»ƒ trĂ¡nh trĂ¹ng sao
     document.querySelectorAll(".layer-3").forEach(el => el.innerHTML = "");
 
     const cungTuVi = BANG_TU_VI[cucSo][ngayAm - 1];
-    console.log("🟣 [CT] cung Tử Vi =", cungTuVi);
+    console.log("đŸŸ£ [CT] cung Tá»­ Vi =", cungTuVi);
 
     if (!cungTuVi) {
-        console.warn("❌ [CT] cung Tử Vi không hợp lệ!");
+        console.warn("âŒ [CT] cung Tá»­ Vi khĂ´ng há»£p lá»‡!");
         return;
     }
 
-    const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+    const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
     const CUNG_TO_CELL = {
-        "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,
-        "Thìn":5,"Dậu":6,"Mão":7,"Tuất":8,
-        "Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+        "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,
+        "ThĂ¬n":5,"Dáº­u":6,"MĂ£o":7,"Tuáº¥t":8,
+        "Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
     };
 
     const idxTuVi = CUNG_THUAN.indexOf(cungTuVi);
-    console.log("🟣 [CT] idxTuVi =", idxTuVi);
+    console.log("đŸŸ£ [CT] idxTuVi =", idxTuVi);
 
     if (idxTuVi === -1) {
-        console.warn("❌ [CT] Không tìm thấy index cungTuVi trong CUNG_THUAN");
+        console.warn("âŒ [CT] KhĂ´ng tĂ¬m tháº¥y index cungTuVi trong CUNG_THUAN");
         return;
     }
 
     const cungThienPhu = CAP_TU_VI_PHU[cungTuVi];
-    console.log("🟣 [CT] cung Thiên Phủ =", cungThienPhu);
+    console.log("đŸŸ£ [CT] cung ThiĂªn Phá»§ =", cungThienPhu);
 
     const idxThienPhu = CUNG_THUAN.indexOf(cungThienPhu);
-    console.log("🟣 [CT] idxThienPhu =", idxThienPhu);
+    console.log("đŸŸ£ [CT] idxThienPhu =", idxThienPhu);
 
     if (idxThienPhu === -1) {
-        console.warn("❌ [CT] Không tìm thấy index cung Thiên Phủ");
+        console.warn("âŒ [CT] KhĂ´ng tĂ¬m tháº¥y index cung ThiĂªn Phá»§");
         return;
     }
 
     const PATTERN_TU_VI = [
-        "Tử Vi","Thiên Cơ",null,"Thái Dương","Vũ Khúc","Thiên Đồng",
-        null,null,"Liêm Trinh",null,null,null
+        "Tá»­ Vi","ThiĂªn CÆ¡",null,"ThĂ¡i DÆ°Æ¡ng","VÅ© KhĂºc","ThiĂªn Äá»“ng",
+        null,null,"LiĂªm Trinh",null,null,null
     ];
 
     const PATTERN_THIEN_PHU = [
-        "Thiên Phủ","Thái Âm","Tham Lang","Cự Môn","Thiên Tướng",
-        "Thiên Lương","Thất Sát",null,null,null,"Phá Quân",null
+        "ThiĂªn Phá»§","ThĂ¡i Ă‚m","Tham Lang","Cá»± MĂ´n","ThiĂªn TÆ°á»›ng",
+        "ThiĂªn LÆ°Æ¡ng","Tháº¥t SĂ¡t",null,null,null,"PhĂ¡ QuĂ¢n",null
     ];
 
     function getIndexNgich(start, step) { return (start - step + 12) % 12; }
     function getIndexThuan(start, step) { return (start + step) % 12; }
 
 function addStarToCung(tenCung, tenSao) {
-    console.log("📌 ADD:", tenSao, "→", tenCung);
+    console.log("đŸ“Œ ADD:", tenSao, "â†’", tenCung);
 
     const cellID = "cell" + CUNG_TO_CELL[tenCung];
     const cell = document.getElementById(cellID);
-    if (!cell) return console.warn("   ❌ Không tìm thấy cell:", cellID);
+    if (!cell) return console.warn("   âŒ KhĂ´ng tĂ¬m tháº¥y cell:", cellID);
 
     let layer3 = cell.querySelector(".layer-3");
     if (!layer3) {
@@ -3076,16 +3081,16 @@ function addStarToCung(tenCung, tenSao) {
     divSao.style.fontSize = "15px";
     divSao.style.fontWeight = "bold";
 
-    // 🎨 MÀU NGŨ HÀNH
+    // đŸ¨ MĂ€U NGÅ¨ HĂ€NH
     const mau = HANH_CHINH_TINH[tenSao.toUpperCase()];
     if (mau) divSao.style.color = mau;
 
-    // 🔑 KEY – dùng nguyên tên sao làm key
-    const keySao = tenSao; // "Thiên Đồng", "Tử Vi", ...
+    // đŸ”‘ KEY â€“ dĂ¹ng nguyĂªn tĂªn sao lĂ m key
+    const keySao = tenSao; // "ThiĂªn Äá»“ng", "Tá»­ Vi", ...
     window.saoToCung[keySao] = tenCung;
-    console.log("✅ MAP SAO:", keySao, "→", tenCung);
+    console.log("âœ… MAP SAO:", keySao, "â†’", tenCung);
 
-    // ⭐⭐ CLICK SAO MỞ POPUP
+    // â­â­ CLICK SAO Má» POPUP
     divSao.setAttribute("data-sao", tenSao);
     divSao.style.cursor = "pointer";
     divSao.style.pointerEvents = "auto";
@@ -3099,40 +3104,40 @@ function addStarToCung(tenCung, tenSao) {
 
     layer3.appendChild(divSao);
     window.__DANG_AN_LOP3__ = false;
-    console.log("🟢 [CT] ⭐ HOÀN TẤT AN LỚP 3 – CHÍNH TINH");
+    console.log("đŸŸ¢ [CT] â­ HOĂ€N Táº¤T AN Lá»P 3 â€“ CHĂNH TINH");
 }
 
 
 
 
-    // 🌟 An chòm TỬ VI (ngược)
-    console.log("🔶 [CT] Bắt đầu an chòm TỬ VI…");
+    // đŸŒŸ An chĂ²m Tá»¬ VI (ngÆ°á»£c)
+    console.log("đŸ”¶ [CT] Báº¯t Ä‘áº§u an chĂ²m Tá»¬ VIâ€¦");
     for (let i = 0; i < PATTERN_TU_VI.length; i++) {
         const sao = PATTERN_TU_VI[i];
         if (!sao) continue;
         const idxTarget = getIndexNgich(idxTuVi, i);
-        console.log(`   Tử Vi step=${i}, idxTarget=${idxTarget}, cung=${CUNG_THUAN[idxTarget]}`);
-console.log(`⭐️ AT STEP ${i}:`, sao, "→", CUNG_THUAN[idxTarget]);
+        console.log(`   Tá»­ Vi step=${i}, idxTarget=${idxTarget}, cung=${CUNG_THUAN[idxTarget]}`);
+console.log(`â­ï¸ AT STEP ${i}:`, sao, "â†’", CUNG_THUAN[idxTarget]);
 
         addStarToCung(CUNG_THUAN[idxTarget], sao);
     }
 
-    // 🌟 An chòm THIÊN PHỦ (thuận)
-    console.log("🔶 [CT] Bắt đầu an chòm THIÊN PHỦ…");
+    // đŸŒŸ An chĂ²m THIĂN PHá»¦ (thuáº­n)
+    console.log("đŸ”¶ [CT] Báº¯t Ä‘áº§u an chĂ²m THIĂN PHá»¦â€¦");
     for (let i = 0; i < PATTERN_THIEN_PHU.length; i++) {
         const sao = PATTERN_THIEN_PHU[i];
         if (!sao) continue;
         const idxTarget = getIndexThuan(idxThienPhu, i);
-        console.log(`   Thiên Phủ step=${i}, idxTarget=${idxTarget}, cung=${CUNG_THUAN[idxTarget]}`);
+        console.log(`   ThiĂªn Phá»§ step=${i}, idxTarget=${idxTarget}, cung=${CUNG_THUAN[idxTarget]}`);
         addStarToCung(CUNG_THUAN[idxTarget], sao);
     }
 
-    console.log("🟢 [CT] ⭐ HOÀN TẤT AN LỚP 3 – CHÍNH TINH");
-    console.log("🟢 [CT] saoToCung =", JSON.stringify(window.saoToCung, null, 2));
-console.log("🚨 SAO BỊ MẤT:", [
- "Tử Vi","Thiên Cơ","Thái Dương","Vũ Khúc","Thiên Đồng",
- "Liêm Trinh","Tham Lang","Cự Môn","Thiên Tướng",
- "Thiên Lương","Thất Sát","Phá Quân","Thiên Phủ","Thái Âm"
+    console.log("đŸŸ¢ [CT] â­ HOĂ€N Táº¤T AN Lá»P 3 â€“ CHĂNH TINH");
+    console.log("đŸŸ¢ [CT] saoToCung =", JSON.stringify(window.saoToCung, null, 2));
+console.log("đŸ¨ SAO Bá» Máº¤T:", [
+ "Tá»­ Vi","ThiĂªn CÆ¡","ThĂ¡i DÆ°Æ¡ng","VÅ© KhĂºc","ThiĂªn Äá»“ng",
+ "LiĂªm Trinh","Tham Lang","Cá»± MĂ´n","ThiĂªn TÆ°á»›ng",
+ "ThiĂªn LÆ°Æ¡ng","Tháº¥t SĂ¡t","PhĂ¡ QuĂ¢n","ThiĂªn Phá»§","ThĂ¡i Ă‚m"
 ].filter(s => !window.saoToCung[s]));
 
 }
@@ -3158,35 +3163,35 @@ console.log("🚨 SAO BỊ MẤT:", [
 
 
 // =====================================================
-// 🌟 LỚP 4 – CỤC SỐ (theo công thức truyền thống, hiển thị đầy đủ 12 cung)
+// đŸŒŸ Lá»P 4 â€“ Cá»¤C Sá» (theo cĂ´ng thá»©c truyá»n thá»‘ng, hiá»ƒn thá»‹ Ä‘áº§y Ä‘á»§ 12 cung)
 // -----------------------------------------------------
 function anLop4_CucSo(data) {
 if (!data.tenCungMenh || typeof data.tenCungMenh !== "string") {
-  console.warn("⚠️ anLop4_CucSo bị gọi khi chưa có tenCungMenh, dừng lại.");
+  console.warn("â ï¸ anLop4_CucSo bá»‹ gá»i khi chÆ°a cĂ³ tenCungMenh, dá»«ng láº¡i.");
   return;
 }
 
-  // 🧹 Dọn lớp Cục Số cũ
+  // đŸ§¹ Dá»n lá»›p Cá»¥c Sá»‘ cÅ©
   document.querySelectorAll('.layer-4').forEach(el => el.remove());
 
-  // ⚙️ Kiểm tra dữ liệu đầu vào
+  // â™ï¸ Kiá»ƒm tra dá»¯ liá»‡u Ä‘áº§u vĂ o
   if (!data || !data.cucSo) {
-    console.warn("⚠️ Thiếu dữ liệu Cục Số, bỏ qua.");
+    console.warn("â ï¸ Thiáº¿u dá»¯ liá»‡u Cá»¥c Sá»‘, bá» qua.");
     return;
   }
 
-  // 🌟 Xác định tên cung Mệnh (đảm bảo là chuỗi, không phải object)
+  // đŸŒŸ XĂ¡c Ä‘á»‹nh tĂªn cung Má»‡nh (Ä‘áº£m báº£o lĂ  chuá»—i, khĂ´ng pháº£i object)
 let cungMenh = data.tenCungMenh;
 
-// 🔹 Nếu chưa có hoặc là object, lấy từ map {Tý:'MỆNH',...}
+// đŸ”¹ Náº¿u chÆ°a cĂ³ hoáº·c lĂ  object, láº¥y tá»« map {TĂ½:'Má»†NH',...}
 if (!cungMenh && typeof data.cungMenh === "object") {
   const keys = Object.keys(data.cungMenh);
-  // Ưu tiên key có giá trị "MỆNH", nếu không có thì lấy key đầu tiên
-  const found = keys.find(k => data.cungMenh[k] === "MỆNH");
+  // Æ¯u tiĂªn key cĂ³ giĂ¡ trá»‹ "Má»†NH", náº¿u khĂ´ng cĂ³ thĂ¬ láº¥y key Ä‘áº§u tiĂªn
+  const found = keys.find(k => data.cungMenh[k] === "Má»†NH");
   cungMenh = found || keys[0];
 }
 
-// 🔹 Ép kiểu thành chuỗi phòng trường hợp là object / null
+// đŸ”¹ Ă‰p kiá»ƒu thĂ nh chuá»—i phĂ²ng trÆ°á»ng há»£p lĂ  object / null
 if (typeof cungMenh !== "string") {
   try {
     cungMenh = String(cungMenh);
@@ -3195,85 +3200,85 @@ if (typeof cungMenh !== "string") {
   }
 }
 
-// 🚨 Nếu vẫn không xác định được thì dừng
+// đŸ¨ Náº¿u váº«n khĂ´ng xĂ¡c Ä‘á»‹nh Ä‘Æ°á»£c thĂ¬ dá»«ng
 if (!cungMenh) {
-  console.warn("⚠️ Không xác định được Cung Mệnh để an Cục Số");
+  console.warn("â ï¸ KhĂ´ng xĂ¡c Ä‘á»‹nh Ä‘Æ°á»£c Cung Má»‡nh Ä‘á»ƒ an Cá»¥c Sá»‘");
   return;
 }
 
 // =====================================================
-// ✅ Tính và lưu Cục Số đúng chuẩn (ưu tiên data.tenCungMenh thật)
+// âœ… TĂ­nh vĂ  lÆ°u Cá»¥c Sá»‘ Ä‘Ăºng chuáº©n (Æ°u tiĂªn data.tenCungMenh tháº­t)
 // -----------------------------------------------------
 const tenMenh = (data.tenCungMenh && typeof data.tenCungMenh === "string")
   ? data.tenCungMenh.trim()
   : (typeof cungMenh === "string" ? cungMenh.trim() : "");
 
-// 🔹 Luôn đồng bộ lại giá trị Cục Số chuẩn
+// đŸ”¹ LuĂ´n Ä‘á»“ng bá»™ láº¡i giĂ¡ trá»‹ Cá»¥c Sá»‘ chuáº©n
 const ketQuaCuc = xacDinhCucSo(data.canChiNam, tenMenh);
 data.cucSo = ketQuaCuc;
 window.dataGlobal.cucSo = ketQuaCuc;
-console.log(`✅ anLop4_CucSo() sử dụng Cục Số CHUẨN: ${data.canChiNam} – ${tenMenh} → ${ketQuaCuc}`);
+console.log(`âœ… anLop4_CucSo() sá»­ dá»¥ng Cá»¥c Sá»‘ CHUáº¨N: ${data.canChiNam} â€“ ${tenMenh} â†’ ${ketQuaCuc}`);
 
 
 
 
-  // 🌟 Bảng quy chiếu cung & vị trí
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // đŸŒŸ Báº£ng quy chiáº¿u cung & vá»‹ trĂ­
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const CUNG_TO_CELL = {
-    "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,
-    "Thìn":5,"Dậu":6,"Mão":7,"Tuất":8,
-    "Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+    "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,
+    "ThĂ¬n":5,"Dáº­u":6,"MĂ£o":7,"Tuáº¥t":8,
+    "Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
   };
 
-  // 🌟 Giá trị khởi đầu của từng loại cục
+  // đŸŒŸ GiĂ¡ trá»‹ khá»Ÿi Ä‘áº§u cá»§a tá»«ng loáº¡i cá»¥c
   const CUC_SO_START = {
-    "Thủy nhị cục": 2,
-    "Mộc tam cục": 3,
-    "Kim tứ cục": 4,
-    "Thổ ngũ cục": 5,
-    "Hỏa lục cục": 6
+    "Thá»§y nhá»‹ cá»¥c": 2,
+    "Má»™c tam cá»¥c": 3,
+    "Kim tá»© cá»¥c": 4,
+    "Thá»• ngÅ© cá»¥c": 5,
+    "Há»a lá»¥c cá»¥c": 6
   };
 
     const baseCuc = CUC_SO_START[data.cucSo];
   if (!baseCuc) {
-    console.warn("⚠️ Không xác định được giá trị khởi đầu của Cục:", data.cucSo);
+    console.warn("â ï¸ KhĂ´ng xĂ¡c Ä‘á»‹nh Ä‘Æ°á»£c giĂ¡ trá»‹ khá»Ÿi Ä‘áº§u cá»§a Cá»¥c:", data.cucSo);
     return;
   }
 
-  // 🌟 Xác định chiều chạy
+  // đŸŒŸ XĂ¡c Ä‘á»‹nh chiá»u cháº¡y
   const gioiTinh = (data.gender || "").trim();
   const menhText = (data.menh || "").trim();
   const isThuan =
-    (gioiTinh === "Nam" && menhText.includes("Dương")) ||
-    (gioiTinh === "Nữ" && menhText.includes("Âm"));
+    (gioiTinh === "Nam" && menhText.includes("DÆ°Æ¡ng")) ||
+    (gioiTinh === "Ná»¯" && menhText.includes("Ă‚m"));
 
-  // 🌟 Đồng bộ Unicode để không bị lệch chữ "Tý", "Mùi"...
+  // đŸŒŸ Äá»“ng bá»™ Unicode Ä‘á»ƒ khĂ´ng bá»‹ lá»‡ch chá»¯ "TĂ½", "MĂ¹i"...
  const cungMenhStr = String(cungMenh || "").trim().normalize("NFC");
 const CUNG_THUAN_NORM = CUNG_THUAN.map(c => String(c).normalize("NFC"));
 const idxMenh = CUNG_THUAN_NORM.indexOf(cungMenhStr);
 
   if (idxMenh === -1) {
-    console.warn("⚠️ Không tìm thấy chỉ số cung Mệnh:", cungMenh);
+    console.warn("â ï¸ KhĂ´ng tĂ¬m tháº¥y chá»‰ sá»‘ cung Má»‡nh:", cungMenh);
     return;
   }
-console.log("✅ Cung Mệnh hợp lệ:", cungMenh);
+console.log("âœ… Cung Má»‡nh há»£p lá»‡:", cungMenh);
 
 
-  // 🌟 Hàm tiện ích
+  // đŸŒŸ HĂ m tiá»‡n Ă­ch
   const getIndexThuan = (start, step) => (start + step) % 12;
   const getIndexNgich = (start, step) => (start - step + 12) % 12;
 
-  // 🧹 Xóa các layer-4 cũ trước khi an lại
+  // đŸ§¹ XĂ³a cĂ¡c layer-4 cÅ© trÆ°á»›c khi an láº¡i
   document.querySelectorAll(".layer-4").forEach(el => el.remove());
 
-  // 🌟 An cục số vào từng cung
+  // đŸŒŸ An cá»¥c sá»‘ vĂ o tá»«ng cung
   for (let i = 0; i < 12; i++) {
     const idx = isThuan ? getIndexThuan(idxMenh, i) : getIndexNgich(idxMenh, i);
     const cung = CUNG_THUAN[idx];
     const cell = document.getElementById("cell" + CUNG_TO_CELL[cung]);
     if (!cell) continue;
 
-    // Tạo layer 4 nếu chưa có
+    // Táº¡o layer 4 náº¿u chÆ°a cĂ³
     let layer4 = cell.querySelector(".layer-4");
     if (!layer4) {
       layer4 = document.createElement("div");
@@ -3281,47 +3286,47 @@ console.log("✅ Cung Mệnh hợp lệ:", cungMenh);
       cell.appendChild(layer4);
     }
 
-    // Hiển thị giá trị Cục số (2,12,22,…)
+    // Hiá»ƒn thá»‹ giĂ¡ trá»‹ Cá»¥c sá»‘ (2,12,22,â€¦)
     const value = baseCuc + i * 10;
     const div = document.createElement("div");
     div.textContent = value;
     layer4.appendChild(div);
   }
 
-  console.log(`✅ Lớp 4 – Cục Số an xong (${data.cucSo}, ${isThuan ? "thuận" : "nghịch"}) tại cung ${cungMenh}`);
+  console.log(`âœ… Lá»›p 4 â€“ Cá»¥c Sá»‘ an xong (${data.cucSo}, ${isThuan ? "thuáº­n" : "nghá»‹ch"}) táº¡i cung ${cungMenh}`);
 }
 
 // =====================================================
-// 🌟 LỚP 5 – NGŨ HÀNH CUNG (CỐ ĐỊNH)
+// đŸŒŸ Lá»P 5 â€“ NGÅ¨ HĂ€NH CUNG (Cá» Äá»NH)
 // -----------------------------------------------------
 function nguHanhCuaCung(tenCung) {
   const NGU_HANH_CUNG = {
-    "Dần": "+Mộc", "Mão": "-Mộc", "Thìn": "+Thổ", "Tỵ": "-Hỏa",
-    "Ngọ": "+Hỏa", "Mùi": "-Thổ", "Thân": "+Kim", "Dậu": "-Kim",
-    "Tuất": "+Thổ", "Hợi": "-Thủy", "Tý": "+Thủy", "Sửu": "-Thổ"
+    "Dáº§n": "+Má»™c", "MĂ£o": "-Má»™c", "ThĂ¬n": "+Thá»•", "Tá»µ": "-Há»a",
+    "Ngá»": "+Há»a", "MĂ¹i": "-Thá»•", "ThĂ¢n": "+Kim", "Dáº­u": "-Kim",
+    "Tuáº¥t": "+Thá»•", "Há»£i": "-Thá»§y", "TĂ½": "+Thá»§y", "Sá»­u": "-Thá»•"
   };
   const val = NGU_HANH_CUNG[tenCung] || "";
-  // chỉ lấy phần chữ Hành (Mộc, Hỏa...) bỏ dấu +/-
+  // chá»‰ láº¥y pháº§n chá»¯ HĂ nh (Má»™c, Há»a...) bá» dáº¥u +/-
   return val.replace(/[+-]/g, "");
 }
 function anLop5_NguHanhCung() {
   const CUNG_TO_CELL = {
-    "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,
-    "Thìn":5,"Dậu":6,"Mão":7,"Tuất":8,
-    "Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+    "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,
+    "ThĂ¬n":5,"Dáº­u":6,"MĂ£o":7,"Tuáº¥t":8,
+    "Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
   };
 
   const NGU_HANH_CUNG = {
-    "Dần": "+Mộc", "Mão": "-Mộc", "Thìn": "+Thổ", "Tỵ": "-Hỏa",
-    "Ngọ": "+Hỏa", "Mùi": "-Thổ", "Thân": "+Kim", "Dậu": "-Kim",
-    "Tuất": "+Thổ", "Hợi": "-Thủy", "Tý": "+Thủy", "Sửu": "-Thổ"
+    "Dáº§n": "+Má»™c", "MĂ£o": "-Má»™c", "ThĂ¬n": "+Thá»•", "Tá»µ": "-Há»a",
+    "Ngá»": "+Há»a", "MĂ¹i": "-Thá»•", "ThĂ¢n": "+Kim", "Dáº­u": "-Kim",
+    "Tuáº¥t": "+Thá»•", "Há»£i": "-Thá»§y", "TĂ½": "+Thá»§y", "Sá»­u": "-Thá»•"
   };
 
   for (const [cung, cellId] of Object.entries(CUNG_TO_CELL)) {
     const cell = document.getElementById("cell" + cellId);
     if (!cell) continue;
 
-    // Tạo khối bao riêng cho lớp 5
+    // Táº¡o khá»‘i bao riĂªng cho lá»›p 5
     let layer5 = cell.querySelector(".layer-5");
     if (!layer5) {
       layer5 = document.createElement("div");
@@ -3329,32 +3334,32 @@ function anLop5_NguHanhCung() {
       cell.appendChild(layer5);
     }
 
-    // Tạo div con cố định vị trí (giống layer4-div)
+    // Táº¡o div con cá»‘ Ä‘á»‹nh vá»‹ trĂ­ (giá»‘ng layer4-div)
     const div = document.createElement("div");
     div.className = "layer5-div";
     div.textContent = NGU_HANH_CUNG[cung];
-    layer5.innerHTML = ""; // reset nếu có cũ
+    layer5.innerHTML = ""; // reset náº¿u cĂ³ cÅ©
     layer5.appendChild(div);
   }
 
-  console.log("✅ Lớp 5 – Ngũ hành cung đã an xong.");
+  console.log("âœ… Lá»›p 5 â€“ NgÅ© hĂ nh cung Ä‘Ă£ an xong.");
 }
 
 // =====================================================
-// 🌟 LỚP 6 – HỆ THỐNG 2 CỘT CÁT & HUNG (TỔNG HỢP)
+// đŸŒŸ Lá»P 6 â€“ Há»† THá»NG 2 Cá»˜T CĂT & HUNG (Tá»”NG Há»¢P)
 // =====================================================
 
-// ✅ Hàm gốc thêm sao (dùng cho tất cả nhóm)
+// âœ… HĂ m gá»‘c thĂªm sao (dĂ¹ng cho táº¥t cáº£ nhĂ³m)
 function themSao(cung, tenSao, nhom, loai) {
 
   const cellMap = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
   const cell = document.getElementById("cell" + cellMap[cung]);
   if (!cell) return;
 
-  // 🔹 Tạo hoặc tìm layer 6
+  // đŸ”¹ Táº¡o hoáº·c tĂ¬m layer 6
   let layer6 = cell.querySelector(".layer-6");
   if (!layer6) {
     layer6 = document.createElement("div");
@@ -3370,7 +3375,7 @@ function themSao(cung, tenSao, nhom, loai) {
 
   const target = (loai === "cat") ? layer6.querySelector(".cat-tinh") : layer6.querySelector(".hung-tinh");
 
-  // 🔹 Xác định thứ tự hiển thị ưu tiên
+  // đŸ”¹ XĂ¡c Ä‘á»‹nh thá»© tá»± hiá»ƒn thá»‹ Æ°u tiĂªn
   const orderMap = {
     "TrungTinh": 1,
     "TuHoa": 2,
@@ -3380,63 +3385,63 @@ function themSao(cung, tenSao, nhom, loai) {
   };
 
   const div = document.createElement("div");
-console.log("Thêm sao:", tenSao);
+console.log("ThĂªm sao:", tenSao);
   div.textContent = tenSao;
-console.log("Tên sao nhận vào:", tenSao);
+console.log("TĂªn sao nháº­n vĂ o:", tenSao);
   div.dataset.order = orderMap[nhom] || 9;
 
 
-// 🌟 Nếu là Tứ Hóa → gắn liên kết tới sao gốc
+// đŸŒŸ Náº¿u lĂ  Tá»© HĂ³a â†’ gáº¯n liĂªn káº¿t tá»›i sao gá»‘c
 if (nhom === "TuHoa") {
-  // 🔸 Ưu tiên lấy CAN của năm hạn (nếu đang xem hạn)
+  // đŸ”¸ Æ¯u tiĂªn láº¥y CAN cá»§a nÄƒm háº¡n (náº¿u Ä‘ang xem háº¡n)
   let canNam = "";
   if (window.dataGlobal?.luuHan?.canChiNam) {
-    canNam = window.dataGlobal.luuHan.canChiNam.split(" ")[0]; // năm hạn
+    canNam = window.dataGlobal.luuHan.canChiNam.split(" ")[0]; // nÄƒm háº¡n
   } else if (window.dataGlobal?.canChiNam) {
-    canNam = window.dataGlobal.canChiNam.split(" ")[0]; // năm sinh gốc
+    canNam = window.dataGlobal.canChiNam.split(" ")[0]; // nÄƒm sinh gá»‘c
   }
 
-  // 🔹 Bảng Tứ Hóa chuẩn (dùng chung)
+  // đŸ”¹ Báº£ng Tá»© HĂ³a chuáº©n (dĂ¹ng chung)
   const TU_HOA = {
-    "Giáp": { loc:"Liêm Trinh", quyen:"Phá Quân", khoa:"Vũ Khúc", ky:"Thái Dương" },
-    "Ất": { loc:"Thiên Cơ", quyen:"Thiên Lương", khoa:"Tử Vi", ky:"Thái Âm" },
-    "Bính": { loc:"Thiên Đồng", quyen:"Thiên Cơ", khoa:"Văn Xương", ky:"Liêm Trinh" },
-    "Đinh": { loc:"Thái Âm", quyen:"Thiên Đồng", khoa:"Thiên Cơ", ky:"Cự Môn" },
-    "Mậu": { loc:"Tham Lang", quyen:"Thái Âm", khoa:"Hữu Bật", ky:"Thiên Cơ" },
-    "Kỷ": { loc:"Vũ Khúc", quyen:"Tham Lang", khoa:"Thiên Lương", ky:"Văn Khúc" },
-    "Canh": { loc:"Thái Dương", quyen:"Vũ Khúc", khoa:"Thiên Đồng", ky:"Thái Âm" },
-    "Tân": { loc:"Cự Môn", quyen:"Thái Dương", khoa:"Văn Khúc", ky:"Văn Xương" },
-    "Nhâm": { loc:"Thiên Lương", quyen:"Tử Vi", khoa:"Tả Phù", ky:"Vũ Khúc" },
-    "Quý": { loc:"Phá Quân", quyen:"Cự Môn", khoa:"Thái Âm", ky:"Tham Lang" }
+    "GiĂ¡p": { loc:"LiĂªm Trinh", quyen:"PhĂ¡ QuĂ¢n", khoa:"VÅ© KhĂºc", ky:"ThĂ¡i DÆ°Æ¡ng" },
+    "áº¤t": { loc:"ThiĂªn CÆ¡", quyen:"ThiĂªn LÆ°Æ¡ng", khoa:"Tá»­ Vi", ky:"ThĂ¡i Ă‚m" },
+    "BĂ­nh": { loc:"ThiĂªn Äá»“ng", quyen:"ThiĂªn CÆ¡", khoa:"VÄƒn XÆ°Æ¡ng", ky:"LiĂªm Trinh" },
+    "Äinh": { loc:"ThĂ¡i Ă‚m", quyen:"ThiĂªn Äá»“ng", khoa:"ThiĂªn CÆ¡", ky:"Cá»± MĂ´n" },
+    "Máº­u": { loc:"Tham Lang", quyen:"ThĂ¡i Ă‚m", khoa:"Há»¯u Báº­t", ky:"ThiĂªn CÆ¡" },
+    "Ká»·": { loc:"VÅ© KhĂºc", quyen:"Tham Lang", khoa:"ThiĂªn LÆ°Æ¡ng", ky:"VÄƒn KhĂºc" },
+    "Canh": { loc:"ThĂ¡i DÆ°Æ¡ng", quyen:"VÅ© KhĂºc", khoa:"ThiĂªn Äá»“ng", ky:"ThĂ¡i Ă‚m" },
+    "TĂ¢n": { loc:"Cá»± MĂ´n", quyen:"ThĂ¡i DÆ°Æ¡ng", khoa:"VÄƒn KhĂºc", ky:"VÄƒn XÆ°Æ¡ng" },
+    "NhĂ¢m": { loc:"ThiĂªn LÆ°Æ¡ng", quyen:"Tá»­ Vi", khoa:"Táº£ PhĂ¹", ky:"VÅ© KhĂºc" },
+    "QuĂ½": { loc:"PhĂ¡ QuĂ¢n", quyen:"Cá»± MĂ´n", khoa:"ThĂ¡i Ă‚m", ky:"Tham Lang" }
   };
 
   const hoa = TU_HOA[canNam];
   let goc = "";
-  if (tenSao === "Hóa Lộc") goc = hoa?.loc;
-  if (tenSao === "Hóa Quyền") goc = hoa?.quyen;
-  if (tenSao === "Hóa Khoa") goc = hoa?.khoa;
-  if (tenSao === "Hóa Kỵ") goc = hoa?.ky;
+  if (tenSao === "HĂ³a Lá»™c") goc = hoa?.loc;
+  if (tenSao === "HĂ³a Quyá»n") goc = hoa?.quyen;
+  if (tenSao === "HĂ³a Khoa") goc = hoa?.khoa;
+  if (tenSao === "HĂ³a Ká»µ") goc = hoa?.ky;
   if (goc) div.dataset.hoaGoc = goc;
 }
 
-// 🌟 Bắt sự kiện click: khi click vào Hóa → sáng sao gốc
+// đŸŒŸ Báº¯t sá»± kiá»‡n click: khi click vĂ o HĂ³a â†’ sĂ¡ng sao gá»‘c
 div.addEventListener("click", () => {
   const goc = div.dataset.hoaGoc;
   if (!goc) return;
 
-  // Xóa sáng hiện có
+  // XĂ³a sĂ¡ng hiá»‡n cĂ³
   document.querySelectorAll(".sao-highlight").forEach(e => e.classList.remove("sao-highlight"));
 
-  // ✨ Tìm và sáng sao gốc
+  // âœ¨ TĂ¬m vĂ  sĂ¡ng sao gá»‘c
   const cleanGoc = goc.normalize("NFD").replace(/\p{Diacritic}/gu,"").replace(/\s+/g,"").toLowerCase();
   let timThay = false;
 
   document.querySelectorAll("[class*='layer'] div, .cung div").forEach(el => {
     const name = el.textContent.trim()
         .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")   // bỏ dấu tổ hợp
-    .replace(/\u0110/g, "d")           // Đ
-    .replace(/\u0111/g, "d")           // đ
+    .replace(/[\u0300-\u036f]/g, "")   // bá» dáº¥u tá»• há»£p
+    .replace(/\u0110/g, "d")           // Ä
+    .replace(/\u0111/g, "d")           // Ä‘
     .replace(/\s+/g, "")
     .toLowerCase();
     if (name === cleanGoc) {
@@ -3445,7 +3450,7 @@ div.addEventListener("click", () => {
     }
   });
 
-  // 🩵 Nếu là sao Nguyệt vận (N.) → mở popup tra cứu
+  // đŸ©µ Náº¿u lĂ  sao Nguyá»‡t váº­n (N.) â†’ má»Ÿ popup tra cá»©u
   if (tenHoa.startsWith("N.")) {
     const tenSaoGoc = goc || tenHoa.replace(/^N\.\s*/,"").trim();
     const key = timKeySao(tenSaoGoc);
@@ -3453,18 +3458,18 @@ div.addEventListener("click", () => {
     else moPopupSao_Ten(tenSaoGoc);
   }
 
-  if (!timThay) console.warn("Warning: Không tìm thấy sao gốc:", goc);
+  if (!timThay) console.warn("Warning: KhĂ´ng tĂ¬m tháº¥y sao gá»‘c:", goc);
 });
 
 
-// 🟩 Debug map trung tinh
+// đŸŸ© Debug map trung tinh
 if (nhom === "TrungTinh") {
   const keyTT = tenSao
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")   // bỏ dấu tổ hợp
-    .replace(/\u0110/g, "d")           // Đ → d
-    .replace(/\u0111/g, "d")           // đ → d
-    .replace(/\s+/g, "")               // bỏ khoảng trắng
+    .replace(/[\u0300-\u036f]/g, "")   // bá» dáº¥u tá»• há»£p
+    .replace(/\u0110/g, "d")           // Ä â†’ d
+    .replace(/\u0111/g, "d")           // Ä‘ â†’ d
+    .replace(/\s+/g, "")               // bá» khoáº£ng tráº¯ng
     .trim()
     .toLowerCase();
 
@@ -3472,12 +3477,12 @@ if (nhom === "TrungTinh") {
   if (!window.trungTinhToCung) window.trungTinhToCung = {};
   window.trungTinhToCung[keyTT] = cung;
 
-  console.log("📌 Trung tinh map:", keyTT, "→", cung);
+  console.log("đŸ“Œ Trung tinh map:", keyTT, "â†’", cung);
 }
 
   target.appendChild(div);
 
-  // 🔹 Sắp xếp lại theo thứ tự
+  // đŸ”¹ Sáº¯p xáº¿p láº¡i theo thá»© tá»±
   const items = Array.from(target.children);
   items.sort((a, b) => a.dataset.order - b.dataset.order);
   target.innerHTML = "";
@@ -3485,15 +3490,15 @@ if (nhom === "TrungTinh") {
 }
 
 // =====================================================
-// 🌟 LỚP 6 – HỆ THỐNG 2 CỘT CÁT & HUNG (TỔNG HỢP)
+// đŸŒŸ Lá»P 6 â€“ Há»† THá»NG 2 Cá»˜T CĂT & HUNG (Tá»”NG Há»¢P)
 // =====================================================
 
-// ✅ Hàm thêm sao – bản fix hiển thị màu ngũ hành cho cả sao gốc, ĐV, Lưu
+// âœ… HĂ m thĂªm sao â€“ báº£n fix hiá»ƒn thá»‹ mĂ u ngÅ© hĂ nh cho cáº£ sao gá»‘c, ÄV, LÆ°u
 function themSao(cung, tenSao, nhom, loai) {
 
   const CUNG_TO_CELL = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
   const cell = document.getElementById("cell" + CUNG_TO_CELL[cung]);
   if (!cell) return;
@@ -3510,39 +3515,39 @@ function themSao(cung, tenSao, nhom, loai) {
 
   const column = (loai === "cat") ? layer6.querySelector(".cat-tinh") : layer6.querySelector(".hung-tinh");
 
-  // Không thêm trùng
+  // KhĂ´ng thĂªm trĂ¹ng
   if ([...column.children].some(el => el.textContent.trim() === tenSao.trim())) return;
 
-  // 🎯 Chuẩn hóa tên gốc (bỏ tiền tố ĐV. / L.)
-const tenGoc = tenSao.replace(/^(ĐV\.|L\.|N\.|Nh\.)\s*/i, "").trim();
+  // đŸ¯ Chuáº©n hĂ³a tĂªn gá»‘c (bá» tiá»n tá»‘ ÄV. / L.)
+const tenGoc = tenSao.replace(/^(ÄV\.|L\.|N\.|Nh\.)\s*/i, "").trim();
 
-  // 🌿 Bảng hành sao
+  // đŸŒ¿ Báº£ng hĂ nh sao
   const hanhSao = {
-    "Tử Vi":"Thổ","Thiên Cơ":"Mộc","Thái Dương":"Hỏa","Vũ Khúc":"Kim","Thiên Đồng":"Thủy",
-    "Liêm Trinh":"Hỏa","Thiên Phủ":"Thổ","Thái Âm":"Thủy","Tham Lang":"Mộc","Cự Môn":"Thủy",
-    "Thiên Tướng":"Thủy","Thiên Lương":"Mộc","Thất Sát":"Kim","Phá Quân":"Thủy","Thiên Khôi":"Hỏa",
-    "Thiên Việt":"Hỏa","Lộc Tồn":"Thổ","Thiên Mã":"Hỏa","Hóa Lộc":"Mộc","Hóa Quyền":"Mộc",
-    "Hóa Khoa":"Mộc","Hóa Kỵ":"Kim","Kình Dương":"Kim","Đà La":"Kim","Văn Xương":"Kim","Văn Khúc":"Thủy",
-    "Linh Tinh":"Hỏa","Hỏa Tinh":"Hỏa","Địa Không":"Hỏa","Địa Kiếp":"Hỏa","Tả Phù":"Thổ"
+    "Tá»­ Vi":"Thá»•","ThiĂªn CÆ¡":"Má»™c","ThĂ¡i DÆ°Æ¡ng":"Há»a","VÅ© KhĂºc":"Kim","ThiĂªn Äá»“ng":"Thá»§y",
+    "LiĂªm Trinh":"Há»a","ThiĂªn Phá»§":"Thá»•","ThĂ¡i Ă‚m":"Thá»§y","Tham Lang":"Má»™c","Cá»± MĂ´n":"Thá»§y",
+    "ThiĂªn TÆ°á»›ng":"Thá»§y","ThiĂªn LÆ°Æ¡ng":"Má»™c","Tháº¥t SĂ¡t":"Kim","PhĂ¡ QuĂ¢n":"Thá»§y","ThiĂªn KhĂ´i":"Há»a",
+    "ThiĂªn Viá»‡t":"Há»a","Lá»™c Tá»“n":"Thá»•","ThiĂªn MĂ£":"Há»a","HĂ³a Lá»™c":"Má»™c","HĂ³a Quyá»n":"Má»™c",
+    "HĂ³a Khoa":"Má»™c","HĂ³a Ká»µ":"Kim","KĂ¬nh DÆ°Æ¡ng":"Kim","ÄĂ  La":"Kim","VÄƒn XÆ°Æ¡ng":"Kim","VÄƒn KhĂºc":"Thá»§y",
+    "Linh Tinh":"Há»a","Há»a Tinh":"Há»a","Äá»‹a KhĂ´ng":"Há»a","Äá»‹a Kiáº¿p":"Há»a","Táº£ PhĂ¹":"Thá»•"
   };
 
 const hanh = hanhSao[tenGoc] || "";
 const colorMap = {
-  "Hỏa": "#ff4d4d",  // 🔥 đỏ tươi sáng
-  "Thổ": "#e69500",  // 🟠 cam đất đậm hơn
-  "Mộc": "#007a29",  // 🌿 xanh lá đậm hơn một chút
-  "Kim": "#000000",  // ⚫ đen thuần
-  "Thủy": "#004cff"  // 💧 xanh dương đậm sáng
+  "Há»a": "#ff4d4d",  // đŸ”¥ Ä‘á» tÆ°Æ¡i sĂ¡ng
+  "Thá»•": "#e69500",  // đŸŸ  cam Ä‘áº¥t Ä‘áº­m hÆ¡n
+  "Má»™c": "#007a29",  // đŸŒ¿ xanh lĂ¡ Ä‘áº­m hÆ¡n má»™t chĂºt
+  "Kim": "#000000",  // â« Ä‘en thuáº§n
+  "Thá»§y": "#004cff"  // đŸ’§ xanh dÆ°Æ¡ng Ä‘áº­m sĂ¡ng
 };
 const color = colorMap[hanh] || "#222";
 
 
-  // 🎨 Tạo div sao
+  // đŸ¨ Táº¡o div sao
   const div = document.createElement("div");
   div.textContent = tenSao;
   div.dataset.order = 9;
-  div.style.fontWeight = /^ĐV\.|^L\./.test(tenSao) ? "700" : "600";
-// 🌟 Cho phép click xem sao (chỉ khi popup đang mở)
+  div.style.fontWeight = /^ÄV\.|^L\./.test(tenSao) ? "700" : "600";
+// đŸŒŸ Cho phĂ©p click xem sao (chá»‰ khi popup Ä‘ang má»Ÿ)
 div.style.cursor = "pointer";
 div.addEventListener("click", () => {
   if (typeof showStarInfo === "function") {
@@ -3552,21 +3557,21 @@ div.addEventListener("click", () => {
 
 
 
-  // ✅ Thêm class ngũ hành + sao lưu
+  // âœ… ThĂªm class ngÅ© hĂ nh + sao lÆ°u
   if (hanh) {
-    const hanhClass = {Hỏa:"sao-hoa",Thổ:"sao-tho",Mộc:"sao-moc",Kim:"sao-kim",Thủy:"sao-thuy"}[hanh];
+    const hanhClass = {Há»a:"sao-hoa",Thá»•:"sao-tho",Má»™c:"sao-moc",Kim:"sao-kim",Thá»§y:"sao-thuy"}[hanh];
     div.classList.add(hanhClass);
   }
   if (/^L\./.test(tenSao)) div.classList.add("sao-luu");
-  if (/^ĐV\./.test(tenSao)) div.classList.add("sao-dv");
+  if (/^ÄV\./.test(tenSao)) div.classList.add("sao-dv");
 
-  // ✅ Ép màu inline có !important để không bị mất
+  // âœ… Ă‰p mĂ u inline cĂ³ !important Ä‘á»ƒ khĂ´ng bá»‹ máº¥t
   div.style.setProperty("color", color, "important");
-  if (/^(ĐV\.|L\.)/i.test(tenSao)) div.style.filter = "brightness(1.15)";
+  if (/^(ÄV\.|L\.)/i.test(tenSao)) div.style.filter = "brightness(1.15)";
 
   column.appendChild(div);
 
-  // ✅ Sắp xếp lại
+  // âœ… Sáº¯p xáº¿p láº¡i
   const items = Array.from(column.children);
   items.sort((a,b)=>(a.dataset.order||0)-(b.dataset.order||0));
   column.innerHTML = "";
@@ -3578,65 +3583,65 @@ div.addEventListener("click", () => {
 
 
 
-// 🌟 LỚP 6.2 – LỘC TỒN & THIÊN MÃ (CÁT TINH BỔ SUNG)
+// đŸŒŸ Lá»P 6.2 â€“ Lá»˜C Tá»’N & THIĂN MĂƒ (CĂT TINH Bá»” SUNG)
 function anLop6_2_LocTon_ThienMa(data) {
 window.dataGlobal = data;
-  console.log("🚀 Bắt đầu an Lộc Tồn – Thiên Mã", data.canChiNam);
+  console.log("đŸ€ Báº¯t Ä‘áº§u an Lá»™c Tá»“n â€“ ThiĂªn MĂ£", data.canChiNam);
 
-  const CAN = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
-  const CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const CAN = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
+  const CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
   let canNam = "", chiNam = "";
   for (const can of CAN) if (data.canChiNam?.includes(can)) canNam = can;
   for (const chi of CHI) if (data.canChiNam?.includes(chi)) chiNam = chi;
 
   const LOC_TON_MAP = {
-    "Giáp":"Dần","Ất":"Mão","Bính":"Tỵ","Đinh":"Ngọ","Mậu":"Tỵ",
-    "Kỷ":"Ngọ","Canh":"Thân","Tân":"Dậu","Nhâm":"Hợi","Quý":"Tý"
+    "GiĂ¡p":"Dáº§n","áº¤t":"MĂ£o","BĂ­nh":"Tá»µ","Äinh":"Ngá»","Máº­u":"Tá»µ",
+    "Ká»·":"Ngá»","Canh":"ThĂ¢n","TĂ¢n":"Dáº­u","NhĂ¢m":"Há»£i","QuĂ½":"TĂ½"
   };
 
   const THIEN_MA_MAP = {
-    "Hợi":"Tỵ","Mão":"Tỵ","Mùi":"Tỵ",
-    "Tỵ":"Hợi","Dậu":"Hợi","Sửu":"Hợi",
-    "Dần":"Thân","Ngọ":"Thân","Tuất":"Thân",
-    "Thân":"Dần","Tý":"Dần","Thìn":"Dần"
+    "Há»£i":"Tá»µ","MĂ£o":"Tá»µ","MĂ¹i":"Tá»µ",
+    "Tá»µ":"Há»£i","Dáº­u":"Há»£i","Sá»­u":"Há»£i",
+    "Dáº§n":"ThĂ¢n","Ngá»":"ThĂ¢n","Tuáº¥t":"ThĂ¢n",
+    "ThĂ¢n":"Dáº§n","TĂ½":"Dáº§n","ThĂ¬n":"Dáº§n"
   };
 
   const locTonCung = LOC_TON_MAP[canNam];
   const thienMaCung = THIEN_MA_MAP[chiNam];
 
-  if (locTonCung) themSao(locTonCung, "Lộc Tồn", "LocTon", "cat");
-  if (thienMaCung) themSao(thienMaCung, "Thiên Mã", "LocTon", "cat");
+  if (locTonCung) themSao(locTonCung, "Lá»™c Tá»“n", "LocTon", "cat");
+  if (thienMaCung) themSao(thienMaCung, "ThiĂªn MĂ£", "LocTon", "cat");
 
   data.cungLocTon = locTonCung;
 
-  console.log(`💰 Năm ${data.canChiNam}: Can ${canNam} → Lộc Tồn tại ${locTonCung}, Chi ${chiNam} → Thiên Mã tại ${thienMaCung}`);
+  console.log(`đŸ’° NÄƒm ${data.canChiNam}: Can ${canNam} â†’ Lá»™c Tá»“n táº¡i ${locTonCung}, Chi ${chiNam} â†’ ThiĂªn MĂ£ táº¡i ${thienMaCung}`);
 }
 
 
 
 function rebuildSaoToCungFromDOM() {
 
-  // Nếu đang an sao → KHÔNG ĐƯỢC REBUILD
+  // Náº¿u Ä‘ang an sao â†’ KHĂ”NG ÄÆ¯á»¢C REBUILD
   if (window.__LOCK_REBUILD__) {
-    console.warn("⛔ REBUILD bị chặn: hệ thống đang an sao!");
+    console.warn("â›” REBUILD bá»‹ cháº·n: há»‡ thá»‘ng Ä‘ang an sao!");
     return window.saoToCung;
   }
 
   const revMap = {
-    1:"Tỵ", 2:"Ngọ", 3:"Mùi", 4:"Thân",
-    5:"Thìn",6:"Dậu",7:"Mão",8:"Tuất",
-    9:"Dần",10:"Sửu",11:"Tý",12:"Hợi"
+    1:"Tá»µ", 2:"Ngá»", 3:"MĂ¹i", 4:"ThĂ¢n",
+    5:"ThĂ¬n",6:"Dáº­u",7:"MĂ£o",8:"Tuáº¥t",
+    9:"Dáº§n",10:"Sá»­u",11:"TĂ½",12:"Há»£i"
   };
 
-  // dùng normalizeKey để đồng nhất với Tứ Hóa
+  // dĂ¹ng normalizeKey Ä‘á»ƒ Ä‘á»“ng nháº¥t vá»›i Tá»© HĂ³a
 function normalizeKey(str){
   return str
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")  // bỏ dấu
-    .replace(/đ/gi, "d")              // ⭐ QUAN TRỌNG: đổi đ → d
-    .replace(/\s+/g,"")               // xoá space
-    .replace(/[\u00A0]/g,"")          // xoá NBSP
+    .replace(/[\u0300-\u036f]/g,"")  // bá» dáº¥u
+    .replace(/Ä‘/gi, "d")              // â­ QUAN TRá»ŒNG: Ä‘á»•i Ä‘ â†’ d
+    .replace(/\s+/g,"")               // xoĂ¡ space
+    .replace(/[\u00A0]/g,"")          // xoĂ¡ NBSP
     .trim()
     .toLowerCase();
 }
@@ -3657,11 +3662,11 @@ function normalizeKey(str){
 
     layer3.querySelectorAll("div").forEach(el => {
 
-      // lấy tên sao SẠCH — rất quan trọng
+      // láº¥y tĂªn sao Sáº CH â€” ráº¥t quan trá»ng
       const raw = el.textContent.normalize("NFC").trim();
 console.log("RAW:", raw, "UNICODE:", [...raw].map(c => c.charCodeAt(0).toString(16)));
 
-      // chuẩn hóa thành key đồng bộ
+      // chuáº©n hĂ³a thĂ nh key Ä‘á»“ng bá»™
       const key = normalizeKey(raw);
 
       if (CHINH_TINH_KEYS.includes(key)) {
@@ -3671,33 +3676,33 @@ console.log("RAW:", raw, "UNICODE:", [...raw].map(c => c.charCodeAt(0).toString(
   });
 
   if (Object.keys(newMap).length < 12) {
-    console.warn("⚠️ REBUILD: DOM chưa đủ chính tinh → GIỮ LẠI MAP CŨ");
+    console.warn("â ï¸ REBUILD: DOM chÆ°a Ä‘á»§ chĂ­nh tinh â†’ GIá»® Láº I MAP CÅ¨");
     return window.saoToCung;
   }
 
   window.saoToCung = newMap;
-  console.log("🧭 [REBUILD] saoToCung từ DOM:", window.saoToCung);
+  console.log("đŸ§­ [REBUILD] saoToCung tá»« DOM:", window.saoToCung);
 }
 // =====================================================
-// 🌟 LỚP 6 – TRUNG TINH (GỘP CÁT + HUNG)
+// đŸŒŸ Lá»P 6 â€“ TRUNG TINH (Gá»˜P CĂT + HUNG)
 // =====================================================
 function anLop6_TrungTinh(data) {
- console.log("🌀 Bắt đầu an Trung tinh...", data.canChiNam);
+ console.log("đŸŒ€ Báº¯t Ä‘áº§u an Trung tinh...", data.canChiNam);
 
-  // 🔥 Fallback: nếu Chính Tinh chưa chạy → gọi bù
+  // đŸ”¥ Fallback: náº¿u ChĂ­nh Tinh chÆ°a cháº¡y â†’ gá»i bĂ¹
   if (!window.saoToCung || Object.keys(window.saoToCung).length === 0) {
-    console.warn("⚠️ [TT] saoToCung đang rỗng → gọi anLop3_ChinhTinh bổ sung");
+    console.warn("â ï¸ [TT] saoToCung Ä‘ang rá»—ng â†’ gá»i anLop3_ChinhTinh bá»• sung");
     if (typeof anLop3_ChinhTinh === "function") {
       anLop3_ChinhTinh(data);
     } else {
-      console.error("❌ [TT] anLop3_ChinhTinh chưa được định nghĩa!");
+      console.error("âŒ [TT] anLop3_ChinhTinh chÆ°a Ä‘Æ°á»£c Ä‘á»‹nh nghÄ©a!");
     }
   }
   const canNam = data.canChiNam?.split(" ")[0] || "";
   const thangAm = parseInt(data.lunar[1]);
-  const gioChi = data.canChiGio?.split(" ")[1] || "Tý";
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-// 🌟 Đảm bảo mỗi cung chỉ có 1 lớp trung tinh
+  const gioChi = data.canChiGio?.split(" ")[1] || "TĂ½";
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+// đŸŒŸ Äáº£m báº£o má»—i cung chá»‰ cĂ³ 1 lá»›p trung tinh
 Object.values(CUNG_TO_CELL).forEach(id => {
   const cell = document.getElementById("cell" + id);
   if (!cell) return;
@@ -3709,100 +3714,100 @@ Object.values(CUNG_TO_CELL).forEach(id => {
   }
 });
 
-  // 🧭 Hàm đếm cung (dùng chung)
-  function demCung(start, step, chieu="thuận") {
+  // đŸ§­ HĂ m Ä‘áº¿m cung (dĂ¹ng chung)
+  function demCung(start, step, chieu="thuáº­n") {
     const iStart = CUNG_THUAN.indexOf(start);
     if (iStart === -1) return null;
-    const idx = (chieu === "thuận")
+    const idx = (chieu === "thuáº­n")
       ? (iStart + (step - 1)) % 12
       : (iStart - (step - 1) + 12) % 12;
     return CUNG_THUAN[idx];
   }
 
   // ===============================
-  // 🌿 NHÓM CÁT TINH
+  // đŸŒ¿ NHĂ“M CĂT TINH
   // ===============================
   const BANG_KHOI_VIET = {
-    "Giáp": ["Sửu", "Mùi"], "Mậu": ["Sửu", "Mùi"],
-    "Ất": ["Tý", "Thân"], "Kỷ": ["Tý", "Thân"],
-    "Canh": ["Dần", "Ngọ"], "Tân": ["Dần", "Ngọ"],
-    "Bính": ["Hợi", "Dậu"], "Đinh": ["Hợi", "Dậu"],
-    "Nhâm": ["Mão", "Tỵ"], "Quý": ["Mão", "Tỵ"]
+    "GiĂ¡p": ["Sá»­u", "MĂ¹i"], "Máº­u": ["Sá»­u", "MĂ¹i"],
+    "áº¤t": ["TĂ½", "ThĂ¢n"], "Ká»·": ["TĂ½", "ThĂ¢n"],
+    "Canh": ["Dáº§n", "Ngá»"], "TĂ¢n": ["Dáº§n", "Ngá»"],
+    "BĂ­nh": ["Há»£i", "Dáº­u"], "Äinh": ["Há»£i", "Dáº­u"],
+    "NhĂ¢m": ["MĂ£o", "Tá»µ"], "QuĂ½": ["MĂ£o", "Tá»µ"]
   };
 
   const cap = BANG_KHOI_VIET[canNam];
   if (cap) {
-    themSao(cap[0], "Thiên Khôi", "TrungTinh", "cat");
-    themSao(cap[1], "Thiên Việt", "TrungTinh", "cat");
+    themSao(cap[0], "ThiĂªn KhĂ´i", "TrungTinh", "cat");
+    themSao(cap[1], "ThiĂªn Viá»‡t", "TrungTinh", "cat");
   }
 
-  const cungTaPhu = demCung("Thìn", thangAm, "thuận");
-  const cungHuuBat = demCung("Tuất", thangAm, "nghịch");
-  if (cungTaPhu) themSao(cungTaPhu, "Tả Phù", "TrungTinh", "cat");
-  if (cungHuuBat) themSao(cungHuuBat, "Hữu Bật", "TrungTinh", "cat");
+  const cungTaPhu = demCung("ThĂ¬n", thangAm, "thuáº­n");
+  const cungHuuBat = demCung("Tuáº¥t", thangAm, "nghá»‹ch");
+  if (cungTaPhu) themSao(cungTaPhu, "Táº£ PhĂ¹", "TrungTinh", "cat");
+  if (cungHuuBat) themSao(cungHuuBat, "Há»¯u Báº­t", "TrungTinh", "cat");
 
-  // 🌟 Văn Xương – Văn Khúc (chuẩn cổ: Tuất nghịch, Thìn thuận)
-  const gioChiArray = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // đŸŒŸ VÄƒn XÆ°Æ¡ng â€“ VÄƒn KhĂºc (chuáº©n cá»•: Tuáº¥t nghá»‹ch, ThĂ¬n thuáº­n)
+  const gioChiArray = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const gioIndex = gioChiArray.indexOf(gioChi);
 
   if (gioIndex !== -1) {
-    // 🪶 Văn Xương: Tuất coi là Tý, đếm NGHỊCH theo giờ sinh
-    const startXuong = CUNG_THUAN.indexOf("Tuất"); // 8
+    // đŸª¶ VÄƒn XÆ°Æ¡ng: Tuáº¥t coi lĂ  TĂ½, Ä‘áº¿m NGHá»CH theo giá» sinh
+    const startXuong = CUNG_THUAN.indexOf("Tuáº¥t"); // 8
     const idxXuong = (startXuong - gioIndex + 12) % 12;
     const cungVanXuong = CUNG_THUAN[idxXuong];
 
-    // 🪶 Văn Khúc: Thìn coi là Tý, đếm THUẬN theo giờ sinh
-    const startKhuc = CUNG_THUAN.indexOf("Thìn"); // 2
+    // đŸª¶ VÄƒn KhĂºc: ThĂ¬n coi lĂ  TĂ½, Ä‘áº¿m THUáº¬N theo giá» sinh
+    const startKhuc = CUNG_THUAN.indexOf("ThĂ¬n"); // 2
     const idxKhuc = (startKhuc + gioIndex) % 12;
     const cungVanKhuc = CUNG_THUAN[idxKhuc];
 
-    if (cungVanXuong) themSao(cungVanXuong, "Văn Xương", "TrungTinh", "cat");
-    if (cungVanKhuc) themSao(cungVanKhuc, "Văn Khúc", "TrungTinh", "cat");
+    if (cungVanXuong) themSao(cungVanXuong, "VÄƒn XÆ°Æ¡ng", "TrungTinh", "cat");
+    if (cungVanKhuc) themSao(cungVanKhuc, "VÄƒn KhĂºc", "TrungTinh", "cat");
   }
 
   // ===============================
-  // ⚡ NHÓM HUNG TINH
+  // â¡ NHĂ“M HUNG TINH
   // ===============================
-// 🌟 Kình Dương – Đà La (tính trực tiếp từ công thức Lộc Tồn gốc)
+// đŸŒŸ KĂ¬nh DÆ°Æ¡ng â€“ ÄĂ  La (tĂ­nh trá»±c tiáº¿p tá»« cĂ´ng thá»©c Lá»™c Tá»“n gá»‘c)
 if (data.canChiNam) {
   const canChiNam = data.canChiNam.trim();
   let canNam = "";
 
-  // ✅ Trích xuất đúng Can năm từ chuỗi data.canChiNam
-  if (canChiNam.startsWith("Giáp")) canNam = "Giáp";
-  else if (canChiNam.startsWith("Ất")) canNam = "Ất";
-  else if (canChiNam.startsWith("Bính")) canNam = "Bính";
-  else if (canChiNam.startsWith("Đinh")) canNam = "Đinh";
-  else if (canChiNam.startsWith("Mậu")) canNam = "Mậu";
-  else if (canChiNam.startsWith("Kỷ")) canNam = "Kỷ";
+  // âœ… TrĂ­ch xuáº¥t Ä‘Ăºng Can nÄƒm tá»« chuá»—i data.canChiNam
+  if (canChiNam.startsWith("GiĂ¡p")) canNam = "GiĂ¡p";
+  else if (canChiNam.startsWith("áº¤t")) canNam = "áº¤t";
+  else if (canChiNam.startsWith("BĂ­nh")) canNam = "BĂ­nh";
+  else if (canChiNam.startsWith("Äinh")) canNam = "Äinh";
+  else if (canChiNam.startsWith("Máº­u")) canNam = "Máº­u";
+  else if (canChiNam.startsWith("Ká»·")) canNam = "Ká»·";
   else if (canChiNam.startsWith("Canh")) canNam = "Canh";
-  else if (canChiNam.startsWith("Tân")) canNam = "Tân";
-  else if (canChiNam.startsWith("Nhâm")) canNam = "Nhâm";
-  else if (canChiNam.startsWith("Quý")) canNam = "Quý";
+  else if (canChiNam.startsWith("TĂ¢n")) canNam = "TĂ¢n";
+  else if (canChiNam.startsWith("NhĂ¢m")) canNam = "NhĂ¢m";
+  else if (canChiNam.startsWith("QuĂ½")) canNam = "QuĂ½";
 
-  // ✅ Tính vị trí Lộc Tồn gốc theo Can năm
-  let viTriA = "Dần";
+  // âœ… TĂ­nh vá»‹ trĂ­ Lá»™c Tá»“n gá»‘c theo Can nÄƒm
+  let viTriA = "Dáº§n";
   switch (canNam) {
-    case "Giáp": viTriA = "Dần"; break;
-    case "Ất":   viTriA = "Mão"; break;
-    case "Bính":
-    case "Mậu":  viTriA = "Tỵ";  break;
-    case "Đinh":
-    case "Kỷ":   viTriA = "Ngọ"; break;
-    case "Canh": viTriA = "Thân"; break;
-    case "Tân":  viTriA = "Dậu"; break;
-    case "Nhâm": viTriA = "Hợi"; break;
-    case "Quý":  viTriA = "Tý";  break;
+    case "GiĂ¡p": viTriA = "Dáº§n"; break;
+    case "áº¤t":   viTriA = "MĂ£o"; break;
+    case "BĂ­nh":
+    case "Máº­u":  viTriA = "Tá»µ";  break;
+    case "Äinh":
+    case "Ká»·":   viTriA = "Ngá»"; break;
+    case "Canh": viTriA = "ThĂ¢n"; break;
+    case "TĂ¢n":  viTriA = "Dáº­u"; break;
+    case "NhĂ¢m": viTriA = "Há»£i"; break;
+    case "QuĂ½":  viTriA = "TĂ½";  break;
   }
 
-  // ✅ Từ đó an Kình Dương – Đà La (thuận +1, nghịch -1)
+  // âœ… Tá»« Ä‘Ă³ an KĂ¬nh DÆ°Æ¡ng â€“ ÄĂ  La (thuáº­n +1, nghá»‹ch -1)
   const iA = CUNG_THUAN.indexOf(viTriA);
   if (iA >= 0) {
     const cungKinh = CUNG_THUAN[(iA + 1) % 12];
     const cungDa   = CUNG_THUAN[(iA - 1 + 12) % 12];
-    themSao(cungKinh, "Kình Dương", "TrungTinh", "hung");
-    themSao(cungDa, "Đà La", "TrungTinh", "hung");
-    console.log(`✅ ${canChiNam} → Lộc Tồn gốc tại ${viTriA}, Kình Dương: ${cungKinh}, Đà La: ${cungDa}`);
+    themSao(cungKinh, "KĂ¬nh DÆ°Æ¡ng", "TrungTinh", "hung");
+    themSao(cungDa, "ÄĂ  La", "TrungTinh", "hung");
+    console.log(`âœ… ${canChiNam} â†’ Lá»™c Tá»“n gá»‘c táº¡i ${viTriA}, KĂ¬nh DÆ°Æ¡ng: ${cungKinh}, ÄĂ  La: ${cungDa}`);
   }
 }
 
@@ -3812,139 +3817,139 @@ if (data.canChiNam) {
 
 
 
-  // 🔹 Địa Không & Địa Kiếp (chuẩn: từ Hợi, Tý đếm thuận/ nghịch)
-  const GIO_CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // đŸ”¹ Äá»‹a KhĂ´ng & Äá»‹a Kiáº¿p (chuáº©n: tá»« Há»£i, TĂ½ Ä‘áº¿m thuáº­n/ nghá»‹ch)
+  const GIO_CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const iGio = GIO_CHI.indexOf(gioChi);
   if (iGio >= 0) {
-    const iHoi = CUNG_THUAN.indexOf("Hợi");
+    const iHoi = CUNG_THUAN.indexOf("Há»£i");
     const cungKiep = CUNG_THUAN[(iHoi + iGio) % 12];
     const cungKhong = CUNG_THUAN[(iHoi - iGio + 12) % 12];
-    themSao(cungKiep, "Địa Kiếp", "TrungTinh", "hung");
-    themSao(cungKhong, "Địa Không", "TrungTinh", "hung");
-    console.log(`🕐 Giờ ${gioChi}: Kiếp tại ${cungKiep}, Không tại ${cungKhong}`);
+    themSao(cungKiep, "Äá»‹a Kiáº¿p", "TrungTinh", "hung");
+    themSao(cungKhong, "Äá»‹a KhĂ´ng", "TrungTinh", "hung");
+    console.log(`đŸ• Giá» ${gioChi}: Kiáº¿p táº¡i ${cungKiep}, KhĂ´ng táº¡i ${cungKhong}`);
   }
 
-  // 🔹 LINH TINH
-  const menhAD = data.amduongMenh || "Dương Nam"; 
-  const chiNam = data.canChiNam?.split(" ")[1] || "Tý";
+  // đŸ”¹ LINH TINH
+  const menhAD = data.amduongMenh || "DÆ°Æ¡ng Nam"; 
+  const chiNam = data.canChiNam?.split(" ")[1] || "TĂ½";
 
   const BANG_LINH_TINH = {
     "DuongNam_AmNu": {
-      "Tý":{"DầnNgọTuất":"Mão","Khac":"Tuất"},"Sửu":{"DầnNgọTuất":"Dần","Khac":"Dậu"},
-      "Dần":{"DầnNgọTuất":"Sửu","Khac":"Thân"},"Mão":{"DầnNgọTuất":"Tý","Khac":"Mùi"},
-      "Thìn":{"DầnNgọTuất":"Hợi","Khac":"Ngọ"},"Tỵ":{"DầnNgọTuất":"Tuất","Khac":"Tỵ"},
-      "Ngọ":{"DầnNgọTuất":"Dậu","Khac":"Thìn"},"Mùi":{"DầnNgọTuất":"Thân","Khac":"Mão"},
-      "Thân":{"DầnNgọTuất":"Mùi","Khac":"Dần"},"Dậu":{"DầnNgọTuất":"Ngọ","Khac":"Sửu"},
-      "Tuất":{"DầnNgọTuất":"Tỵ","Khac":"Tý"},"Hợi":{"DầnNgọTuất":"Thìn","Khac":"Hợi"}
+      "TĂ½":{"Dáº§nNgá»Tuáº¥t":"MĂ£o","Khac":"Tuáº¥t"},"Sá»­u":{"Dáº§nNgá»Tuáº¥t":"Dáº§n","Khac":"Dáº­u"},
+      "Dáº§n":{"Dáº§nNgá»Tuáº¥t":"Sá»­u","Khac":"ThĂ¢n"},"MĂ£o":{"Dáº§nNgá»Tuáº¥t":"TĂ½","Khac":"MĂ¹i"},
+      "ThĂ¬n":{"Dáº§nNgá»Tuáº¥t":"Há»£i","Khac":"Ngá»"},"Tá»µ":{"Dáº§nNgá»Tuáº¥t":"Tuáº¥t","Khac":"Tá»µ"},
+      "Ngá»":{"Dáº§nNgá»Tuáº¥t":"Dáº­u","Khac":"ThĂ¬n"},"MĂ¹i":{"Dáº§nNgá»Tuáº¥t":"ThĂ¢n","Khac":"MĂ£o"},
+      "ThĂ¢n":{"Dáº§nNgá»Tuáº¥t":"MĂ¹i","Khac":"Dáº§n"},"Dáº­u":{"Dáº§nNgá»Tuáº¥t":"Ngá»","Khac":"Sá»­u"},
+      "Tuáº¥t":{"Dáº§nNgá»Tuáº¥t":"Tá»µ","Khac":"TĂ½"},"Há»£i":{"Dáº§nNgá»Tuáº¥t":"ThĂ¬n","Khac":"Há»£i"}
     },
     "AmNam_DuongNu": {
-      "Tý":{"DầnNgọTuất":"Mão","Khac":"Tuất"},"Sửu":{"DầnNgọTuất":"Thìn","Khac":"Hợi"},
-      "Dần":{"DầnNgọTuất":"Tỵ","Khac":"Tý"},"Mão":{"DầnNgọTuất":"Ngọ","Khac":"Sửu"},
-      "Thìn":{"DầnNgọTuất":"Mùi","Khac":"Dần"},"Tỵ":{"DầnNgọTuất":"Thân","Khac":"Mão"},
-      "Ngọ":{"DầnNgọTuất":"Dậu","Khac":"Thìn"},"Mùi":{"DầnNgọTuất":"Tuất","Khac":"Tỵ"},
-      "Thân":{"DầnNgọTuất":"Hợi","Khac":"Ngọ"},"Dậu":{"DầnNgọTuất":"Tý","Khac":"Mùi"},
-      "Tuất":{"DầnNgọTuất":"Sửu","Khac":"Thân"},"Hợi":{"DầnNgọTuất":"Dần","Khac":"Dậu"}
+      "TĂ½":{"Dáº§nNgá»Tuáº¥t":"MĂ£o","Khac":"Tuáº¥t"},"Sá»­u":{"Dáº§nNgá»Tuáº¥t":"ThĂ¬n","Khac":"Há»£i"},
+      "Dáº§n":{"Dáº§nNgá»Tuáº¥t":"Tá»µ","Khac":"TĂ½"},"MĂ£o":{"Dáº§nNgá»Tuáº¥t":"Ngá»","Khac":"Sá»­u"},
+      "ThĂ¬n":{"Dáº§nNgá»Tuáº¥t":"MĂ¹i","Khac":"Dáº§n"},"Tá»µ":{"Dáº§nNgá»Tuáº¥t":"ThĂ¢n","Khac":"MĂ£o"},
+      "Ngá»":{"Dáº§nNgá»Tuáº¥t":"Dáº­u","Khac":"ThĂ¬n"},"MĂ¹i":{"Dáº§nNgá»Tuáº¥t":"Tuáº¥t","Khac":"Tá»µ"},
+      "ThĂ¢n":{"Dáº§nNgá»Tuáº¥t":"Há»£i","Khac":"Ngá»"},"Dáº­u":{"Dáº§nNgá»Tuáº¥t":"TĂ½","Khac":"MĂ¹i"},
+      "Tuáº¥t":{"Dáº§nNgá»Tuáº¥t":"Sá»­u","Khac":"ThĂ¢n"},"Há»£i":{"Dáº§nNgá»Tuáº¥t":"Dáº§n","Khac":"Dáº­u"}
     }
   };
 
-  const keyLinh = (menhAD === "Dương Nam" || menhAD === "Âm Nữ") ? "DuongNam_AmNu" : "AmNam_DuongNu";
+  const keyLinh = (menhAD === "DÆ°Æ¡ng Nam" || menhAD === "Ă‚m Ná»¯") ? "DuongNam_AmNu" : "AmNam_DuongNu";
   const chiNamThuong = chiNam.normalize("NFD").replace(/\p{Diacritic}/gu,"");
-  const nhomChi = ["Dan","Ngo","Tuat"].includes(chiNamThuong) ? "DầnNgọTuất" : "Khac";
+  const nhomChi = ["Dan","Ngo","Tuat"].includes(chiNamThuong) ? "Dáº§nNgá»Tuáº¥t" : "Khac";
   const cungLinh = BANG_LINH_TINH[keyLinh][gioChi]?.[nhomChi];
   if (cungLinh) themSao(cungLinh, "Linh Tinh", "TrungTinh", "hung");
 
-  // 🔹 HỎA TINH
+  // đŸ”¹ Há»A TINH
   const BANG_HOA_TINH = {
     "DuongNam_AmNu": {
-      "TyThinThan": { "Tý":"Dần","Sửu":"Mão","Dần":"Thìn","Mão":"Tỵ","Thìn":"Ngọ","Tỵ":"Mùi","Ngọ":"Thân","Mùi":"Dậu","Thân":"Tuất","Dậu":"Hợi","Tuất":"Tý","Hợi":"Sửu" },
-      "SuuTyDau": { "Tý":"Mão","Sửu":"Thìn","Dần":"Tỵ","Mão":"Ngọ","Thìn":"Mùi","Tỵ":"Thân","Ngọ":"Dậu","Mùi":"Tuất","Thân":"Hợi","Dậu":"Tý","Tuất":"Sửu","Hợi":"Dần" },
-      "DanNgoTuat": { "Tý":"Sửu","Sửu":"Dần","Dần":"Mão","Mão":"Thìn","Thìn":"Tỵ","Tỵ":"Ngọ","Ngọ":"Mùi","Mùi":"Thân","Thân":"Dậu","Dậu":"Tuất","Tuất":"Hợi","Hợi":"Tý" },
-      "MaoMuiHoi": { "Tý":"Dậu","Sửu":"Tuất","Dần":"Hợi","Mão":"Tý","Thìn":"Sửu","Tỵ":"Dần","Ngọ":"Mão","Mùi":"Thìn","Thân":"Tỵ","Dậu":"Ngọ","Tuất":"Mùi","Hợi":"Thân" }
+      "TyThinThan": { "TĂ½":"Dáº§n","Sá»­u":"MĂ£o","Dáº§n":"ThĂ¬n","MĂ£o":"Tá»µ","ThĂ¬n":"Ngá»","Tá»µ":"MĂ¹i","Ngá»":"ThĂ¢n","MĂ¹i":"Dáº­u","ThĂ¢n":"Tuáº¥t","Dáº­u":"Há»£i","Tuáº¥t":"TĂ½","Há»£i":"Sá»­u" },
+      "SuuTyDau": { "TĂ½":"MĂ£o","Sá»­u":"ThĂ¬n","Dáº§n":"Tá»µ","MĂ£o":"Ngá»","ThĂ¬n":"MĂ¹i","Tá»µ":"ThĂ¢n","Ngá»":"Dáº­u","MĂ¹i":"Tuáº¥t","ThĂ¢n":"Há»£i","Dáº­u":"TĂ½","Tuáº¥t":"Sá»­u","Há»£i":"Dáº§n" },
+      "DanNgoTuat": { "TĂ½":"Sá»­u","Sá»­u":"Dáº§n","Dáº§n":"MĂ£o","MĂ£o":"ThĂ¬n","ThĂ¬n":"Tá»µ","Tá»µ":"Ngá»","Ngá»":"MĂ¹i","MĂ¹i":"ThĂ¢n","ThĂ¢n":"Dáº­u","Dáº­u":"Tuáº¥t","Tuáº¥t":"Há»£i","Há»£i":"TĂ½" },
+      "MaoMuiHoi": { "TĂ½":"Dáº­u","Sá»­u":"Tuáº¥t","Dáº§n":"Há»£i","MĂ£o":"TĂ½","ThĂ¬n":"Sá»­u","Tá»µ":"Dáº§n","Ngá»":"MĂ£o","MĂ¹i":"ThĂ¬n","ThĂ¢n":"Tá»µ","Dáº­u":"Ngá»","Tuáº¥t":"MĂ¹i","Há»£i":"ThĂ¢n" }
     },
     "AmNam_DuongNu": {
-      "TyThinThan": { "Tý":"Dần","Sửu":"Sửu","Dần":"Tý","Mão":"Hợi","Thìn":"Tuất","Tỵ":"Dậu","Ngọ":"Thân","Mùi":"Mùi","Thân":"Ngọ","Dậu":"Tỵ","Tuất":"Thìn","Hợi":"Mão" },
-      "SuuTyDau": { "Tý":"Mão","Sửu":"Dần","Dần":"Sửu","Mão":"Tý","Thìn":"Hợi","Tỵ":"Tuất","Ngọ":"Dậu","Mùi":"Thân","Thân":"Mùi","Dậu":"Ngọ","Tuất":"Tỵ","Hợi":"Thìn" },
-      "DanNgoTuat": { "Tý":"Sửu","Sửu":"Tý","Dần":"Hợi","Mão":"Tuất","Thìn":"Dậu","Tỵ":"Thân","Ngọ":"Mùi","Mùi":"Ngọ","Thân":"Tỵ","Dậu":"Thìn","Tuất":"Mão","Hợi":"Dần" },
-      "MaoMuiHoi": { "Tý":"Dậu","Sửu":"Thân","Dần":"Mùi","Mão":"Ngọ","Thìn":"Tỵ","Tỵ":"Thìn","Ngọ":"Mão","Mùi":"Dần","Thân":"Sửu","Dậu":"Tý","Tuất":"Hợi","Hợi":"Tuất" }
+      "TyThinThan": { "TĂ½":"Dáº§n","Sá»­u":"Sá»­u","Dáº§n":"TĂ½","MĂ£o":"Há»£i","ThĂ¬n":"Tuáº¥t","Tá»µ":"Dáº­u","Ngá»":"ThĂ¢n","MĂ¹i":"MĂ¹i","ThĂ¢n":"Ngá»","Dáº­u":"Tá»µ","Tuáº¥t":"ThĂ¬n","Há»£i":"MĂ£o" },
+      "SuuTyDau": { "TĂ½":"MĂ£o","Sá»­u":"Dáº§n","Dáº§n":"Sá»­u","MĂ£o":"TĂ½","ThĂ¬n":"Há»£i","Tá»µ":"Tuáº¥t","Ngá»":"Dáº­u","MĂ¹i":"ThĂ¢n","ThĂ¢n":"MĂ¹i","Dáº­u":"Ngá»","Tuáº¥t":"Tá»µ","Há»£i":"ThĂ¬n" },
+      "DanNgoTuat": { "TĂ½":"Sá»­u","Sá»­u":"TĂ½","Dáº§n":"Há»£i","MĂ£o":"Tuáº¥t","ThĂ¬n":"Dáº­u","Tá»µ":"ThĂ¢n","Ngá»":"MĂ¹i","MĂ¹i":"Ngá»","ThĂ¢n":"Tá»µ","Dáº­u":"ThĂ¬n","Tuáº¥t":"MĂ£o","Há»£i":"Dáº§n" },
+      "MaoMuiHoi": { "TĂ½":"Dáº­u","Sá»­u":"ThĂ¢n","Dáº§n":"MĂ¹i","MĂ£o":"Ngá»","ThĂ¬n":"Tá»µ","Tá»µ":"ThĂ¬n","Ngá»":"MĂ£o","MĂ¹i":"Dáº§n","ThĂ¢n":"Sá»­u","Dáº­u":"TĂ½","Tuáº¥t":"Há»£i","Há»£i":"Tuáº¥t" }
     }
   };
 
   const keyHoa = keyLinh;
   let nhomNam;
-  if (["Tý","Thìn","Thân"].includes(chiNam)) nhomNam = "TyThinThan";
-  else if (["Sửu","Tỵ","Dậu"].includes(chiNam)) nhomNam = "SuuTyDau";
-  else if (["Dần","Ngọ","Tuất"].includes(chiNam)) nhomNam = "DanNgoTuat";
+  if (["TĂ½","ThĂ¬n","ThĂ¢n"].includes(chiNam)) nhomNam = "TyThinThan";
+  else if (["Sá»­u","Tá»µ","Dáº­u"].includes(chiNam)) nhomNam = "SuuTyDau";
+  else if (["Dáº§n","Ngá»","Tuáº¥t"].includes(chiNam)) nhomNam = "DanNgoTuat";
   else nhomNam = "MaoMuiHoi";
 
   const cungHoa = BANG_HOA_TINH[keyHoa][nhomNam]?.[gioChi];
-  if (cungHoa) themSao(cungHoa, "Hỏa Tinh", "TrungTinh", "hung");
-// 🔹 Lưu vị trí toàn bộ Trung Tinh (Cát + Hung) để Tứ Hóa có thể tìm thấy
+  if (cungHoa) themSao(cungHoa, "Há»a Tinh", "TrungTinh", "hung");
+// đŸ”¹ LÆ°u vá»‹ trĂ­ toĂ n bá»™ Trung Tinh (CĂ¡t + Hung) Ä‘á»ƒ Tá»© HĂ³a cĂ³ thá»ƒ tĂ¬m tháº¥y
 if (!window.trungTinhToCung) window.trungTinhToCung = {};
 document.querySelectorAll('.layer-6 .cat-tinh div, .layer-6 .hung-tinh div').forEach(el => {
   const name = el.textContent.trim()
   .normalize("NFD")
-  .replace(/[\u0300-\u036f]/g, "")   // xoá dấu tổ hợp
-  .replace(/\u0110/g, "d")           // Đ → d
-  .replace(/\u0111/g, "d")           // đ → d
-  .replace(/\s+/g, "")               // xoá space
+  .replace(/[\u0300-\u036f]/g, "")   // xoĂ¡ dáº¥u tá»• há»£p
+  .replace(/\u0110/g, "d")           // Ä â†’ d
+  .replace(/\u0111/g, "d")           // Ä‘ â†’ d
+  .replace(/\s+/g, "")               // xoĂ¡ space
   .toLowerCase();
 
   const cell = el.closest(".cung");
   if (cell) {
     const cungId = cell.id.replace("cell", "");
-    const revMap = {9:"Dần",7:"Mão",5:"Thìn",1:"Tỵ",2:"Ngọ",3:"Mùi",4:"Thân",6:"Dậu",8:"Tuất",12:"Hợi",11:"Tý",10:"Sửu"};
+    const revMap = {9:"Dáº§n",7:"MĂ£o",5:"ThĂ¬n",1:"Tá»µ",2:"Ngá»",3:"MĂ¹i",4:"ThĂ¢n",6:"Dáº­u",8:"Tuáº¥t",12:"Há»£i",11:"TĂ½",10:"Sá»­u"};
     const cungName = revMap[cungId];
     if (cungName) window.trungTinhToCung[name] = cungName;
   }
 });
 
-  console.log("✅ Hoàn tất an Trung Tinh (Cát + Hung)");
+  console.log("âœ… HoĂ n táº¥t an Trung Tinh (CĂ¡t + Hung)");
 }
 // =====================================================
-// 🌟 LỚP 6.4 – TỨ HÓA
+// đŸŒŸ Lá»P 6.4 â€“ Tá»¨ HĂ“A
 // =====================================================
 function anLop6_4_TuHoa(data){
   const canNam=data.canChiNam?.split(" ")[0]||"";
   const TU_HOA={
-    "Giáp":{loc:"Liêm Trinh",quyen:"Phá Quân",khoa:"Vũ Khúc",ky:"Thái Dương"},
-    "Ất":{loc:"Thiên Cơ",quyen:"Thiên Lương",khoa:"Tử Vi",ky:"Thái Âm"},
-    "Bính":{loc:"Thiên Đồng",quyen:"Thiên Cơ",khoa:"Văn Xương",ky:"Liêm Trinh"},
-    "Đinh":{loc:"Thái Âm",quyen:"Thiên Đồng",khoa:"Thiên Cơ",ky:"Cự Môn"},
-    "Mậu":{loc:"Tham Lang",quyen:"Thái Âm",khoa:"Hữu Bật",ky:"Thiên Cơ"},
-    "Kỷ":{loc:"Vũ Khúc",quyen:"Tham Lang",khoa:"Thiên Lương",ky:"Văn Khúc"},
-    "Canh":{loc:"Thái Dương",quyen:"Vũ Khúc",khoa:"Thiên Đồng",ky:"Thái Âm"},
-    "Tân":{loc:"Cự Môn",quyen:"Thái Dương",khoa:"Văn Khúc",ky:"Văn Xương"},
-    "Nhâm":{loc:"Thiên Lương",quyen:"Tử Vi",khoa:"Tả Phù",ky:"Vũ Khúc"},
-    "Quý":{loc:"Phá Quân",quyen:"Cự Môn",khoa:"Thái Âm",ky:"Tham Lang"}
+    "GiĂ¡p":{loc:"LiĂªm Trinh",quyen:"PhĂ¡ QuĂ¢n",khoa:"VÅ© KhĂºc",ky:"ThĂ¡i DÆ°Æ¡ng"},
+    "áº¤t":{loc:"ThiĂªn CÆ¡",quyen:"ThiĂªn LÆ°Æ¡ng",khoa:"Tá»­ Vi",ky:"ThĂ¡i Ă‚m"},
+    "BĂ­nh":{loc:"ThiĂªn Äá»“ng",quyen:"ThiĂªn CÆ¡",khoa:"VÄƒn XÆ°Æ¡ng",ky:"LiĂªm Trinh"},
+    "Äinh":{loc:"ThĂ¡i Ă‚m",quyen:"ThiĂªn Äá»“ng",khoa:"ThiĂªn CÆ¡",ky:"Cá»± MĂ´n"},
+    "Máº­u":{loc:"Tham Lang",quyen:"ThĂ¡i Ă‚m",khoa:"Há»¯u Báº­t",ky:"ThiĂªn CÆ¡"},
+    "Ká»·":{loc:"VÅ© KhĂºc",quyen:"Tham Lang",khoa:"ThiĂªn LÆ°Æ¡ng",ky:"VÄƒn KhĂºc"},
+    "Canh":{loc:"ThĂ¡i DÆ°Æ¡ng",quyen:"VÅ© KhĂºc",khoa:"ThiĂªn Äá»“ng",ky:"ThĂ¡i Ă‚m"},
+    "TĂ¢n":{loc:"Cá»± MĂ´n",quyen:"ThĂ¡i DÆ°Æ¡ng",khoa:"VÄƒn KhĂºc",ky:"VÄƒn XÆ°Æ¡ng"},
+    "NhĂ¢m":{loc:"ThiĂªn LÆ°Æ¡ng",quyen:"Tá»­ Vi",khoa:"Táº£ PhĂ¹",ky:"VÅ© KhĂºc"},
+    "QuĂ½":{loc:"PhĂ¡ QuĂ¢n",quyen:"Cá»± MĂ´n",khoa:"ThĂ¡i Ă‚m",ky:"Tham Lang"}
   };
   const hoa=TU_HOA[canNam];
   if(!hoa)return;
-// ✅ Hợp nhất cả Chính Tinh & Trung Tinh
-// ✅ Đảm bảo có map Chính tinh trước khi ghép Tứ Hóa
+// âœ… Há»£p nháº¥t cáº£ ChĂ­nh Tinh & Trung Tinh
+// âœ… Äáº£m báº£o cĂ³ map ChĂ­nh tinh trÆ°á»›c khi ghĂ©p Tá»© HĂ³a
 rebuildSaoToCungFromDOM();
 const map = {
   ...(window.saoToCung || {}),
   ...(window.trungTinhToCung || {})
 };
 
-console.log("🧭 MAP CHO TỨ HÓA:", map);   // <--- console kiểm tra map
+console.log("đŸ§­ MAP CHO Tá»¨ HĂ“A:", map);   // <--- console kiá»ƒm tra map
 
   const ds=[
-    {ten:"Hóa Lộc",sao:hoa.loc,loai:"cat"},
-    {ten:"Hóa Quyền",sao:hoa.quyen,loai:"cat"},
-    {ten:"Hóa Khoa",sao:hoa.khoa,loai:"cat"},
-    {ten:"Hóa Kỵ",sao:hoa.ky,loai:"hung"}
+    {ten:"HĂ³a Lá»™c",sao:hoa.loc,loai:"cat"},
+    {ten:"HĂ³a Quyá»n",sao:hoa.quyen,loai:"cat"},
+    {ten:"HĂ³a Khoa",sao:hoa.khoa,loai:"cat"},
+    {ten:"HĂ³a Ká»µ",sao:hoa.ky,loai:"hung"}
   ];
 
-// 🔧 Chuẩn hóa tên sao (trị dứt điểm lỗi Thiên Đồng)
+// đŸ”§ Chuáº©n hĂ³a tĂªn sao (trá»‹ dá»©t Ä‘iá»ƒm lá»—i ThiĂªn Äá»“ng)
 function normalizeKey(str){
   return str
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")  // bỏ dấu tổ hợp
-    .replace(/\u0110/g, "d")         // Đ → d
-    .replace(/\u0111/g, "d")         // đ → d
-    .replace(/\s+/g,"")              // bỏ khoảng trắng
-    .replace(/[\u00A0]/g,"")         // bỏ NBSP
+    .replace(/[\u0300-\u036f]/g,"")  // bá» dáº¥u tá»• há»£p
+    .replace(/\u0110/g, "d")         // Ä â†’ d
+    .replace(/\u0111/g, "d")         // Ä‘ â†’ d
+    .replace(/\s+/g,"")              // bá» khoáº£ng tráº¯ng
+    .replace(/[\u00A0]/g,"")         // bá» NBSP
     .trim()
     .toLowerCase();
 }
@@ -3956,29 +3961,29 @@ const key = normalizeKey(x.sao);
 
   const cung = map[key];
 
-  console.log(`🔍 Tứ Hóa: ${x.ten} – Sao gốc: ${x.sao} – KEY: ${key} – Cung tìm được:`, cung);
+  console.log(`đŸ” Tá»© HĂ³a: ${x.ten} â€“ Sao gá»‘c: ${x.sao} â€“ KEY: ${key} â€“ Cung tĂ¬m Ä‘Æ°á»£c:`, cung);
 
   if (cung) {
     themSao(cung, x.ten, "TuHoa", x.loai);
   } else {
-    console.warn("⚠️ KHÔNG THẤY SAO GỐC →", x.sao, "→ KEY:", key);
+    console.warn("â ï¸ KHĂ”NG THáº¤Y SAO Gá»C â†’", x.sao, "â†’ KEY:", key);
   }
 });
 
-  console.log("✅ Hoàn tất an Tứ Hóa (Layer 6.4)");
+  console.log("âœ… HoĂ n táº¥t an Tá»© HĂ³a (Layer 6.4)");
 }
 
-// 🌟 Bảng tam hợp cố định
+// đŸŒŸ Báº£ng tam há»£p cá»‘ Ä‘á»‹nh
 const TAM_HOP = {
-  "Hợi": ["Hợi","Mão","Mùi"], "Mão": ["Hợi","Mão","Mùi"], "Mùi": ["Hợi","Mão","Mùi"],
-  "Tý": ["Tý","Thìn","Thân"], "Thìn": ["Tý","Thìn","Thân"], "Thân": ["Tý","Thìn","Thân"],
-  "Sửu": ["Sửu","Tỵ","Dậu"], "Tỵ": ["Sửu","Tỵ","Dậu"], "Dậu": ["Sửu","Tỵ","Dậu"],
-  "Dần": ["Dần","Ngọ","Tuất"], "Ngọ": ["Dần","Ngọ","Tuất"], "Tuất": ["Dần","Ngọ","Tuất"]
+  "Há»£i": ["Há»£i","MĂ£o","MĂ¹i"], "MĂ£o": ["Há»£i","MĂ£o","MĂ¹i"], "MĂ¹i": ["Há»£i","MĂ£o","MĂ¹i"],
+  "TĂ½": ["TĂ½","ThĂ¬n","ThĂ¢n"], "ThĂ¬n": ["TĂ½","ThĂ¬n","ThĂ¢n"], "ThĂ¢n": ["TĂ½","ThĂ¬n","ThĂ¢n"],
+  "Sá»­u": ["Sá»­u","Tá»µ","Dáº­u"], "Tá»µ": ["Sá»­u","Tá»µ","Dáº­u"], "Dáº­u": ["Sá»­u","Tá»µ","Dáº­u"],
+  "Dáº§n": ["Dáº§n","Ngá»","Tuáº¥t"], "Ngá»": ["Dáº§n","Ngá»","Tuáº¥t"], "Tuáº¥t": ["Dáº§n","Ngá»","Tuáº¥t"]
 };
 
-// 🌟 Bảng cung thuận để xác định cung đối
-const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-const cellMap = {"Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10};
+// đŸŒŸ Báº£ng cung thuáº­n Ä‘á»ƒ xĂ¡c Ä‘á»‹nh cung Ä‘á»‘i
+const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+const cellMap = {"Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10};
 
 
 
@@ -3988,37 +3993,37 @@ const cellMap = {"Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,"Thân
 
 
 // =====================================================
-// 🌟 BẬT SÁNG CUNG TAM HỢP + ĐỐI CUNG + SONG TINH KẸP CUNG
+// đŸŒŸ Báº¬T SĂNG CUNG TAM Há»¢P + Äá»I CUNG + SONG TINH Káº¸P CUNG
 // =====================================================
 function enableCungHighlight() {
   const cellMap = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
 
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const TAM_HOP = {
-    "Hợi":["Hợi","Mão","Mùi"], "Mão":["Hợi","Mão","Mùi"], "Mùi":["Hợi","Mão","Mùi"],
-    "Tý":["Tý","Thìn","Thân"], "Thìn":["Tý","Thìn","Thân"], "Thân":["Tý","Thìn","Thân"],
-    "Sửu":["Sửu","Tỵ","Dậu"], "Tỵ":["Sửu","Tỵ","Dậu"], "Dậu":["Sửu","Tỵ","Dậu"],
-    "Dần":["Dần","Ngọ","Tuất"], "Ngọ":["Dần","Ngọ","Tuất"], "Tuất":["Dần","Ngọ","Tuất"]
+    "Há»£i":["Há»£i","MĂ£o","MĂ¹i"], "MĂ£o":["Há»£i","MĂ£o","MĂ¹i"], "MĂ¹i":["Há»£i","MĂ£o","MĂ¹i"],
+    "TĂ½":["TĂ½","ThĂ¬n","ThĂ¢n"], "ThĂ¬n":["TĂ½","ThĂ¬n","ThĂ¢n"], "ThĂ¢n":["TĂ½","ThĂ¬n","ThĂ¢n"],
+    "Sá»­u":["Sá»­u","Tá»µ","Dáº­u"], "Tá»µ":["Sá»­u","Tá»µ","Dáº­u"], "Dáº­u":["Sá»­u","Tá»µ","Dáº­u"],
+    "Dáº§n":["Dáº§n","Ngá»","Tuáº¥t"], "Ngá»":["Dáº§n","Ngá»","Tuáº¥t"], "Tuáº¥t":["Dáº§n","Ngá»","Tuáº¥t"]
   };
   const DOI_CUNG = {
-    "Dần":"Thân","Mão":"Dậu","Thìn":"Tuất","Tỵ":"Hợi",
-    "Ngọ":"Tý","Mùi":"Sửu","Thân":"Dần","Dậu":"Mão",
-    "Tuất":"Thìn","Hợi":"Tỵ","Tý":"Ngọ","Sửu":"Mùi"
+    "Dáº§n":"ThĂ¢n","MĂ£o":"Dáº­u","ThĂ¬n":"Tuáº¥t","Tá»µ":"Há»£i",
+    "Ngá»":"TĂ½","MĂ¹i":"Sá»­u","ThĂ¢n":"Dáº§n","Dáº­u":"MĂ£o",
+    "Tuáº¥t":"ThĂ¬n","Há»£i":"Tá»µ","TĂ½":"Ngá»","Sá»­u":"MĂ¹i"
   };
 
   // =====================================================
-  // 🧩 HÀM TIỆN ÍCH — CHUẨN HÓA TÊN SAO
+  // đŸ§© HĂ€M TIá»†N ĂCH â€” CHUáº¨N HĂ“A TĂN SAO
   // =====================================================
  function normalizeSao(txt) {
   return txt
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")   // bỏ dấu tổ hợp
-    .replace(/\u0110/g, "d")           // Đ → d
-    .replace(/\u0111/g, "d")           // đ → d
-    .replace(/\s+/g, "")               // bỏ khoảng trắng
+    .replace(/[\u0300-\u036f]/g, "")   // bá» dáº¥u tá»• há»£p
+    .replace(/\u0110/g, "d")           // Ä â†’ d
+    .replace(/\u0111/g, "d")           // Ä‘ â†’ d
+    .replace(/\s+/g, "")               // bá» khoáº£ng tráº¯ng
     .trim()
     .toLowerCase();
 }
@@ -4028,10 +4033,10 @@ function splitPrefix(txt) {
   const t = normalizeSao(txt);
 
   if (t.startsWith("l."))    return { prefix: "L",  name: t.slice(2) };
-  if (t.startsWith("dv."))   return { prefix: "ĐV", name: t.slice(3) }; // ✅ ĐV: đã normalize nên dùng dv.
+  if (t.startsWith("dv."))   return { prefix: "ÄV", name: t.slice(3) }; // âœ… ÄV: Ä‘Ă£ normalize nĂªn dĂ¹ng dv.
   if (t.startsWith("tl."))   return { prefix: "TL", name: t.slice(3) };
   if (t.startsWith("n."))    return { prefix: "N",  name: t.slice(2) };
-  if (t.startsWith("nh."))   return { prefix: "NH", name: t.slice(3) }; // ✅ đổi thành NH in hoa
+  if (t.startsWith("nh."))   return { prefix: "NH", name: t.slice(3) }; // âœ… Ä‘á»•i thĂ nh NH in hoa
 
   return { prefix: "", name: t };
 }
@@ -4052,18 +4057,18 @@ function splitPrefix(txt) {
   }
 
   // =====================================================
-  // ⚡ HÀM XỬ LÝ SONG TINH KẸP CUNG
+  // â¡ HĂ€M Xá»¬ LĂ SONG TINH Káº¸P CUNG
   // =====================================================
   function xuLySongTinhKep(cellTruoc, cellSau) {
     const DOI_SAO = [
-      ["Văn Xương", "Văn Khúc"],
-      ["Thiên Khôi", "Thiên Việt"],
-      ["Tả Phù", "Hữu Bật"],
-      ["Kình Dương", "Đà La"],
-      ["Hỏa Tinh", "Linh Tinh"],
-      ["Địa Không", "Địa Kiếp"]
+      ["VÄƒn XÆ°Æ¡ng", "VÄƒn KhĂºc"],
+      ["ThiĂªn KhĂ´i", "ThiĂªn Viá»‡t"],
+      ["Táº£ PhĂ¹", "Há»¯u Báº­t"],
+      ["KĂ¬nh DÆ°Æ¡ng", "ÄĂ  La"],
+      ["Há»a Tinh", "Linh Tinh"],
+      ["Äá»‹a KhĂ´ng", "Äá»‹a Kiáº¿p"]
     ];
-const prefixGroup = ["", "L", "ĐV", "TL", "N", "Nh"];
+const prefixGroup = ["", "L", "ÄV", "TL", "N", "Nh"];
 
     prefixGroup.forEach(prefix => {
       DOI_SAO.forEach(([sao1, sao2]) => {
@@ -4091,7 +4096,7 @@ const prefixGroup = ["", "L", "ĐV", "TL", "N", "Nh"];
   }
 
   // =====================================================
-  // 🎯 XỬ LÝ CLICK CUNG
+  // đŸ¯ Xá»¬ LĂ CLICK CUNG
   // =====================================================
   Object.entries(cellMap).forEach(([cung, id]) => {
     const cell = document.getElementById("cell" + id);
@@ -4130,7 +4135,7 @@ const prefixGroup = ["", "L", "ĐV", "TL", "N", "Nh"];
   });
 
   // =====================================================
-  // 🧹 CLICK RA NGOÀI TẮT HIỆU ỨNG
+  // đŸ§¹ CLICK RA NGOĂ€I Táº®T HIá»†U á»¨NG
   // =====================================================
   document.addEventListener("click", e => {
     if (
@@ -4154,26 +4159,26 @@ const prefixGroup = ["", "L", "ĐV", "TL", "N", "Nh"];
 
 
 
-/* 🌿 LAYER 8 – Vòng Tràng Sinh */
+/* đŸŒ¿ LAYER 8 â€“ VĂ²ng TrĂ ng Sinh */
 function anLop8_VongTrangSinh(data) {
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi",
-                      "Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i",
+                      "ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const cellMap = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
 
   const START = {
-    "mộc tam cục": "Hợi",
-    "hỏa lục cục": "Dần",
-    "kim tứ cục": "Tỵ",
-    "thủy nhị cục": "Thân",
-    "thổ ngũ cục": "Thân"
+    "má»™c tam cá»¥c": "Há»£i",
+    "há»a lá»¥c cá»¥c": "Dáº§n",
+    "kim tá»© cá»¥c": "Tá»µ",
+    "thá»§y nhá»‹ cá»¥c": "ThĂ¢n",
+    "thá»• ngÅ© cá»¥c": "ThĂ¢n"
   };
 
   const VONG_TS = [
-    "trường sinh","mộc dục","quan đới","lâm quan",
-    "đế vượng","suy","bệnh","tử","mộ","tuyệt","thai","dưỡng"
+    "trÆ°á»ng sinh","má»™c dá»¥c","quan Ä‘á»›i","lĂ¢m quan",
+    "Ä‘áº¿ vÆ°á»£ng","suy","bá»‡nh","tá»­","má»™","tuyá»‡t","thai","dÆ°á»¡ng"
   ];
 
   const cuc = (data.cucSo || "").toLowerCase();
@@ -4182,14 +4187,14 @@ function anLop8_VongTrangSinh(data) {
   const startCung = START[cuc];
   if (!startCung) return;
 
-  const chieu = (menhAD.includes("dương nam") || menhAD.includes("âm nữ"))
-    ? "thuận" : "nghịch";
+  const chieu = (menhAD.includes("dÆ°Æ¡ng nam") || menhAD.includes("Ă¢m ná»¯"))
+    ? "thuáº­n" : "nghá»‹ch";
 
   let idxStart = CUNG_THUAN.indexOf(startCung);
   if (idxStart < 0) return;
 
   for (let i = 0; i < 12; i++) {
-    const idx = (chieu === "thuận")
+    const idx = (chieu === "thuáº­n")
       ? (idxStart + i) % 12
       : (idxStart - i + 12) % 12;
     const cung = CUNG_THUAN[idx];
@@ -4199,7 +4204,7 @@ function anLop8_VongTrangSinh(data) {
     let layer8 = cell.querySelector(".layer-8");
     if (!layer8) {
       layer8 = document.createElement("div");
-layer8.className = "layer-8";  // ✅ 
+layer8.className = "layer-8";  // âœ… 
       const inner = document.createElement("div");
       inner.className = "layer8-div";
       layer8.appendChild(inner);
@@ -4209,7 +4214,7 @@ layer8.className = "layer-8";  // ✅
     if (inner) inner.textContent = sao;
   }
 
-  console.log("🌿 Hoàn tất an Layer 8 – Vòng Tràng Sinh");
+  console.log("đŸŒ¿ HoĂ n táº¥t an Layer 8 â€“ VĂ²ng TrĂ ng Sinh");
 }
 
 
@@ -4227,7 +4232,7 @@ layer8.className = "layer-8";  // ✅
 
 
 // =====================================================
-// 🌟 CLICK SAO HÓA → SÁNG SAO GỐC (tự động nhận năm hạn nếu đang xem hạn)
+// đŸŒŸ CLICK SAO HĂ“A â†’ SĂNG SAO Gá»C (tá»± Ä‘á»™ng nháº­n nÄƒm háº¡n náº¿u Ä‘ang xem háº¡n)
 // =====================================================
 document.addEventListener("click", (ev) => {
   const target = ev.target;
@@ -4237,28 +4242,28 @@ document.addEventListener("click", (ev) => {
   const insideBang = container.contains(target);
   
 
-  // 🟢 Nếu click ra ngoài vùng lá số → reset toàn bộ sáng
+  // đŸŸ¢ Náº¿u click ra ngoĂ i vĂ¹ng lĂ¡ sá»‘ â†’ reset toĂ n bá»™ sĂ¡ng
   if (!insideBang) {
     document.querySelectorAll(".sao-highlight").forEach(el => el.classList.remove("sao-highlight"));
     window.tuHoaClicked = false;
     return;
   }
 
-  // 🟢 Nếu đang ở chế độ sao Hóa mà click vào vùng khác KHÔNG có chữ "Hóa" → tắt sáng sao Hóa
-  if (window.tuHoaClicked && !target.textContent.includes("Hóa")) {
+  // đŸŸ¢ Náº¿u Ä‘ang á»Ÿ cháº¿ Ä‘á»™ sao HĂ³a mĂ  click vĂ o vĂ¹ng khĂ¡c KHĂ”NG cĂ³ chá»¯ "HĂ³a" â†’ táº¯t sĂ¡ng sao HĂ³a
+  if (window.tuHoaClicked && !target.textContent.includes("HĂ³a")) {
     document.querySelectorAll(".sao-highlight").forEach(el => el.classList.remove("sao-highlight"));
     window.tuHoaClicked = false;
   }
 
-  // ✅ Nếu click không phải sao Hóa → thoát khỏi logic Hóa
-  if (!target.textContent.includes("Hóa")) return;
+  // âœ… Náº¿u click khĂ´ng pháº£i sao HĂ³a â†’ thoĂ¡t khá»i logic HĂ³a
+  if (!target.textContent.includes("HĂ³a")) return;
 
-  // ✅ Kiểm tra có thật sự click đúng chữ sao Hóa không
+  // âœ… Kiá»ƒm tra cĂ³ tháº­t sá»± click Ä‘Ăºng chá»¯ sao HĂ³a khĂ´ng
   const isExactHoa =
     target &&
     target.nodeType === 1 &&
     target.children.length === 0 &&
-    target.textContent.trim().includes("Hóa");
+    target.textContent.trim().includes("HĂ³a");
 
   if (!isExactHoa) {
     if (window.tuHoaClicked) {
@@ -4268,33 +4273,33 @@ document.addEventListener("click", (ev) => {
     return;
   }
 
-  // 🚀 Bắt đầu xử lý thật khi click đúng chữ Hóa
+  // đŸ€ Báº¯t Ä‘áº§u xá»­ lĂ½ tháº­t khi click Ä‘Ăºng chá»¯ HĂ³a
   window.tuHoaClicked = true;
-  console.log("✅ Đã click vào:", target.textContent);
+  console.log("âœ… ÄĂ£ click vĂ o:", target.textContent);
 
   const tenHoa = target.textContent.trim();
 
  
-// 🔍 Xác định CAN năm phù hợp với loại sao Hóa được click
+// đŸ” XĂ¡c Ä‘á»‹nh CAN nÄƒm phĂ¹ há»£p vá»›i loáº¡i sao HĂ³a Ä‘Æ°á»£c click
 let canNam = "";
 
-// Nếu là sao Tiểu Vận (bắt đầu bằng "L.")
+// Náº¿u lĂ  sao Tiá»ƒu Váº­n (báº¯t Ä‘áº§u báº±ng "L.")
 if (tenHoa.startsWith("L.")) {
   canNam = window.dataGlobal?.canChiHan?.split(" ")[0] || "";
 }
-// Nếu là sao Đại Vận (bắt đầu bằng "ĐV.")
-else if (tenHoa.startsWith("ĐV.")) {
+// Náº¿u lĂ  sao Äáº¡i Váº­n (báº¯t Ä‘áº§u báº±ng "ÄV.")
+else if (tenHoa.startsWith("ÄV.")) {
   canNam = window.dataGlobal?.canChiDaiVan?.split(" ")[0] || "";
 }
-// Nếu là sao Nguyệt Vận (bắt đầu bằng "N.")
+// Náº¿u lĂ  sao Nguyá»‡t Váº­n (báº¯t Ä‘áº§u báº±ng "N.")
 else if (tenHoa.startsWith("N.")) {
   canNam = window.dataGlobal?.luuHan?.canChiThang?.split(" ")[0] || "";
 }
-// ✅ Nếu là sao Nhật Vận (bắt đầu bằng "Nh.")
+// âœ… Náº¿u lĂ  sao Nháº­t Váº­n (báº¯t Ä‘áº§u báº±ng "Nh.")
 else if (tenHoa.startsWith("Nh.")) {
   canNam = window.dataGlobal?.luuHan?.canChiNgay?.split(" ")[0] || "";
 }
-// Còn lại: sao gốc năm sinh
+// CĂ²n láº¡i: sao gá»‘c nÄƒm sinh
 else {
   canNam = window.dataGlobal?.canChiNam?.split(" ")[0] || "";
 }
@@ -4303,48 +4308,48 @@ else {
 
 
   const TU_HOA = {
-    "Giáp": { loc:"Liêm Trinh", quyen:"Phá Quân", khoa:"Vũ Khúc", ky:"Thái Dương" },
-    "Ất": { loc:"Thiên Cơ", quyen:"Thiên Lương", khoa:"Tử Vi", ky:"Thái Âm" },
-    "Bính": { loc:"Thiên Đồng", quyen:"Thiên Cơ", khoa:"Văn Xương", ky:"Liêm Trinh" },
-    "Đinh": { loc:"Thái Âm", quyen:"Thiên Đồng", khoa:"Thiên Cơ", ky:"Cự Môn" },
-    "Mậu": { loc:"Tham Lang", quyen:"Thái Âm", khoa:"Hữu Bật", ky:"Thiên Cơ" },
-    "Kỷ": { loc:"Vũ Khúc", quyen:"Tham Lang", khoa:"Thiên Lương", ky:"Văn Khúc" },
-    "Canh": { loc:"Thái Dương", quyen:"Vũ Khúc", khoa:"Thiên Đồng", ky:"Thái Âm" },
-    "Tân": { loc:"Cự Môn", quyen:"Thái Dương", khoa:"Văn Khúc", ky:"Văn Xương" },
-    "Nhâm": { loc:"Thiên Lương", quyen:"Tử Vi", khoa:"Tả Phù", ky:"Vũ Khúc" },
-    "Quý": { loc:"Phá Quân", quyen:"Cự Môn", khoa:"Thái Âm", ky:"Tham Lang" }
+    "GiĂ¡p": { loc:"LiĂªm Trinh", quyen:"PhĂ¡ QuĂ¢n", khoa:"VÅ© KhĂºc", ky:"ThĂ¡i DÆ°Æ¡ng" },
+    "áº¤t": { loc:"ThiĂªn CÆ¡", quyen:"ThiĂªn LÆ°Æ¡ng", khoa:"Tá»­ Vi", ky:"ThĂ¡i Ă‚m" },
+    "BĂ­nh": { loc:"ThiĂªn Äá»“ng", quyen:"ThiĂªn CÆ¡", khoa:"VÄƒn XÆ°Æ¡ng", ky:"LiĂªm Trinh" },
+    "Äinh": { loc:"ThĂ¡i Ă‚m", quyen:"ThiĂªn Äá»“ng", khoa:"ThiĂªn CÆ¡", ky:"Cá»± MĂ´n" },
+    "Máº­u": { loc:"Tham Lang", quyen:"ThĂ¡i Ă‚m", khoa:"Há»¯u Báº­t", ky:"ThiĂªn CÆ¡" },
+    "Ká»·": { loc:"VÅ© KhĂºc", quyen:"Tham Lang", khoa:"ThiĂªn LÆ°Æ¡ng", ky:"VÄƒn KhĂºc" },
+    "Canh": { loc:"ThĂ¡i DÆ°Æ¡ng", quyen:"VÅ© KhĂºc", khoa:"ThiĂªn Äá»“ng", ky:"ThĂ¡i Ă‚m" },
+    "TĂ¢n": { loc:"Cá»± MĂ´n", quyen:"ThĂ¡i DÆ°Æ¡ng", khoa:"VÄƒn KhĂºc", ky:"VÄƒn XÆ°Æ¡ng" },
+    "NhĂ¢m": { loc:"ThiĂªn LÆ°Æ¡ng", quyen:"Tá»­ Vi", khoa:"Táº£ PhĂ¹", ky:"VÅ© KhĂºc" },
+    "QuĂ½": { loc:"PhĂ¡ QuĂ¢n", quyen:"Cá»± MĂ´n", khoa:"ThĂ¡i Ă‚m", ky:"Tham Lang" }
   };
 
   const hoa = TU_HOA[canNam];
   if (!hoa) return;
 
-  // ✅ Xác định sao gốc đúng theo năm đang xem
+  // âœ… XĂ¡c Ä‘á»‹nh sao gá»‘c Ä‘Ăºng theo nÄƒm Ä‘ang xem
   let goc = "";
-  if (tenHoa.includes("Lộc")) goc = hoa.loc;
-  if (tenHoa.includes("Quyền")) goc = hoa.quyen;
+  if (tenHoa.includes("Lá»™c")) goc = hoa.loc;
+  if (tenHoa.includes("Quyá»n")) goc = hoa.quyen;
   if (tenHoa.includes("Khoa")) goc = hoa.khoa;
-  if (tenHoa.includes("Kỵ")) goc = hoa.ky;
+  if (tenHoa.includes("Ká»µ")) goc = hoa.ky;
   if (!goc) return;
 
-  console.log(`🌸 ${tenHoa} (${canNam}) → Sao gốc: ${goc}`);
+  console.log(`đŸŒ¸ ${tenHoa} (${canNam}) â†’ Sao gá»‘c: ${goc}`);
 
 
-  // 🧹 Xóa sáng cũ
+  // đŸ§¹ XĂ³a sĂ¡ng cÅ©
   document.querySelectorAll(".sao-highlight").forEach(e => e.classList.remove("sao-highlight"));
 
-  // 🌟 Làm sáng chính sao Hóa bạn vừa click
+  // đŸŒŸ LĂ m sĂ¡ng chĂ­nh sao HĂ³a báº¡n vá»«a click
   target.classList.add("sao-highlight");
   target.offsetHeight;
 target.style.transform = "translateZ(0)";
 
 
-  // ✨ Tìm và sáng sao gốc
+  // âœ¨ TĂ¬m vĂ  sĂ¡ng sao gá»‘c
 const cleanGoc = goc
   .normalize("NFD")
-  .replace(/[\u0300-\u036f]/g, "")  // bỏ dấu tổ hợp
-  .replace(/\u0110/g, "d")          // Đ → d
-  .replace(/\u0111/g, "d")          // đ → d
-  .replace(/\s+/g, "")              // bỏ khoảng trắng
+  .replace(/[\u0300-\u036f]/g, "")  // bá» dáº¥u tá»• há»£p
+  .replace(/\u0110/g, "d")          // Ä â†’ d
+  .replace(/\u0111/g, "d")          // Ä‘ â†’ d
+  .replace(/\s+/g, "")              // bá» khoáº£ng tráº¯ng
   .trim()
   .toLowerCase();
 
@@ -4353,10 +4358,10 @@ const cleanGoc = goc
   document.querySelectorAll("[class*='layer'] div, .cung div").forEach(el => {
    const name = el.textContent.trim()
   .normalize("NFD")
-  .replace(/[\u0300-\u036f]/g, "")   // bỏ dấu tổ hợp
-  .replace(/\u0110/g, "d")           // Đ → d
-  .replace(/\u0111/g, "d")           // đ → d
-  .replace(/\s+/g, "")               // bỏ khoảng trắng
+  .replace(/[\u0300-\u036f]/g, "")   // bá» dáº¥u tá»• há»£p
+  .replace(/\u0110/g, "d")           // Ä â†’ d
+  .replace(/\u0111/g, "d")           // Ä‘ â†’ d
+  .replace(/\s+/g, "")               // bá» khoáº£ng tráº¯ng
   .trim()
   .toLowerCase();
 
@@ -4366,7 +4371,7 @@ const cleanGoc = goc
     }
   });
 
-if (!timThay) console.warn("Warning: Không tìm thấy sao gốc:", goc);
+if (!timThay) console.warn("Warning: KhĂ´ng tĂ¬m tháº¥y sao gá»‘c:", goc);
 });
 
 
@@ -4391,45 +4396,45 @@ if (!timThay) console.warn("Warning: Không tìm thấy sao gốc:", goc);
 
 
 <!-- ===================================================== -->
-<!-- 🌗 LỚP 7 – TUẦN / TRIỆT -->
+<!-- đŸŒ— Lá»P 7 â€“ TUáº¦N / TRIá»†T -->
 <!-- ===================================================== -->
-// 📜 Quy tắc an Triệt
+// đŸ“œ Quy táº¯c an Triá»‡t
 function anTriet(canNam) {
   const bangTriet = {
-    "Giáp": ["Thân", "Dậu"],
-    "Ất": ["Ngọ", "Mùi"],
-    "Bính": ["Thìn", "Tỵ"],
-    "Đinh": ["Dần", "Mão"],
-    "Mậu": ["Tý", "Sửu"],
-    "Kỷ": ["Thân", "Dậu"],
-    "Canh": ["Ngọ", "Mùi"],
-    "Tân": ["Thìn", "Tỵ"],
-    "Nhâm": ["Dần", "Mão"],
-    "Quý": ["Tý", "Sửu"]
+    "GiĂ¡p": ["ThĂ¢n", "Dáº­u"],
+    "áº¤t": ["Ngá»", "MĂ¹i"],
+    "BĂ­nh": ["ThĂ¬n", "Tá»µ"],
+    "Äinh": ["Dáº§n", "MĂ£o"],
+    "Máº­u": ["TĂ½", "Sá»­u"],
+    "Ká»·": ["ThĂ¢n", "Dáº­u"],
+    "Canh": ["Ngá»", "MĂ¹i"],
+    "TĂ¢n": ["ThĂ¬n", "Tá»µ"],
+    "NhĂ¢m": ["Dáº§n", "MĂ£o"],
+    "QuĂ½": ["TĂ½", "Sá»­u"]
   };
   return bangTriet[canNam] || [];
 }
 
-// 📜 Quy tắc an Tuần (theo bảng bạn gửi)
+// đŸ“œ Quy táº¯c an Tuáº§n (theo báº£ng báº¡n gá»­i)
 function anTuan(canNam, chiNam) {
-  const canArr = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
+  const canArr = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
   const bangTuan = {
-    "Tý–Sửu": ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"],
-    "Dần–Mão": ["Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"],
-    "Thìn–Tỵ": ["Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão"],
-    "Ngọ–Mùi": ["Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ"],
-    "Thân–Dậu": ["Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi"],
-    "Tuất–Hợi": ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu"]
+    "TĂ½â€“Sá»­u": ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"],
+    "Dáº§nâ€“MĂ£o": ["ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"],
+    "ThĂ¬nâ€“Tá»µ": ["Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o"],
+    "Ngá»â€“MĂ¹i": ["ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ"],
+    "ThĂ¢nâ€“Dáº­u": ["Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i"],
+    "Tuáº¥tâ€“Há»£i": ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u"]
   };
 
   const canIndex = canArr.indexOf(canNam);
   if (canIndex === -1) return [];
 
-  // Duyệt từng hàng (cặp Tuần)
+  // Duyá»‡t tá»«ng hĂ ng (cáº·p Tuáº§n)
   for (const [capTuan, danhSachChi] of Object.entries(bangTuan)) {
     const chiO = danhSachChi[canIndex];
     if (chiO === chiNam) {
-      const [c1, c2] = capTuan.split("–");
+      const [c1, c2] = capTuan.split("â€“");
       return [c1, c2];
     }
   }
@@ -4448,45 +4453,45 @@ function anTuan(canNam, chiNam) {
 
 
 // =====================================================
-// 🌑 Vẽ thanh Tuần / Triệt (chuẩn quy tắc cố định + gộp Tuần–Triệt)
+// đŸŒ‘ Váº½ thanh Tuáº§n / Triá»‡t (chuáº©n quy táº¯c cá»‘ Ä‘á»‹nh + gá»™p Tuáº§nâ€“Triá»‡t)
 // =====================================================
 function veThanhTuanTriet(ten, cung1, cung2) {
-  // 🔠 Viết hoa chữ đầu, các chữ sau viết thường
+  // đŸ”  Viáº¿t hoa chá»¯ Ä‘áº§u, cĂ¡c chá»¯ sau viáº¿t thÆ°á»ng
   ten = ten.charAt(0).toUpperCase() + ten.slice(1).toLowerCase();
 
   const map = {
-    "Tý":11, "Sửu":10, "Dần":9, "Mão":7,
-    "Thìn":5, "Tỵ":1, "Ngọ":2, "Mùi":3,
-    "Thân":4, "Dậu":6, "Tuất":8, "Hợi":12
+    "TĂ½":11, "Sá»­u":10, "Dáº§n":9, "MĂ£o":7,
+    "ThĂ¬n":5, "Tá»µ":1, "Ngá»":2, "MĂ¹i":3,
+    "ThĂ¢n":4, "Dáº­u":6, "Tuáº¥t":8, "Há»£i":12
   };
 
   const key = [cung1, cung2].sort().join("-");
   const existing = document.querySelector(`[data-cap="${key}"]`);
 
-  // ✅ Nếu đã có thanh Tuần/Triệt → chỉ thêm chữ, rồi căn lại giữa
+  // âœ… Náº¿u Ä‘Ă£ cĂ³ thanh Tuáº§n/Triá»‡t â†’ chá»‰ thĂªm chá»¯, rá»“i cÄƒn láº¡i giá»¯a
   if (existing) {
     if (!existing.innerText.includes(ten)) {
-      existing.innerHTML = `<span>${existing.innerText.trim()} – ${ten}</span>`;
+      existing.innerHTML = `<span>${existing.innerText.trim()} â€“ ${ten}</span>`;
 
-      // 🕒 Chờ DOM cập nhật xong, rồi đo lại kích thước thật để căn giữa
+      // đŸ•’ Chá» DOM cáº­p nháº­t xong, rá»“i Ä‘o láº¡i kĂ­ch thÆ°á»›c tháº­t Ä‘á»ƒ cÄƒn giá»¯a
       requestAnimationFrame(() => {
         const newWidth = existing.offsetWidth;
         const oldWidth = existing.dataset.oldWidth ? parseFloat(existing.dataset.oldWidth) : newWidth;
         const currentLeft = parseFloat(existing.style.left) || 0;
         existing.style.left = (currentLeft - (newWidth - oldWidth) / 2) + "px";
-        existing.dataset.oldWidth = newWidth; // lưu lại cho lần sau
+        existing.dataset.oldWidth = newWidth; // lÆ°u láº¡i cho láº§n sau
       });
     }
     return;
   }
 
-  // 📦 Lấy DOM các cung
+  // đŸ“¦ Láº¥y DOM cĂ¡c cung
   const c1 = document.getElementById("cell" + map[cung1]);
   const c2 = document.getElementById("cell" + map[cung2]);
   const container = document.getElementById("lasoContainer");
   if (!c1 || !c2 || !container) return;
 
-  // 🎨 Tạo thanh hiển thị
+  // đŸ¨ Táº¡o thanh hiá»ƒn thá»‹
   const bar = document.createElement("div");
 bar.className = "tuan-triet sao";
   bar.dataset.cap = key;
@@ -4508,7 +4513,7 @@ bar.className = "tuan-triet sao";
   });
   container.appendChild(bar);
 
-  // 🎯 Tính vị trí thật (theo layout)
+  // đŸ¯ TĂ­nh vá»‹ trĂ­ tháº­t (theo layout)
   const rect1 = c1.getBoundingClientRect();
   const rect2 = c2.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
@@ -4519,18 +4524,18 @@ bar.className = "tuan-triet sao";
   let x = midX - bar.offsetWidth / 2;
   let y = midY - bar.offsetHeight / 2;
 
-  // 🔹 Quy tắc cố định 6 cặp
- if (["Tý-Sửu", "Sửu-Tý"].includes(key)) {
-  // 🔹 Đè lên đúng thanh ngang biên trên
+  // đŸ”¹ Quy táº¯c cá»‘ Ä‘á»‹nh 6 cáº·p
+ if (["TĂ½-Sá»­u", "Sá»­u-TĂ½"].includes(key)) {
+  // đŸ”¹ ÄĂ¨ lĂªn Ä‘Ăºng thanh ngang biĂªn trĂªn
   y = rect1.top - containerRect.top - bar.offsetHeight / 2;
 }
-else if (["Ngọ-Mùi", "Mùi-Ngọ"].includes(key)) {
-  // 🔹 Đè lên đúng thanh ngang biên dưới
+else if (["Ngá»-MĂ¹i", "MĂ¹i-Ngá»"].includes(key)) {
+  // đŸ”¹ ÄĂ¨ lĂªn Ä‘Ăºng thanh ngang biĂªn dÆ°á»›i
   y = rect1.bottom - containerRect.top - bar.offsetHeight / 2;
 }
  
   else {
-    // 👉 4 cặp còn lại giữa biên
+    // đŸ‘‰ 4 cáº·p cĂ²n láº¡i giá»¯a biĂªn
     y = midY - bar.offsetHeight / 2;
   }
 
@@ -4540,137 +4545,137 @@ else if (["Ngọ-Mùi", "Mùi-Ngọ"].includes(key)) {
 }
 
 const CUNG_MAP = {
-  "Tý": 11, "Sửu": 10, "Dần": 9, "Mão": 7, "Thìn": 5, "Tỵ": 1,
-  "Ngọ": 2, "Mùi": 3, "Thân": 4, "Dậu": 6, "Tuất": 8, "Hợi": 12
+  "TĂ½": 11, "Sá»­u": 10, "Dáº§n": 9, "MĂ£o": 7, "ThĂ¬n": 5, "Tá»µ": 1,
+  "Ngá»": 2, "MĂ¹i": 3, "ThĂ¢n": 4, "Dáº­u": 6, "Tuáº¥t": 8, "Há»£i": 12
 };
 
 const TIEUTINH_DATA = [
-  { ten: "Thái Tuế", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "ThaiTue", huong: "thuận", ghiChu: "An tại cung có địa chi năm sinh (Thái Tuế)." },
-  { ten: "Thiếu Dương", hanh: "Hỏa", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 1, ghiChu: "Đếm thuận từ Thái Tuế 1 cung." },
-  { ten: "Tang Môn", hanh: "Mộc", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 2, ghiChu: "Đếm thuận từ Thái Tuế 2 cung." },
-  { ten: "Thiếu Âm", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Tình Duyên","Tiền bạc"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 3, ghiChu: "Đếm thuận từ Thái Tuế 3 cung." },
-  { ten: "Quan Phù", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 4, ghiChu: "Đếm thuận từ Thái Tuế 4 cung." },
-  { ten: "Tử Phù", hanh: "Kim", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 5, ghiChu: "Đếm thuận từ Thái Tuế 5 cung." },
-  { ten: "Tuế Phá", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 6, ghiChu: "Đếm thuận từ Thái Tuế 6 cung." },
-  { ten: "Long Đức", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 7, ghiChu: "Đếm thuận từ Thái Tuế 7 cung." },
-  { ten: "Bạch Hổ", hanh: "Kim", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 8, ghiChu: "Đếm thuận từ Thái Tuế 8 cung." },
-  { ten: "Phúc Đức", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 9, ghiChu: "Đếm thuận từ Thái Tuế 9 cung." },
-  { ten: "Điếu Khách", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 10, ghiChu: "Đếm thuận từ Thái Tuế 10 cung." },
-  { ten: "Trực Phù", hanh: "Kim", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoThaiTue", huong: "thuận", buoc: 11, ghiChu: "Đếm thuận từ Thái Tuế 11 cung." }
+  { ten: "ThĂ¡i Tuáº¿", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "ThaiTue", huong: "thuáº­n", ghiChu: "An táº¡i cung cĂ³ Ä‘á»‹a chi nÄƒm sinh (ThĂ¡i Tuáº¿)." },
+  { ten: "Thiáº¿u DÆ°Æ¡ng", hanh: "Há»a", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 1, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 1 cung." },
+  { ten: "Tang MĂ´n", hanh: "Má»™c", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 2, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 2 cung." },
+  { ten: "Thiáº¿u Ă‚m", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn","Tiá»n báº¡c"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 3, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 3 cung." },
+  { ten: "Quan PhĂ¹", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 4, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 4 cung." },
+  { ten: "Tá»­ PhĂ¹", hanh: "Kim", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 5, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 5 cung." },
+  { ten: "Tuáº¿ PhĂ¡", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 6, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 6 cung." },
+  { ten: "Long Äá»©c", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 7, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 7 cung." },
+  { ten: "Báº¡ch Há»•", hanh: "Kim", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 8, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 8 cung." },
+  { ten: "PhĂºc Äá»©c", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 9, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 9 cung." },
+  { ten: "Äiáº¿u KhĂ¡ch", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 10, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 10 cung." },
+  { ten: "Trá»±c PhĂ¹", hanh: "Kim", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoThaiTue", huong: "thuáº­n", buoc: 11, ghiChu: "Äáº¿m thuáº­n tá»« ThĂ¡i Tuáº¿ 11 cung." }
 ];
-// 🌟 Nhóm tiểu tinh an theo Địa Chi Năm Sinh
+// đŸŒŸ NhĂ³m tiá»ƒu tinh an theo Äá»‹a Chi NÄƒm Sinh
 TIEUTINH_DATA.push(
-  { ten: "Phượng Các", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Giải Thần", hanh: "Mộc", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Long Trì", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Nguyệt Đức", hanh: "Hỏa", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoDiaChiNam", dsCung: ["Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Thiên Đức", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Thiên Hỷ", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoDiaChiNam", dsCung: ["Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Thiên Khốc", hanh: "Thủy", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoDiaChiNam", dsCung: ["Ngọ","Tỵ","Thìn","Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Thiên Hư", hanh: "Thủy", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoDiaChiNam", dsCung: ["Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Đào Hoa", hanh: "Mộc", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoDiaChiNam", dsCung: ["Dậu","Ngọ","Mão","Tý","Dậu","Ngọ","Mão","Tý","Dậu","Ngọ","Mão","Tý"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Hồng Loan", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoDiaChiNam", dsCung: ["Mão","Dần","Sửu","Tý","Hợi","Tuất","Dậu","Thân","Mùi","Ngọ","Tỵ","Thìn"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Hoa Cái", hanh: "Kim", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Thìn","Sửu","Tuất","Mùi","Thìn","Sửu","Tuất","Mùi","Thìn","Sửu","Tuất","Mùi"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Kiếp Sát", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tỵ","Dần","Hợi","Thân","Tỵ","Dần","Hợi","Thân","Tỵ","Dần","Hợi","Thân"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Phá Toái", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tỵ","Sửu","Dậu","Tỵ","Sửu","Dậu","Tỵ","Sửu","Dậu","Tỵ","Sửu","Dậu"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Cô Thần", hanh: "Thổ", loai: "Hung", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoDiaChiNam", dsCung: ["Dần","Dần","Tỵ","Tỵ","Tỵ","Thân","Thân","Thân","Hợi","Hợi","Hợi","Dần"], ghiChu: "An theo địa chi năm sinh." },
-  { ten: "Quả Tú", hanh: "Thổ", loai: "Hung", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoDiaChiNam", dsCung: ["Tuất","Tuất","Sửu","Sửu","Sửu","Thìn","Thìn","Thìn","Mùi","Mùi","Mùi","Tuất"], ghiChu: "An theo địa chi năm sinh." }
+  { ten: "PhÆ°á»£ng CĂ¡c", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Giáº£i Tháº§n", hanh: "Má»™c", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Long TrĂ¬", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Nguyá»‡t Äá»©c", hanh: "Há»a", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoDiaChiNam", dsCung: ["Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "ThiĂªn Äá»©c", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "ThiĂªn Há»·", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoDiaChiNam", dsCung: ["Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "ThiĂªn Khá»‘c", hanh: "Thá»§y", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoDiaChiNam", dsCung: ["Ngá»","Tá»µ","ThĂ¬n","MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "ThiĂªn HÆ°", hanh: "Thá»§y", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoDiaChiNam", dsCung: ["Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "ÄĂ o Hoa", hanh: "Má»™c", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoDiaChiNam", dsCung: ["Dáº­u","Ngá»","MĂ£o","TĂ½","Dáº­u","Ngá»","MĂ£o","TĂ½","Dáº­u","Ngá»","MĂ£o","TĂ½"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Há»“ng Loan", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoDiaChiNam", dsCung: ["MĂ£o","Dáº§n","Sá»­u","TĂ½","Há»£i","Tuáº¥t","Dáº­u","ThĂ¢n","MĂ¹i","Ngá»","Tá»µ","ThĂ¬n"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Hoa CĂ¡i", hanh: "Kim", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["ThĂ¬n","Sá»­u","Tuáº¥t","MĂ¹i","ThĂ¬n","Sá»­u","Tuáº¥t","MĂ¹i","ThĂ¬n","Sá»­u","Tuáº¥t","MĂ¹i"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Kiáº¿p SĂ¡t", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tá»µ","Dáº§n","Há»£i","ThĂ¢n","Tá»µ","Dáº§n","Há»£i","ThĂ¢n","Tá»µ","Dáº§n","Há»£i","ThĂ¢n"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "PhĂ¡ ToĂ¡i", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoDiaChiNam", dsCung: ["Tá»µ","Sá»­u","Dáº­u","Tá»µ","Sá»­u","Dáº­u","Tá»µ","Sá»­u","Dáº­u","Tá»µ","Sá»­u","Dáº­u"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "CĂ´ Tháº§n", hanh: "Thá»•", loai: "Hung", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoDiaChiNam", dsCung: ["Dáº§n","Dáº§n","Tá»µ","Tá»µ","Tá»µ","ThĂ¢n","ThĂ¢n","ThĂ¢n","Há»£i","Há»£i","Há»£i","Dáº§n"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." },
+  { ten: "Quáº£ TĂº", hanh: "Thá»•", loai: "Hung", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoDiaChiNam", dsCung: ["Tuáº¥t","Tuáº¥t","Sá»­u","Sá»­u","Sá»­u","ThĂ¬n","ThĂ¬n","ThĂ¬n","MĂ¹i","MĂ¹i","MĂ¹i","Tuáº¥t"], ghiChu: "An theo Ä‘á»‹a chi nÄƒm sinh." }
 );
-// 🌙 Nhóm Tiểu Tinh an theo Tháng Sinh
+// đŸŒ™ NhĂ³m Tiá»ƒu Tinh an theo ThĂ¡ng Sinh
 TIEUTINH_DATA.push(
-  { ten: "Thiên Hình", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả"], congThuc: "TheoThangSinh", dsCung: ["Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân"], ghiChu: "An theo tháng âm lịch (1–12) cố định theo bảng tra." },
-  { ten: "Thiên Riêu", hanh: "Thủy", loai: "Hung", nhom: ["Tất Cả"], congThuc: "TheoThangSinh", dsCung: ["Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý"], ghiChu: "An theo tháng âm lịch (1–12) cố định theo bảng tra." },
-  { ten: "Thiên Y", hanh: "Thủy", loai: "Hung", nhom: ["Tất Cả"], congThuc: "TheoThangSinh", dsCung: ["Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý"], ghiChu: "An theo tháng âm lịch (1–12) cố định theo bảng tra." },
-  { ten: "Thiên Giải", hanh: "Hỏa", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoThangSinh", dsCung: ["Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi"], ghiChu: "An theo tháng âm lịch (1–12) cố định theo bảng tra." },
-  { ten: "Địa Giải", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoThangSinh", dsCung: ["Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ"], ghiChu: "An theo tháng âm lịch (1–12) cố định theo bảng tra." }
-);
-
-
-// 🕒 Nhóm Tiểu Tinh an theo Giờ Sinh
-TIEUTINH_DATA.push(
-  { ten: "Thai Phụ", hanh: "Kim", loai: "Cát", nhom: ["Tất Cả","Công Danh","Tình Duyên"], congThuc: "TheoGioSinh", dsCung: ["Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ"], ghiChu: "An theo giờ sinh (Tý–Sửu–...–Hợi)." },
-  { ten: "Phong Cáo", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoGioSinh", dsCung: ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"], ghiChu: "An theo giờ sinh (Tý–Sửu–...–Hợi)." }
-);
-// 💫 Nhóm Tiểu Tinh an theo Lộc Tồn
-TIEUTINH_DATA.push(
-  { ten: "Bác Sĩ", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoLocTon", buoc: 0, ghiChu: "An cùng cung với Lộc Tồn." },
-  { ten: "Lực Sĩ", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoLocTon", buoc: 1, ghiChu: "Sau hoặc Trước Lộc Tồn 1 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Thanh Long", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoLocTon", buoc: 2, ghiChu: "Sau hoặc Trước Lộc Tồn 2 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Tiểu Hao", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Tiền Bạc"], congThuc: "TheoLocTon", buoc: 3, ghiChu: "Sau hoặc Trước Lộc Tồn 3 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Tướng Quân", hanh: "Mộc", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoLocTon", buoc: 4, ghiChu: "Sau hoặc Trước Lộc Tồn 4 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Tấu Thư", hanh: "Kim", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TheoLocTon", buoc: 5, ghiChu: "Sau hoặc Trước Lộc Tồn 5 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Phi Liêm", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả"], congThuc: "TheoLocTon", buoc: 6, ghiChu: "Sau hoặc Trước Lộc Tồn 6 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Hỷ Thần", hanh: "Hỏa", loai: "Cát", nhom: ["Tất Cả","Tình Duyên"], congThuc: "TheoLocTon", buoc: 7, ghiChu: "Sau hoặc Trước Lộc Tồn 7 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Bệnh Phù", hanh: "Thổ", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoLocTon", buoc: 8, ghiChu: "Sau hoặc Trước Lộc Tồn 8 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Đại Hao", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Tiền Bạc"], congThuc: "TheoLocTon", buoc: 9, ghiChu: "Sau hoặc Trước Lộc Tồn 9 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Phục Binh", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoLocTon", buoc: 10, ghiChu: "Sau hoặc Trước Lộc Tồn 10 cung tùy Âm Dương Nam Nữ." },
-  { ten: "Quan Phủ", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoLocTon", buoc: 11, ghiChu: "Sau hoặc Trước Lộc Tồn 11 cung tùy Âm Dương Nam Nữ." }
-);
-// 📅 Nhóm Tiểu tinh theo NGÀY SINH
-TIEUTINH_DATA.push(
-  // Thiên Quý: từ Văn Khúc đếm NGHỊCH đến ngày sinh, rồi lùi 1 cung
-  { ten: "Thiên Quý", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoNgay_ThienQuy", ghiChu: "Từ Văn Khúc đếm nghịch đến ngày sinh, lùi 1 cung." },
-
-  // Ân Quang: từ Văn Xương đếm THUẬN đến ngày sinh, rồi lùi 1 cung
-  { ten: "Ân Quang", hanh: "Mộc", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoNgay_AnQuang", ghiChu: "Từ Văn Xương đếm thuận đến ngày sinh, lùi 1 cung." },
-
-  // Tam Thai: từ Tả Phụ đếm THUẬN đến ngày sinh
-  { ten: "Tam Thai", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoNgay_TamThai", ghiChu: "Từ Tả Phụ đếm thuận đến ngày sinh." },
-
-  // Bát Tọa: từ Hữu Bật đếm NGHỊCH đến ngày sinh
-  { ten: "Bát Tọa", hanh: "Mộc", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TheoNgay_BatToa", ghiChu: "Từ Hữu Bật đếm nghịch đến ngày sinh." }
-);
-
-// 🌟 Nhóm Tiểu Tinh an theo Can Năm Sinh
-TIEUTINH_DATA.push(
-  { ten: "Lưu Hà", hanh: "Thủy", loai: "Hung", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Dậu","Tuất","Mùi","Thìn","Tỵ","Ngọ","Thân","Mão","Hợi","Dần"], ghiChu: "An theo Can năm sinh (Giáp→Ất→Bính→Đinh→Mậu→Kỷ→Canh→Tân→Nhâm→Quý)." },
-  { ten: "Quốc Ấn", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Tuất","Hợi","Sửu","Dần","Sửu","Dần","Thìn","Tỵ","Mùi","Thân"], ghiChu: "An theo Can năm sinh (Giáp→Ất→...→Quý)." },
-  { ten: "Đường Phù", hanh: "Mộc", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Mùi","Thân","Tuất","Hợi","Tuất","Hợi","Sửu","Dần","Thìn","Tỵ"], ghiChu: "An theo Can năm sinh (Giáp→Ất→...→Quý)." },
-  { ten: "Văn Tinh", hanh: "Hỏa", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Tỵ","Ngọ","Thân","Dậu","Thân","Dậu","Hợi","Tý","Dậu","Mão"], ghiChu: "An theo Can năm sinh (Giáp→Ất→...→Quý)." },
-  { ten: "Thiên Quan", hanh: "Hỏa", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Mùi","Thìn","Tỵ","Dần","Mão","Dậu","Hợi","Dậu","Tuất","Ngọ"], ghiChu: "An theo Can năm sinh (Giáp→Ất→...→Quý)." },
-  { ten: "Thiên Phúc", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Dậu","Thân","Tý","Hợi","Mão","Dần","Ngọ","Tỵ","Ngọ","Tỵ"], ghiChu: "An theo Can năm sinh (Giáp→Ất→...→Quý)." },
-  { ten: "Thiên Trù", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả"], congThuc: "TheoCanNamSinh", dsCung: ["Tỵ","Ngọ","Tý","Tỵ","Ngọ","Thân","Dần","Ngọ","Dậu","Tuất"], ghiChu: "An theo Can năm sinh (Giáp→Ất→...→Quý)." }
-);
-
-// 🌟 Nhóm TIỂU TINH – TẠP TINH (đặc biệt, mỗi sao 1 quy tắc riêng)
-TIEUTINH_DATA.push(
-  { ten: "Đẩu Quân", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TapTinh_DauQuan", ghiChu: "Tính nghịch từ Thái Tuế (Dần) đến tháng sinh, rồi thuận theo giờ sinh." },
-  { ten: "Thiên Không", hanh: "Hỏa", loai: "Hung", nhom: ["Tất Cả","Công Danh"], congThuc: "TapTinh_ThienKhong", ghiChu: "An sau Thái Tuế, cùng cung Thiếu Dương." },
-  { ten: "Thiên Tài", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TapTinh_ThienTai", ghiChu: "Đặt Tý ở Mệnh, đếm thuận đến năm sinh." },
-  { ten: "Thiên Thọ", hanh: "Thổ", loai: "Cát", nhom: ["Tất Cả","Công Danh"], congThuc: "TapTinh_ThienTho", ghiChu: "Đặt Tý ở Thân, đếm thuận đến năm sinh." },
-{ ten: "Thiên Thương", hanh: "Thổ", loai: "Hung", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TapTinh_CuDinh", cuDinh: "Nô Bộc", ghiChu: "An tại Nô Bộc." },
-{ ten: "Thiên Sứ", hanh: "Thủy", loai: "Cát", nhom: ["Tất Cả","Sức Khỏe"], congThuc: "TapTinh_CuDinh", cuDinh: "Tật Ách", ghiChu: "An tại Tật Ách." },
-{ ten: "Thiên La", hanh: "Kim", loai: "Hung", nhom: ["Tất Cả"], congThuc: "codinh", dsCung: ["Thìn","Thìn","Thìn","Thìn","Thìn","Thìn","Thìn","Thìn","Thìn","Thìn","Thìn","Thìn"], ghiChu: "An cố định tại Thìn." },
-{ ten: "Địa Võng", hanh: "Kim", loai: "Hung", nhom: ["Tất Cả"], congThuc: "codinh", dsCung: ["Tuất","Tuất","Tuất","Tuất","Tuất","Tuất","Tuất","Tuất","Tuất","Tuất","Tuất","Tuất"], ghiChu: "An cố định tại Tuất." }
+  { ten: "ThiĂªn HĂ¬nh", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "TheoThangSinh", dsCung: ["Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n"], ghiChu: "An theo thĂ¡ng Ă¢m lá»‹ch (1â€“12) cá»‘ Ä‘á»‹nh theo báº£ng tra." },
+  { ten: "ThiĂªn RiĂªu", hanh: "Thá»§y", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "TheoThangSinh", dsCung: ["Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½"], ghiChu: "An theo thĂ¡ng Ă¢m lá»‹ch (1â€“12) cá»‘ Ä‘á»‹nh theo báº£ng tra." },
+  { ten: "ThiĂªn Y", hanh: "Thá»§y", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "TheoThangSinh", dsCung: ["Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½"], ghiChu: "An theo thĂ¡ng Ă¢m lá»‹ch (1â€“12) cá»‘ Ä‘á»‹nh theo báº£ng tra." },
+  { ten: "ThiĂªn Giáº£i", hanh: "Há»a", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoThangSinh", dsCung: ["ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i"], ghiChu: "An theo thĂ¡ng Ă¢m lá»‹ch (1â€“12) cá»‘ Ä‘á»‹nh theo báº£ng tra." },
+  { ten: "Äá»‹a Giáº£i", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoThangSinh", dsCung: ["MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»"], ghiChu: "An theo thĂ¡ng Ă¢m lá»‹ch (1â€“12) cá»‘ Ä‘á»‹nh theo báº£ng tra." }
 );
 
 
+// đŸ•’ NhĂ³m Tiá»ƒu Tinh an theo Giá» Sinh
+TIEUTINH_DATA.push(
+  { ten: "Thai Phá»¥", hanh: "Kim", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh","TĂ¬nh DuyĂªn"], congThuc: "TheoGioSinh", dsCung: ["Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ"], ghiChu: "An theo giá» sinh (TĂ½â€“Sá»­uâ€“...â€“Há»£i)." },
+  { ten: "Phong CĂ¡o", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoGioSinh", dsCung: ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"], ghiChu: "An theo giá» sinh (TĂ½â€“Sá»­uâ€“...â€“Há»£i)." }
+);
+// đŸ’« NhĂ³m Tiá»ƒu Tinh an theo Lá»™c Tá»“n
+TIEUTINH_DATA.push(
+  { ten: "BĂ¡c SÄ©", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoLocTon", buoc: 0, ghiChu: "An cĂ¹ng cung vá»›i Lá»™c Tá»“n." },
+  { ten: "Lá»±c SÄ©", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoLocTon", buoc: 1, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 1 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Thanh Long", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoLocTon", buoc: 2, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 2 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Tiá»ƒu Hao", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","Tiá»n Báº¡c"], congThuc: "TheoLocTon", buoc: 3, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 3 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "TÆ°á»›ng QuĂ¢n", hanh: "Má»™c", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoLocTon", buoc: 4, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 4 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Táº¥u ThÆ°", hanh: "Kim", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TheoLocTon", buoc: 5, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 5 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Phi LiĂªm", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "TheoLocTon", buoc: 6, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 6 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Há»· Tháº§n", hanh: "Há»a", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","TĂ¬nh DuyĂªn"], congThuc: "TheoLocTon", buoc: 7, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 7 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Bá»‡nh PhĂ¹", hanh: "Thá»•", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoLocTon", buoc: 8, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 8 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Äáº¡i Hao", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","Tiá»n Báº¡c"], congThuc: "TheoLocTon", buoc: 9, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 9 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Phá»¥c Binh", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoLocTon", buoc: 10, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 10 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." },
+  { ten: "Quan Phá»§", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoLocTon", buoc: 11, ghiChu: "Sau hoáº·c TrÆ°á»›c Lá»™c Tá»“n 11 cung tĂ¹y Ă‚m DÆ°Æ¡ng Nam Ná»¯." }
+);
+// đŸ“… NhĂ³m Tiá»ƒu tinh theo NGĂ€Y SINH
+TIEUTINH_DATA.push(
+  // ThiĂªn QuĂ½: tá»« VÄƒn KhĂºc Ä‘áº¿m NGHá»CH Ä‘áº¿n ngĂ y sinh, rá»“i lĂ¹i 1 cung
+  { ten: "ThiĂªn QuĂ½", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoNgay_ThienQuy", ghiChu: "Tá»« VÄƒn KhĂºc Ä‘áº¿m nghá»‹ch Ä‘áº¿n ngĂ y sinh, lĂ¹i 1 cung." },
 
-// ===== Helpers cho nhóm theo NGÀY SINH (đặt TRƯỚC tinhCungTieuTinh) =====
-const __CHI_LIST = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // Ă‚n Quang: tá»« VÄƒn XÆ°Æ¡ng Ä‘áº¿m THUáº¬N Ä‘áº¿n ngĂ y sinh, rá»“i lĂ¹i 1 cung
+  { ten: "Ă‚n Quang", hanh: "Má»™c", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoNgay_AnQuang", ghiChu: "Tá»« VÄƒn XÆ°Æ¡ng Ä‘áº¿m thuáº­n Ä‘áº¿n ngĂ y sinh, lĂ¹i 1 cung." },
 
-// Map ngược id ô -> tên chi (vd: cell11 -> "Tý")
+  // Tam Thai: tá»« Táº£ Phá»¥ Ä‘áº¿m THUáº¬N Ä‘áº¿n ngĂ y sinh
+  { ten: "Tam Thai", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoNgay_TamThai", ghiChu: "Tá»« Táº£ Phá»¥ Ä‘áº¿m thuáº­n Ä‘áº¿n ngĂ y sinh." },
+
+  // BĂ¡t Tá»a: tá»« Há»¯u Báº­t Ä‘áº¿m NGHá»CH Ä‘áº¿n ngĂ y sinh
+  { ten: "BĂ¡t Tá»a", hanh: "Má»™c", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TheoNgay_BatToa", ghiChu: "Tá»« Há»¯u Báº­t Ä‘áº¿m nghá»‹ch Ä‘áº¿n ngĂ y sinh." }
+);
+
+// đŸŒŸ NhĂ³m Tiá»ƒu Tinh an theo Can NÄƒm Sinh
+TIEUTINH_DATA.push(
+  { ten: "LÆ°u HĂ ", hanh: "Thá»§y", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["Dáº­u","Tuáº¥t","MĂ¹i","ThĂ¬n","Tá»µ","Ngá»","ThĂ¢n","MĂ£o","Há»£i","Dáº§n"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’BĂ­nhâ†’Äinhâ†’Máº­uâ†’Ká»·â†’Canhâ†’TĂ¢nâ†’NhĂ¢mâ†’QuĂ½)." },
+  { ten: "Quá»‘c áº¤n", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["Tuáº¥t","Há»£i","Sá»­u","Dáº§n","Sá»­u","Dáº§n","ThĂ¬n","Tá»µ","MĂ¹i","ThĂ¢n"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’...â†’QuĂ½)." },
+  { ten: "ÄÆ°á»ng PhĂ¹", hanh: "Má»™c", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["MĂ¹i","ThĂ¢n","Tuáº¥t","Há»£i","Tuáº¥t","Há»£i","Sá»­u","Dáº§n","ThĂ¬n","Tá»µ"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’...â†’QuĂ½)." },
+  { ten: "VÄƒn Tinh", hanh: "Há»a", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["Tá»µ","Ngá»","ThĂ¢n","Dáº­u","ThĂ¢n","Dáº­u","Há»£i","TĂ½","Dáº­u","MĂ£o"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’...â†’QuĂ½)." },
+  { ten: "ThiĂªn Quan", hanh: "Há»a", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["MĂ¹i","ThĂ¬n","Tá»µ","Dáº§n","MĂ£o","Dáº­u","Há»£i","Dáº­u","Tuáº¥t","Ngá»"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’...â†’QuĂ½)." },
+  { ten: "ThiĂªn PhĂºc", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["Dáº­u","ThĂ¢n","TĂ½","Há»£i","MĂ£o","Dáº§n","Ngá»","Tá»µ","Ngá»","Tá»µ"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’...â†’QuĂ½)." },
+  { ten: "ThiĂªn TrĂ¹", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£"], congThuc: "TheoCanNamSinh", dsCung: ["Tá»µ","Ngá»","TĂ½","Tá»µ","Ngá»","ThĂ¢n","Dáº§n","Ngá»","Dáº­u","Tuáº¥t"], ghiChu: "An theo Can nÄƒm sinh (GiĂ¡pâ†’áº¤tâ†’...â†’QuĂ½)." }
+);
+
+// đŸŒŸ NhĂ³m TIá»‚U TINH â€“ Táº P TINH (Ä‘áº·c biá»‡t, má»—i sao 1 quy táº¯c riĂªng)
+TIEUTINH_DATA.push(
+  { ten: "Äáº©u QuĂ¢n", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TapTinh_DauQuan", ghiChu: "TĂ­nh nghá»‹ch tá»« ThĂ¡i Tuáº¿ (Dáº§n) Ä‘áº¿n thĂ¡ng sinh, rá»“i thuáº­n theo giá» sinh." },
+  { ten: "ThiĂªn KhĂ´ng", hanh: "Há»a", loai: "Hung", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TapTinh_ThienKhong", ghiChu: "An sau ThĂ¡i Tuáº¿, cĂ¹ng cung Thiáº¿u DÆ°Æ¡ng." },
+  { ten: "ThiĂªn TĂ i", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TapTinh_ThienTai", ghiChu: "Äáº·t TĂ½ á»Ÿ Má»‡nh, Ä‘áº¿m thuáº­n Ä‘áº¿n nÄƒm sinh." },
+  { ten: "ThiĂªn Thá»", hanh: "Thá»•", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","CĂ´ng Danh"], congThuc: "TapTinh_ThienTho", ghiChu: "Äáº·t TĂ½ á»Ÿ ThĂ¢n, Ä‘áº¿m thuáº­n Ä‘áº¿n nÄƒm sinh." },
+{ ten: "ThiĂªn ThÆ°Æ¡ng", hanh: "Thá»•", loai: "Hung", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TapTinh_CuDinh", cuDinh: "NĂ´ Bá»™c", ghiChu: "An táº¡i NĂ´ Bá»™c." },
+{ ten: "ThiĂªn Sá»©", hanh: "Thá»§y", loai: "CĂ¡t", nhom: ["Táº¥t Cáº£","Sá»©c Khá»e"], congThuc: "TapTinh_CuDinh", cuDinh: "Táº­t Ăch", ghiChu: "An táº¡i Táº­t Ăch." },
+{ ten: "ThiĂªn La", hanh: "Kim", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "codinh", dsCung: ["ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n","ThĂ¬n"], ghiChu: "An cá»‘ Ä‘á»‹nh táº¡i ThĂ¬n." },
+{ ten: "Äá»‹a VĂµng", hanh: "Kim", loai: "Hung", nhom: ["Táº¥t Cáº£"], congThuc: "codinh", dsCung: ["Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t","Tuáº¥t"], ghiChu: "An cá»‘ Ä‘á»‹nh táº¡i Tuáº¥t." }
+);
+
+
+
+// ===== Helpers cho nhĂ³m theo NGĂ€Y SINH (Ä‘áº·t TRÆ¯á»C tinhCungTieuTinh) =====
+const __CHI_LIST = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+
+// Map ngÆ°á»£c id Ă´ -> tĂªn chi (vd: cell11 -> "TĂ½")
 const REVERSE_CUNG = Object.fromEntries(
   Object.entries(CUNG_MAP).map(([chi, idx]) => [idx, chi])
 );
 
-// Chuẩn hóa sao: bỏ dấu, xử lý Đ/đ, xoá trắng, viết thường
+// Chuáº©n hĂ³a sao: bá» dáº¥u, xá»­ lĂ½ Ä/Ä‘, xoĂ¡ tráº¯ng, viáº¿t thÆ°á»ng
 function __norm(s) {
   return (s || "")
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // bỏ dấu tổ hợp
-    .replace(/\u0110/g, "d")         // Đ → d
-    .replace(/\u0111/g, "d")         // đ → d
-    .replace(/\s+/g, "")             // bỏ khoảng trắng
+    .replace(/[\u0300-\u036f]/g, "") // bá» dáº¥u tá»• há»£p
+    .replace(/\u0110/g, "d")         // Ä â†’ d
+    .replace(/\u0111/g, "d")         // Ä‘ â†’ d
+    .replace(/\s+/g, "")             // bá» khoáº£ng tráº¯ng
     .trim()
     .toLowerCase();
 }
 
 
-// Tìm địa chi ô đang chứa 1 sao mốc (Xương/Khúc/Tả/Hữu) trong LAYER 6 trung tinh
+// TĂ¬m Ä‘á»‹a chi Ă´ Ä‘ang chá»©a 1 sao má»‘c (XÆ°Æ¡ng/KhĂºc/Táº£/Há»¯u) trong LAYER 6 trung tinh
 function __timCungChuaSao(tenSao) {
   const target = __norm(tenSao); // "van xuong", "van khuc", "ta phu", "huu bat"
-  // chỉ quét sao trung tinh (loại .tieutinh ra)
+  // chá»‰ quĂ©t sao trung tinh (loáº¡i .tieutinh ra)
   const els = document.querySelectorAll('.layer-6 .sao:not(.tieutinh)');
 
   for (const el of els) {
@@ -4682,141 +4687,141 @@ function __timCungChuaSao(tenSao) {
       return REVERSE_CUNG[idNum] || null;
     }
   }
-  return null; // không thấy
+  return null; // khĂ´ng tháº¥y
 }
 
-// Đếm từ startChi tới NGÀY sinh (1..30) theo chiều 'thuan'|'nghich', cộng offset
+// Äáº¿m tá»« startChi tá»›i NGĂ€Y sinh (1..30) theo chiá»u 'thuan'|'nghich', cá»™ng offset
 function __demToiNgay(startChi, ngay, chieu, offset = 0) {
-  if (!startChi) return "Tý";
-  const step12 = ((parseInt(ngay,10) || 1) - 1) % 12; // ngày 1 = bước 0
+  if (!startChi) return "TĂ½";
+  const step12 = ((parseInt(ngay,10) || 1) - 1) % 12; // ngĂ y 1 = bÆ°á»›c 0
   const startIdx = __CHI_LIST.indexOf(startChi);
-  if (startIdx < 0) return "Tý";
+  if (startIdx < 0) return "TĂ½";
   const dir = (chieu === "nghich") ? -1 : 1;
   const idx = (startIdx + dir * step12 + offset + 1200) % 12;
   return __CHI_LIST[idx];
 }
-// 🧭 Trả về chỉ số 0–9 tương ứng với Can năm sinh (Giáp→Quý)
+// đŸ§­ Tráº£ vá» chá»‰ sá»‘ 0â€“9 tÆ°Æ¡ng á»©ng vá»›i Can nÄƒm sinh (GiĂ¡pâ†’QuĂ½)
 function getCanIndex(canNam) {
-  const CAN_LIST = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
+  const CAN_LIST = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
   const idx = CAN_LIST.indexOf((canNam || "").trim());
-  return idx >= 0 ? idx : 0; // nếu sai hoặc null → mặc định 0 (Giáp)
+  return idx >= 0 ? idx : 0; // náº¿u sai hoáº·c null â†’ máº·c Ä‘á»‹nh 0 (GiĂ¡p)
 }
 function tinhCungTieuTinh(sao, data) {
-  // 🔹 Nếu thiếu canChiNam, bổ sung từ window.dataGlobal
+  // đŸ”¹ Náº¿u thiáº¿u canChiNam, bá»• sung tá»« window.dataGlobal
   if (!data.canChiNam && window.dataGlobal?.canChiNam) {
     data.canChiNam = window.dataGlobal.canChiNam;
   }
 
-  // 💡 Tách chi năm từ thuộc tính canChiNam (VD: "Ất Tý" → "Tý")
+  // đŸ’¡ TĂ¡ch chi nÄƒm tá»« thuá»™c tĂ­nh canChiNam (VD: "áº¤t TĂ½" â†’ "TĂ½")
   const chiNam = (data.canChiNam || "").split(" ")[1] || null;
   const canNam = (data.canChiNam || "").split(" ")[0] || null;
 
   if (!chiNam) {
-    console.warn("⚠️ Không tìm thấy chi năm sinh trong dataGlobal!"); 
-    return "Tý"; // fallback tránh crash
+    console.warn("â ï¸ KhĂ´ng tĂ¬m tháº¥y chi nÄƒm sinh trong dataGlobal!"); 
+    return "TĂ½"; // fallback trĂ¡nh crash
   }
 
 
-  const chiList = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const chiList = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const next = (chi, n = 1) => chiList[(chiList.indexOf(chi) + n + 12) % 12];
 
   switch (sao.congThuc) {
     case "ThaiTue":
-      return chiNam; // Thái Tuế an tại chi năm sinh
+      return chiNam; // ThĂ¡i Tuáº¿ an táº¡i chi nÄƒm sinh
     case "TheoThaiTue":
-      return next(chiNam, sao.buoc); // các sao khác đếm thuận
+      return next(chiNam, sao.buoc); // cĂ¡c sao khĂ¡c Ä‘áº¿m thuáº­n
    case "TheoDiaChiNam": {
   const chiNam = (data.canChiNam || "").split(" ")[1] || null;
-  const chiList = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-  if (!chiNam) return "Tý";
+  const chiList = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+  if (!chiNam) return "TĂ½";
   const idx = chiList.indexOf(chiNam);
-  if (idx === -1) return "Tý";
-  return sao.dsCung ? sao.dsCung[idx] : "Tý";
+  if (idx === -1) return "TĂ½";
+  return sao.dsCung ? sao.dsCung[idx] : "TĂ½";
 }
 case "TheoThangSinh": {
   let thang = Number(String(data.thangAm || data.thangSinh || "").replace(/\D/g, ""));
   if (!thang || thang < 1 || thang > 12) {
-    console.warn("⚠️ Thiếu tháng âm hợp lệ, tạm lấy tháng 1");
+    console.warn("â ï¸ Thiáº¿u thĂ¡ng Ă¢m há»£p lá»‡, táº¡m láº¥y thĂ¡ng 1");
     thang = 1;
   }
   const idx = thang - 1;
-  return sao.dsCung[idx] || "Tý";
+  return sao.dsCung[idx] || "TĂ½";
 }
 
 
 
 
 case "TheoGioSinh": {
-  const chiGio = (data.gioAm || data.gioSinhChi || "Tý").trim(); // ưu tiên giờ âm
-  const chiList = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const chiGio = (data.gioAm || data.gioSinhChi || "TĂ½").trim(); // Æ°u tiĂªn giá» Ă¢m
+  const chiList = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const idx = chiList.indexOf(chiGio);
-  return sao.dsCung ? sao.dsCung[idx >= 0 ? idx : 0] : "Tý";
+  return sao.dsCung ? sao.dsCung[idx >= 0 ? idx : 0] : "TĂ½";
 }
 case "TheoLocTon": {
-  const chiList = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const chiList = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
-  // 1) Lấy CAN & CHI năm
-  const canNam = (data.canChiNam || "").split(" ")[0] || "";   // "Ất"
-  // Nếu đã có sẵn locTonChi trong dataGlobal thì dùng luôn, còn không thì suy ra theo Can:
+  // 1) Láº¥y CAN & CHI nÄƒm
+  const canNam = (data.canChiNam || "").split(" ")[0] || "";   // "áº¤t"
+  // Náº¿u Ä‘Ă£ cĂ³ sáºµn locTonChi trong dataGlobal thĂ¬ dĂ¹ng luĂ´n, cĂ²n khĂ´ng thĂ¬ suy ra theo Can:
   let locTon = data.locTonChi;
   if (!locTon) {
     const locTonMap = {
-      "Giáp":"Dần","Ất":"Mão","Bính":"Tỵ","Đinh":"Ngọ",
-      "Mậu":"Tỵ","Kỷ":"Ngọ","Canh":"Thân","Tân":"Dậu",
-      "Nhâm":"Hợi","Quý":"Tý"
+      "GiĂ¡p":"Dáº§n","áº¤t":"MĂ£o","BĂ­nh":"Tá»µ","Äinh":"Ngá»",
+      "Máº­u":"Tá»µ","Ká»·":"Ngá»","Canh":"ThĂ¢n","TĂ¢n":"Dáº­u",
+      "NhĂ¢m":"Há»£i","QuĂ½":"TĂ½"
     };
-    locTon = locTonMap[canNam] || "Tý";
+    locTon = locTonMap[canNam] || "TĂ½";
   }
 
-  // 2) Xác định Âm/Dương & Nam/Nữ để quyết định chiều
-  //   Quy ước: Dương Nam / Âm Nữ -> đi THUẬN;  Dương Nữ / Âm Nam -> đi NGHỊCH
-  const rawMenh = (data.menh || "").toLowerCase();   // "âm nam" / "dương nữ" ...
-  const rawGender = (data.gender || data.gioiTinh || "").toLowerCase(); // "nam"/"nữ"
+  // 2) XĂ¡c Ä‘á»‹nh Ă‚m/DÆ°Æ¡ng & Nam/Ná»¯ Ä‘á»ƒ quyáº¿t Ä‘á»‹nh chiá»u
+  //   Quy Æ°á»›c: DÆ°Æ¡ng Nam / Ă‚m Ná»¯ -> Ä‘i THUáº¬N;  DÆ°Æ¡ng Ná»¯ / Ă‚m Nam -> Ä‘i NGHá»CH
+  const rawMenh = (data.menh || "").toLowerCase();   // "Ă¢m nam" / "dÆ°Æ¡ng ná»¯" ...
+  const rawGender = (data.gender || data.gioiTinh || "").toLowerCase(); // "nam"/"ná»¯"
 
-  const isDuong = rawMenh.includes("dương");
+  const isDuong = rawMenh.includes("dÆ°Æ¡ng");
   const isNam   = rawGender.includes("nam") || rawMenh.includes("nam");
   const thuan   = (isDuong && isNam) || (!isDuong && !isNam);
 
-  // 3) Tính vị trí theo bước
+  // 3) TĂ­nh vá»‹ trĂ­ theo bÆ°á»›c
   const idx0   = chiList.indexOf(locTon);
-  if (idx0 === -1) return "Tý";
+  if (idx0 === -1) return "TĂ½";
 
-  const step   = sao.buoc || 0;           // Bác Sĩ = 0 -> đồng cung Lộc Tồn
+  const step   = sao.buoc || 0;           // BĂ¡c SÄ© = 0 -> Ä‘á»“ng cung Lá»™c Tá»“n
   const newIdx = thuan
-      ? (idx0 + step) % 12               // đi thuận
-      : (idx0 - step + 12) % 12;         // đi nghịch
+      ? (idx0 + step) % 12               // Ä‘i thuáº­n
+      : (idx0 - step + 12) % 12;         // Ä‘i nghá»‹ch
 
   return chiList[newIdx];
 }
 case "TheoNgay_ThienQuy": {
-  const chiGio = (data.gioAm || data.gioSinhChi || "Tý").trim();
+  const chiGio = (data.gioAm || data.gioSinhChi || "TĂ½").trim();
   const ngay = parseInt(data.ngayAm || data.ngaySinh || 1);
 
-  // ✅ Vòng thuận theo chiều Tử Vi (ngược kim đồng hồ)
-  const CUNG_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const GIO_CHI   = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // âœ… VĂ²ng thuáº­n theo chiá»u Tá»­ Vi (ngÆ°á»£c kim Ä‘á»“ng há»“)
+  const CUNG_TUVI = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const GIO_CHI   = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
   const gioIndex = GIO_CHI.indexOf(chiGio);
-  if (gioIndex === -1) return "Thìn";
+  if (gioIndex === -1) return "ThĂ¬n";
 
-  // 🟣 DEBUG: Thiên Quý
-  console.group("🟢 DEBUG THIÊN QUÝ");
-  console.log("Giờ sinh:", chiGio, "| Ngày âm:", ngay);
-  console.log("→ Khởi cung Thìn coi là giờ Tý");
+  // đŸŸ£ DEBUG: ThiĂªn QuĂ½
+  console.group("đŸŸ¢ DEBUG THIĂN QUĂ");
+  console.log("Giá» sinh:", chiGio, "| NgĂ y Ă¢m:", ngay);
+  console.log("â†’ Khá»Ÿi cung ThĂ¬n coi lĂ  giá» TĂ½");
 
-  // 🔹 B1: Thìn (giờ Tý) → THUẬN đến giờ sinh (Văn Khúc)
-  const posThìn = CUNG_TUVI.indexOf("Thìn");
-  const posVanKhuc = (posThìn + gioIndex) % 12;
+  // đŸ”¹ B1: ThĂ¬n (giá» TĂ½) â†’ THUáº¬N Ä‘áº¿n giá» sinh (VÄƒn KhĂºc)
+  const posThĂ¬n = CUNG_TUVI.indexOf("ThĂ¬n");
+  const posVanKhuc = (posThĂ¬n + gioIndex) % 12;
   const cungVanKhuc = CUNG_TUVI[posVanKhuc];
-  console.log(`➡️ Đi thuận ${gioIndex} bước → ${cungVanKhuc} (Văn Khúc)`);
+  console.log(`â¡ï¸ Äi thuáº­n ${gioIndex} bÆ°á»›c â†’ ${cungVanKhuc} (VÄƒn KhĂºc)`);
 
-  // 🔹 B2: Từ Văn Khúc → NGHỊCH (ngày sinh - 1)
+  // đŸ”¹ B2: Tá»« VÄƒn KhĂºc â†’ NGHá»CH (ngĂ y sinh - 1)
   const posVan = CUNG_TUVI.indexOf(cungVanKhuc);
-  const buocNghich = (ngay - 2 + 12) % 12; // ngày 1 lùi 1
+  const buocNghich = (ngay - 2 + 12) % 12; // ngĂ y 1 lĂ¹i 1
   const posThienQuy = (posVan - buocNghich + 12) % 12;
   const cungThienQuy = CUNG_TUVI[posThienQuy];
 
-  console.log(`⬅️ Từ ${cungVanKhuc} đi nghịch ${buocNghich} bước → ${cungThienQuy} (Thiên Quý)`);
+  console.log(`â¬…ï¸ Tá»« ${cungVanKhuc} Ä‘i nghá»‹ch ${buocNghich} bÆ°á»›c â†’ ${cungThienQuy} (ThiĂªn QuĂ½)`);
   console.groupEnd();
 
   return cungThienQuy;
@@ -4827,34 +4832,34 @@ case "TheoNgay_ThienQuy": {
 
 
 case "TheoNgay_AnQuang": {
-  const chiGio = (data.gioAm || data.gioSinhChi || "Tý").trim();
+  const chiGio = (data.gioAm || data.gioSinhChi || "TĂ½").trim();
   const ngay = parseInt(data.ngayAm || data.ngaySinh || 1);
 
-  // Vòng Tử Vi (ngược kim đồng hồ)
-  const CUNG_TUVI = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const GIO_CHI   = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // VĂ²ng Tá»­ Vi (ngÆ°á»£c kim Ä‘á»“ng há»“)
+  const CUNG_TUVI = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const GIO_CHI   = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
   const gioIndex = GIO_CHI.indexOf(chiGio);
-  if (gioIndex === -1) return "Tuất";
+  if (gioIndex === -1) return "Tuáº¥t";
 
-  // 🪶 DEBUG STEP 1
-  console.group("🟣 DEBUG ÂN QUANG");
-  console.log("Giờ sinh:", chiGio, "| Ngày âm:", ngay);
-  console.log("→ Khởi cung Tuất coi là giờ Tý");
+  // đŸª¶ DEBUG STEP 1
+  console.group("đŸŸ£ DEBUG Ă‚N QUANG");
+  console.log("Giá» sinh:", chiGio, "| NgĂ y Ă¢m:", ngay);
+  console.log("â†’ Khá»Ÿi cung Tuáº¥t coi lĂ  giá» TĂ½");
 
-  // B1: Tuất → NGHỊCH đến giờ sinh (TRỪ)
-  const posTuất = CUNG_TUVI.indexOf("Tuất");
-  const posVanXuong = (posTuất - gioIndex + 12) % 12;
+  // B1: Tuáº¥t â†’ NGHá»CH Ä‘áº¿n giá» sinh (TRá»ª)
+  const posTuáº¥t = CUNG_TUVI.indexOf("Tuáº¥t");
+  const posVanXuong = (posTuáº¥t - gioIndex + 12) % 12;
   const cungVanXuong = CUNG_TUVI[posVanXuong];
-  console.log(`➡️ Đi nghịch ${gioIndex} bước → ${cungVanXuong} (Văn Xương)`);
+  console.log(`â¡ï¸ Äi nghá»‹ch ${gioIndex} bÆ°á»›c â†’ ${cungVanXuong} (VÄƒn XÆ°Æ¡ng)`);
 
-  // B2: Từ Văn Xương → THUẬN (ngày sinh - 1)
+  // B2: Tá»« VÄƒn XÆ°Æ¡ng â†’ THUáº¬N (ngĂ y sinh - 1)
   const posVan = CUNG_TUVI.indexOf(cungVanXuong);
-  const buocThuan = (ngay - 2 + 12) % 12; // vì ngày 1 phải lùi 1 → tức là -1 thực tế
+  const buocThuan = (ngay - 2 + 12) % 12; // vĂ¬ ngĂ y 1 pháº£i lĂ¹i 1 â†’ tá»©c lĂ  -1 thá»±c táº¿
   const posAnQuang = (posVan + buocThuan) % 12;
   const cungAnQuang = CUNG_TUVI[posAnQuang];
 
-  console.log(`➡️ Từ ${cungVanXuong} đi thuận ${buocThuan} bước → ${cungAnQuang} (Ân Quang)`);
+  console.log(`â¡ï¸ Tá»« ${cungVanXuong} Ä‘i thuáº­n ${buocThuan} bÆ°á»›c â†’ ${cungAnQuang} (Ă‚n Quang)`);
   console.groupEnd();
 
   return cungAnQuang;
@@ -4868,23 +4873,23 @@ case "TheoNgay_AnQuang": {
 
 
 case "TheoNgay_TamThai": {
-  // 🌕 Tam Thai: Khởi từ Thìn, thuận tháng sinh an Tả Phù → thuận ngày sinh an Tam Thai
-  const VONG_12 = ["Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu","Dần","Mão"];
+  // đŸŒ• Tam Thai: Khá»Ÿi tá»« ThĂ¬n, thuáº­n thĂ¡ng sinh an Táº£ PhĂ¹ â†’ thuáº­n ngĂ y sinh an Tam Thai
+  const VONG_12 = ["ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o"];
 
-  // 🔹 Lấy tháng và ngày âm (ưu tiên dữ liệu âm lịch)
+  // đŸ”¹ Láº¥y thĂ¡ng vĂ  ngĂ y Ă¢m (Æ°u tiĂªn dá»¯ liá»‡u Ă¢m lá»‹ch)
   const thang = parseInt(data?.lunar?.[1] || data?.thangAm || 1);
   const ngay  = parseInt(data?.lunar?.[0] || data?.ngayAm || 1);
 
-  // 🔹 Phòng lỗi (nếu thiếu dữ liệu)
-  if (isNaN(thang) || isNaN(ngay)) return "Thìn";
+  // đŸ”¹ PhĂ²ng lá»—i (náº¿u thiáº¿u dá»¯ liá»‡u)
+  if (isNaN(thang) || isNaN(ngay)) return "ThĂ¬n";
 
-  // 🔹 B1: Khởi từ Thìn → thuận tháng sinh để an Tả Phù
+  // đŸ”¹ B1: Khá»Ÿi tá»« ThĂ¬n â†’ thuáº­n thĂ¡ng sinh Ä‘á»ƒ an Táº£ PhĂ¹
   const posTaPhu = (thang - 1) % 12;
 
-  // 🔹 B2: Từ cung Tả Phù → thuận ngày sinh để an Tam Thai
+  // đŸ”¹ B2: Tá»« cung Táº£ PhĂ¹ â†’ thuáº­n ngĂ y sinh Ä‘á»ƒ an Tam Thai
   const idx = (posTaPhu + ((ngay - 1) % 12)) % 12;
 
-  // 🔹 Trả về tên cung
+  // đŸ”¹ Tráº£ vá» tĂªn cung
   return VONG_12[idx];
 }
 
@@ -4895,22 +4900,22 @@ case "TheoNgay_TamThai": {
 
 
 case "TheoNgay_BatToa": {
-  // 🌕 Bát Tọa: Khởi từ Tuất, nghịch tháng sinh an Hữu Bật → nghịch ngày sinh an Bát Tọa
-  const VONG_12 = ["Tuất","Hợi","Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu"];
+  // đŸŒ• BĂ¡t Tá»a: Khá»Ÿi tá»« Tuáº¥t, nghá»‹ch thĂ¡ng sinh an Há»¯u Báº­t â†’ nghá»‹ch ngĂ y sinh an BĂ¡t Tá»a
+  const VONG_12 = ["Tuáº¥t","Há»£i","TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u"];
 
-  // 🔹 Lấy tháng & ngày âm
+  // đŸ”¹ Láº¥y thĂ¡ng & ngĂ y Ă¢m
   const thang = parseInt(data?.lunar?.[1] || data?.thangAm || 1);
   const ngay  = parseInt(data?.lunar?.[0] || data?.ngayAm || 1);
 
-  if (isNaN(thang) || isNaN(ngay)) return "Tuất"; // fallback an toàn
+  if (isNaN(thang) || isNaN(ngay)) return "Tuáº¥t"; // fallback an toĂ n
 
-  // 🔹 B1: Khởi Tuất → nghịch theo tháng sinh → an Hữu Bật
+  // đŸ”¹ B1: Khá»Ÿi Tuáº¥t â†’ nghá»‹ch theo thĂ¡ng sinh â†’ an Há»¯u Báº­t
   const posHuuBat = (0 - (thang - 1) + 12) % 12;
 
-  // 🔹 B2: Từ Hữu Bật → nghịch theo ngày sinh → an Bát Tọa
+  // đŸ”¹ B2: Tá»« Há»¯u Báº­t â†’ nghá»‹ch theo ngĂ y sinh â†’ an BĂ¡t Tá»a
   const idx = (posHuuBat - ((ngay - 1) % 12) + 12) % 12;
 
-  // 🔹 Trả về kết quả
+  // đŸ”¹ Tráº£ vá» káº¿t quáº£
   return VONG_12[idx];
 }
 
@@ -4921,36 +4926,36 @@ case "TheoNgay_BatToa": {
 
 
 case "TheoCanNamSinh": {
-  let canIndex = getCanIndex(canNam); // Giáp=0 → Quý=9
+  let canIndex = getCanIndex(canNam); // GiĂ¡p=0 â†’ QuĂ½=9
   return sao.dsCung[canIndex];
 }
 
 case "TapTinh_DauQuan": {
-  // 🌟 Vòng 12 cung cố định
-  const VONG_12 = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const GIO_CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // đŸŒŸ VĂ²ng 12 cung cá»‘ Ä‘á»‹nh
+  const VONG_12 = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const GIO_CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const idx = cung => VONG_12.indexOf(cung);
 
-  // 🧭 Lấy địa chi năm sinh (ví dụ "Ất Tỵ" → "Tỵ")
-  const chiNam = (data.canChiNam || "").split(" ")[1] || "Tý";
-  if (!VONG_12.includes(chiNam)) return "Tý";
+  // đŸ§­ Láº¥y Ä‘á»‹a chi nÄƒm sinh (vĂ­ dá»¥ "áº¤t Tá»µ" â†’ "Tá»µ")
+  const chiNam = (data.canChiNam || "").split(" ")[1] || "TĂ½";
+  if (!VONG_12.includes(chiNam)) return "TĂ½";
 
-  // 🪶 Cung Thái Tuế đặt tại địa chi năm sinh
+  // đŸª¶ Cung ThĂ¡i Tuáº¿ Ä‘áº·t táº¡i Ä‘á»‹a chi nÄƒm sinh
   const posThaiTue = idx(chiNam);
 
-  // 🈷️ Xác định tháng âm (1–12)
+  // đŸˆ·ï¸ XĂ¡c Ä‘á»‹nh thĂ¡ng Ă¢m (1â€“12)
   const thangAm = parseInt(data.lunar?.[1] || data.thangAm || 1);
 
-  // 🔹 Tháng 1 bắt đầu tại Thái Tuế → đếm NGHỊCH đến tháng sinh
+  // đŸ”¹ ThĂ¡ng 1 báº¯t Ä‘áº§u táº¡i ThĂ¡i Tuáº¿ â†’ Ä‘áº¿m NGHá»CH Ä‘áº¿n thĂ¡ng sinh
   const cungThang = VONG_12[(posThaiTue - (thangAm - 1) + 12 * 10) % 12];
   const posThang = idx(cungThang);
 
-  // 🕒 Lấy địa chi giờ sinh
-  const gioChi = (data.canChiGio || "").split(" ")[1] || "Tý";
+  // đŸ•’ Láº¥y Ä‘á»‹a chi giá» sinh
+  const gioChi = (data.canChiGio || "").split(" ")[1] || "TĂ½";
   const posGio = GIO_CHI.indexOf(gioChi);
   if (posGio === -1) return cungThang;
 
-  // 🚀 Từ cung tháng, đếm THUẬN theo giờ sinh để được cung Đẩu Quân
+  // đŸ€ Tá»« cung thĂ¡ng, Ä‘áº¿m THUáº¬N theo giá» sinh Ä‘á»ƒ Ä‘Æ°á»£c cung Äáº©u QuĂ¢n
   const cungDauQuan = VONG_12[(posThang + posGio) % 12];
 
   return cungDauQuan;
@@ -4958,36 +4963,36 @@ case "TapTinh_DauQuan": {
 
 
 case "TapTinh_ThienKhong": {
-  // Sau Thái Tuế 1 cung, cùng Thiếu Dương
-  const chiNam = (data.canChiNam || "").split(" ")[1] || "Dần";
-  const chiList = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // Sau ThĂ¡i Tuáº¿ 1 cung, cĂ¹ng Thiáº¿u DÆ°Æ¡ng
+  const chiNam = (data.canChiNam || "").split(" ")[1] || "Dáº§n";
+  const chiList = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const idx = chiList.indexOf(chiNam);
   return chiList[(idx + 1) % 12]; // sau 1 cung
 }
 
 case "TapTinh_ThienTai": {
-  // 🌟 Xác định cung Mệnh theo tháng & giờ sinh
+  // đŸŒŸ XĂ¡c Ä‘á»‹nh cung Má»‡nh theo thĂ¡ng & giá» sinh
   const thang = parseInt(data.thangAm || data.thangSinh || 1);
-  const gioChi = (data.gioAm || data.gioSinhChi || "Tý").trim();
-  const chiNam = (data.canChiNam || "").split(" ")[1] || "Tý";
+  const gioChi = (data.gioAm || data.gioSinhChi || "TĂ½").trim();
+  const chiNam = (data.canChiNam || "").split(" ")[1] || "TĂ½";
 
-  const VONG_CUNG = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const GIO_CHI  = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-  const CHI_NAM  = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const VONG_CUNG = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const GIO_CHI  = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+  const CHI_NAM  = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
-  // --- B1: Cung khởi tháng
-  const posDan = VONG_CUNG.indexOf("Dần");
-  const posThang = (posDan + (thang - 1)) % 12; // Dần là tháng 1 → thuận
-  const cungGioTy = VONG_CUNG[posThang]; // Cung giờ Tý
+  // --- B1: Cung khá»Ÿi thĂ¡ng
+  const posDan = VONG_CUNG.indexOf("Dáº§n");
+  const posThang = (posDan + (thang - 1)) % 12; // Dáº§n lĂ  thĂ¡ng 1 â†’ thuáº­n
+  const cungGioTy = VONG_CUNG[posThang]; // Cung giá» TĂ½
 
-  // --- B2: Đếm NGHỊCH từ cung giờ Tý đến giờ sinh
+  // --- B2: Äáº¿m NGHá»CH tá»« cung giá» TĂ½ Ä‘áº¿n giá» sinh
   const gioIndex = GIO_CHI.indexOf(gioChi);
   const posGioTy = VONG_CUNG.indexOf(cungGioTy);
   const posMenh = (posGioTy - gioIndex + 12) % 12;
-  const cungMenh = VONG_CUNG[posMenh]; // ✅ Cung Mệnh thực tế
+  const cungMenh = VONG_CUNG[posMenh]; // âœ… Cung Má»‡nh thá»±c táº¿
 
-  // --- B3: Từ Mệnh (năm Tý) đếm THUẬN đến chi năm sinh
-  const posTyNam = CHI_NAM.indexOf("Tý");
+  // --- B3: Tá»« Má»‡nh (nÄƒm TĂ½) Ä‘áº¿m THUáº¬N Ä‘áº¿n chi nÄƒm sinh
+  const posTyNam = CHI_NAM.indexOf("TĂ½");
   const posChiNam = CHI_NAM.indexOf(chiNam);
   const steps = (posChiNam - posTyNam + 12) % 12;
   const posThienTai = (posMenh + steps) % 12;
@@ -4999,31 +5004,31 @@ case "TapTinh_ThienTai": {
 
 
 case "TapTinh_ThienTho": {
-  // 🌟 Thiên Thọ: Tự tính khép kín, không gọi biến ngoài
-  // Quy tắc: Dần khởi tháng 1 → thuận đến tháng sinh (cung Giờ Tý)
-  // → thuận đến giờ sinh (Cung An Thân) → thuận đến chi năm sinh (Cung Thiên Thọ)
+  // đŸŒŸ ThiĂªn Thá»: Tá»± tĂ­nh khĂ©p kĂ­n, khĂ´ng gá»i biáº¿n ngoĂ i
+  // Quy táº¯c: Dáº§n khá»Ÿi thĂ¡ng 1 â†’ thuáº­n Ä‘áº¿n thĂ¡ng sinh (cung Giá» TĂ½)
+  // â†’ thuáº­n Ä‘áº¿n giá» sinh (Cung An ThĂ¢n) â†’ thuáº­n Ä‘áº¿n chi nÄƒm sinh (Cung ThiĂªn Thá»)
   
-  const chiNam = (data.canChiNam || "").split(" ")[1] || "Tý";
+  const chiNam = (data.canChiNam || "").split(" ")[1] || "TĂ½";
   const thang = parseInt(data.thangAm || data.thangSinh || 1);
-  const gioChi = (data.gioAm || data.gioSinhChi || "Tý").trim();
+  const gioChi = (data.gioAm || data.gioSinhChi || "TĂ½").trim();
 
-  // Vòng 12 cung tử vi
-  const VONG_12 = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const GIO_CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-  const CHI_NAM = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // VĂ²ng 12 cung tá»­ vi
+  const VONG_12 = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const GIO_CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+  const CHI_NAM = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
-  // 1️⃣ Từ Dần → đếm thuận theo tháng sinh (cung Giờ Tý)
-  const posThang = (VONG_12.indexOf("Dần") + (thang - 1)) % 12;
+  // 1ï¸âƒ£ Tá»« Dáº§n â†’ Ä‘áº¿m thuáº­n theo thĂ¡ng sinh (cung Giá» TĂ½)
+  const posThang = (VONG_12.indexOf("Dáº§n") + (thang - 1)) % 12;
   const cungGioTy = VONG_12[posThang];
 
-  // 2️⃣ Từ cung Giờ Tý → đếm thuận theo giờ sinh → Cung An Thân
+  // 2ï¸âƒ£ Tá»« cung Giá» TĂ½ â†’ Ä‘áº¿m thuáº­n theo giá» sinh â†’ Cung An ThĂ¢n
   const gioIndex = GIO_CHI.indexOf(gioChi);
   const posGioTy = VONG_12.indexOf(cungGioTy);
   const posAnThan = (posGioTy + gioIndex) % 12;
   const cungAnThan = VONG_12[posAnThan];
 
-  // 3️⃣ Đặt Tý tại Cung An Thân → đếm thuận đến chi năm sinh
-  const step = (CHI_NAM.indexOf(chiNam) - CHI_NAM.indexOf("Tý") + 12) % 12;
+  // 3ï¸âƒ£ Äáº·t TĂ½ táº¡i Cung An ThĂ¢n â†’ Ä‘áº¿m thuáº­n Ä‘áº¿n chi nÄƒm sinh
+  const step = (CHI_NAM.indexOf(chiNam) - CHI_NAM.indexOf("TĂ½") + 12) % 12;
   const posThienTho = (posAnThan + step) % 12;
 
   return VONG_12[posThienTho];
@@ -5036,40 +5041,40 @@ case "TapTinh_ThienTho": {
 
 
 case "TapTinh_CuDinh": {
-  // ⭐ Công thức đặc biệt cho Thiên Thương & Thiên Sứ (đảo chiều ngược)
-  if (sao.ten === "Thiên Thương" || sao.ten === "Thiên Sứ") {
-    const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-    const GIO_CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  // â­ CĂ´ng thá»©c Ä‘áº·c biá»‡t cho ThiĂªn ThÆ°Æ¡ng & ThiĂªn Sá»© (Ä‘áº£o chiá»u ngÆ°á»£c)
+  if (sao.ten === "ThiĂªn ThÆ°Æ¡ng" || sao.ten === "ThiĂªn Sá»©") {
+    const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+    const GIO_CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
     const thangAm = parseInt(data.lunar[1]);
     const gioChi = data.canChiGio?.split(" ")[1];
-    if (!gioChi) return "Tý";
+    if (!gioChi) return "TĂ½";
 
     const idxThang = (thangAm - 1) % 12;
     const idxGio = GIO_CHI.indexOf(gioChi);
-    if (idxGio === -1) return "Tý";
+    if (idxGio === -1) return "TĂ½";
 
-    // 🔹 Xác định vị trí cung Mệnh (vòng NGƯỢC)
+    // đŸ”¹ XĂ¡c Ä‘á»‹nh vá»‹ trĂ­ cung Má»‡nh (vĂ²ng NGÆ¯á»¢C)
     const idxMenh = (idxThang - idxGio + 12) % 12;
 
-    // 🔹 NGƯỢC CHIỀU: trừ thay vì cộng
-    const idxTatAch = (idxMenh - 5 + 12) % 12; // Tật Ách
-    const idxNoBoc  = (idxMenh - 7 + 12) % 12; // Nô Bộc
+    // đŸ”¹ NGÆ¯á»¢C CHIá»€U: trá»« thay vĂ¬ cá»™ng
+    const idxTatAch = (idxMenh - 5 + 12) % 12; // Táº­t Ăch
+    const idxNoBoc  = (idxMenh - 7 + 12) % 12; // NĂ´ Bá»™c
 
     const cungTatAch = CUNG_THUAN[idxTatAch];
     const cungNoBoc  = CUNG_THUAN[idxNoBoc];
 
-    if (sao.ten === "Thiên Thương") {
-      console.log(`✅ ${sao.ten} an tại ${cungNoBoc} (Nô Bộc)`);
+    if (sao.ten === "ThiĂªn ThÆ°Æ¡ng") {
+      console.log(`âœ… ${sao.ten} an táº¡i ${cungNoBoc} (NĂ´ Bá»™c)`);
       return cungNoBoc;
     }
-    if (sao.ten === "Thiên Sứ") {
-      console.log(`✅ ${sao.ten} an tại ${cungTatAch} (Tật Ách)`);
+    if (sao.ten === "ThiĂªn Sá»©") {
+      console.log(`âœ… ${sao.ten} an táº¡i ${cungTatAch} (Táº­t Ăch)`);
       return cungTatAch;
     }
   }
 
-  // ⭐ Các sao Tạp tinh khác – dùng cách dò chức cũ
+  // â­ CĂ¡c sao Táº¡p tinh khĂ¡c â€“ dĂ¹ng cĂ¡ch dĂ² chá»©c cÅ©
   const chuc = sao.cuDinh;
   let map = data.cungChucMap;
 
@@ -5078,21 +5083,21 @@ case "TapTinh_CuDinh": {
   }
 
   if (!map || Object.keys(map).length === 0) {
-    console.warn("⚠️ cungChucMap chưa sẵn sàng khi an Tạp tinh:", sao.ten);
-    return "Tý";
+    console.warn("â ï¸ cungChucMap chÆ°a sáºµn sĂ ng khi an Táº¡p tinh:", sao.ten);
+    return "TĂ½";
   }
 
   const found = Object.entries(map).find(([chi, tenChuc]) => tenChuc === chuc);
   if (found) return found[0];
 
-  console.warn("⚠️ Không tìm thấy cung chức cho sao Tạp tinh cố định:", sao.ten, chuc);
-  return "Tý";
+  console.warn("â ï¸ KhĂ´ng tĂ¬m tháº¥y cung chá»©c cho sao Táº¡p tinh cá»‘ Ä‘á»‹nh:", sao.ten, chuc);
+  return "TĂ½";
 }
 
 case "codinh": {
-  // ⭐ Thiên La / Địa Võng – an cố định theo địa chi
-  const chi = sao.dsCung ? sao.dsCung[0] : (sao.cuDinh || "Tý");
-  console.log(`✅ ${sao.ten} an cố định tại ${chi}`);
+  // â­ ThiĂªn La / Äá»‹a VĂµng â€“ an cá»‘ Ä‘á»‹nh theo Ä‘á»‹a chi
+  const chi = sao.dsCung ? sao.dsCung[0] : (sao.cuDinh || "TĂ½");
+  console.log(`âœ… ${sao.ten} an cá»‘ Ä‘á»‹nh táº¡i ${chi}`);
   return chi;
 }
 
@@ -5100,66 +5105,66 @@ case "codinh": {
 
 
  default:
-      return "Mệnh";
+      return "Má»‡nh";
   }
 }
 
 const MAU_NGU_HANH = {
-  "Hỏa": "#ff4d4d",   // 🔥 đỏ tươi sáng – rõ hơn, không chói
-  "Thổ": "#e69500",   // 🟠 cam đất đậm – rõ chữ hơn
-  "Mộc": "#007a29",   // 🌿 xanh lá đậm hơn chút – dễ đọc
-  "Kim": "#000000",   // ⚫ đen thuần – giữ nguyên
-  "Thủy": "#004cff"   // 💧 xanh dương đậm sáng – giữ nguyên
+  "Há»a": "#ff4d4d",   // đŸ”¥ Ä‘á» tÆ°Æ¡i sĂ¡ng â€“ rĂµ hÆ¡n, khĂ´ng chĂ³i
+  "Thá»•": "#e69500",   // đŸŸ  cam Ä‘áº¥t Ä‘áº­m â€“ rĂµ chá»¯ hÆ¡n
+  "Má»™c": "#007a29",   // đŸŒ¿ xanh lĂ¡ Ä‘áº­m hÆ¡n chĂºt â€“ dá»… Ä‘á»c
+  "Kim": "#000000",   // â« Ä‘en thuáº§n â€“ giá»¯ nguyĂªn
+  "Thá»§y": "#004cff"   // đŸ’§ xanh dÆ°Æ¡ng Ä‘áº­m sĂ¡ng â€“ giá»¯ nguyĂªn
 };
 
 
 function anTieuTinh(retryCount = 0) {
   const data = window.dataGlobal;
 
-  // 🛑 Giới hạn tối đa 5 lần chờ
+  // đŸ›‘ Giá»›i háº¡n tá»‘i Ä‘a 5 láº§n chá»
   if (retryCount > 5) {
-    console.warn("❌ Dừng an Tiểu Tinh sau 5 lần, dữ liệu chưa sẵn sàng.");
+    console.warn("âŒ Dá»«ng an Tiá»ƒu Tinh sau 5 láº§n, dá»¯ liá»‡u chÆ°a sáºµn sĂ ng.");
     return;
   }
 
-  // 🕓 1️⃣ Kiểm tra window.dataGlobal
+  // đŸ•“ 1ï¸âƒ£ Kiá»ƒm tra window.dataGlobal
   if (!data || typeof data !== "object") {
-    console.warn("⚠️ Chưa có window.dataGlobal, chờ lần", retryCount + 1);
+    console.warn("â ï¸ ChÆ°a cĂ³ window.dataGlobal, chá» láº§n", retryCount + 1);
     return setTimeout(() => anTieuTinh(retryCount + 1), 300);
   }
 
-  // 🕓 2️⃣ Khôi phục ngày, tháng, giờ âm nếu thiếu
+  // đŸ•“ 2ï¸âƒ£ KhĂ´i phá»¥c ngĂ y, thĂ¡ng, giá» Ă¢m náº¿u thiáº¿u
   if ((!data.ngayAm || !data.thangAm) && Array.isArray(data.lunar) && data.lunar.length >= 2) {
     const [ngay, thang] = data.lunar;
     if (!data.ngayAm) data.ngayAm = ngay;
     if (!data.thangAm) data.thangAm = thang;
-    console.log("🌙 Khôi phục ngày/tháng âm từ data.lunar:", { ngay, thang });
+    console.log("đŸŒ™ KhĂ´i phá»¥c ngĂ y/thĂ¡ng Ă¢m tá»« data.lunar:", { ngay, thang });
   }
 
-  // 🔹 Tự tách “Chi giờ” nếu có canChiGio mà chưa có gioAm
+  // đŸ”¹ Tá»± tĂ¡ch â€œChi giá»â€ náº¿u cĂ³ canChiGio mĂ  chÆ°a cĂ³ gioAm
   if (!data.gioAm && data.canChiGio) {
-    data.gioAm = data.canChiGio.split(" ")[1]; // ví dụ: "Giáp Tý" → "Tý"
-    console.log("🕐 Khôi phục giờ âm từ canChiGio:", data.gioAm);
+    data.gioAm = data.canChiGio.split(" ")[1]; // vĂ­ dá»¥: "GiĂ¡p TĂ½" â†’ "TĂ½"
+    console.log("đŸ• KhĂ´i phá»¥c giá» Ă¢m tá»« canChiGio:", data.gioAm);
   }
 
-  // 🔹 Nếu sau khôi phục mà vẫn thiếu thì chờ thêm
+  // đŸ”¹ Náº¿u sau khĂ´i phá»¥c mĂ  váº«n thiáº¿u thĂ¬ chá» thĂªm
   if (!data.gioAm || !data.ngayAm) {
-    console.warn("⚠️ Thiếu giờ hoặc ngày âm, chờ lần", retryCount + 1);
-    console.log("🧾 Data hiện có:", data);
+    console.warn("â ï¸ Thiáº¿u giá» hoáº·c ngĂ y Ă¢m, chá» láº§n", retryCount + 1);
+    console.log("đŸ§¾ Data hiá»‡n cĂ³:", data);
     return setTimeout(() => anTieuTinh(retryCount + 1), 300);
   }
 
-  // 🌿 4️⃣ Khi đã đủ điều kiện, tiến hành an sao thật
-  console.log("🌿 Bắt đầu an Tiểu Tinh (đủ dữ liệu):", {
+  // đŸŒ¿ 4ï¸âƒ£ Khi Ä‘Ă£ Ä‘á»§ Ä‘iá»u kiá»‡n, tiáº¿n hĂ nh an sao tháº­t
+  console.log("đŸŒ¿ Báº¯t Ä‘áº§u an Tiá»ƒu Tinh (Ä‘á»§ dá»¯ liá»‡u):", {
     gioAm: data.gioAm,
     ngayAm: data.ngayAm,
     thangAm: data.thangAm
   });
 
-  // 🧹 Xóa sao cũ
+  // đŸ§¹ XĂ³a sao cÅ©
   document.querySelectorAll(".tieutinh").forEach(el => el.remove());
 
-  // 🪶 Thực hiện an sao
+  // đŸª¶ Thá»±c hiá»‡n an sao
   TIEUTINH_DATA.forEach(sao => {
     const cung = tinhCungTieuTinh(sao, data);
     const cell = document.getElementById("cell" + (CUNG_MAP[cung] || ""));
@@ -5168,7 +5173,7 @@ function anTieuTinh(retryCount = 0) {
     const layer6 = cell.querySelector(".layer-6.trungtinh") || cell.querySelector(".layer-6");
     if (!layer6) return;
 
-    // Tạo cột Cát / Hung nếu chưa có
+    // Táº¡o cá»™t CĂ¡t / Hung náº¿u chÆ°a cĂ³
     let catCol = layer6.querySelector(".cat-tinh");
     let hungCol = layer6.querySelector(".hung-tinh");
     if (!catCol) {
@@ -5182,8 +5187,8 @@ function anTieuTinh(retryCount = 0) {
       layer6.appendChild(hungCol);
     }
 
-    // Tạo sao tiểu tinh
-    const target = sao.loai === "Cát" ? catCol : hungCol;
+    // Táº¡o sao tiá»ƒu tinh
+    const target = sao.loai === "CĂ¡t" ? catCol : hungCol;
     const div = document.createElement("div");
     div.classList.add("sao", "tieutinh", `sao-${sao.hanh.toLowerCase()}`);
     div.dataset.groups = sao.nhom.join(",");
@@ -5196,7 +5201,7 @@ function anTieuTinh(retryCount = 0) {
     target.appendChild(div);
   });
 
-  console.log("✅ Tiểu Tinh đã được an xong!");
+  console.log("âœ… Tiá»ƒu Tinh Ä‘Ă£ Ä‘Æ°á»£c an xong!");
 }
 
 function toggleTieuTinh(group) {
@@ -5204,57 +5209,57 @@ function toggleTieuTinh(group) {
   const allSao = document.querySelectorAll(".tieutinh");
   const allButtons = document.querySelectorAll(".nut-tieutinh");
 
-  // 🧭 1️⃣ Nếu là nút "Tất Cả"
-  if (key === "tất cả") {
-    const btnAll = [...allButtons].find(b => (b.dataset.group || "").trim().toLowerCase() === "tất cả");
+  // đŸ§­ 1ï¸âƒ£ Náº¿u lĂ  nĂºt "Táº¥t Cáº£"
+  if (key === "táº¥t cáº£") {
+    const btnAll = [...allButtons].find(b => (b.dataset.group || "").trim().toLowerCase() === "táº¥t cáº£");
     const turningOn = !btnAll.classList.contains("active");
 
-    // Bật/tắt tất cả nút phụ theo trạng thái nút All
+    // Báº­t/táº¯t táº¥t cáº£ nĂºt phá»¥ theo tráº¡ng thĂ¡i nĂºt All
     allButtons.forEach(btn => {
       if (turningOn) btn.classList.add("active");
       else btn.classList.remove("active");
     });
   } else {
-    // 🧭 2️⃣ Toggle riêng nút đang bấm
+    // đŸ§­ 2ï¸âƒ£ Toggle riĂªng nĂºt Ä‘ang báº¥m
     const currentButton = [...allButtons].find(b => (b.dataset.group || "").trim().toLowerCase() === key);
     if (currentButton) currentButton.classList.toggle("active");
 
-    // 🧭 3️⃣ Cập nhật lại nút "Tất Cả" cho đúng
-    const btnAll = [...allButtons].find(b => (b.dataset.group || "").trim().toLowerCase() === "tất cả");
+    // đŸ§­ 3ï¸âƒ£ Cáº­p nháº­t láº¡i nĂºt "Táº¥t Cáº£" cho Ä‘Ăºng
+    const btnAll = [...allButtons].find(b => (b.dataset.group || "").trim().toLowerCase() === "táº¥t cáº£");
     const otherButtons = [...allButtons].filter(b => b !== btnAll);
     const allOn = otherButtons.every(b => b.classList.contains("active"));
     const noneOn = otherButtons.every(b => !b.classList.contains("active"));
     if (allOn) btnAll.classList.add("active");
     else if (noneOn) btnAll.classList.remove("active");
-    else btnAll.classList.remove("active"); // Khi có pha trộn
+    else btnAll.classList.remove("active"); // Khi cĂ³ pha trá»™n
   }
 
-  // 🧭 4️⃣ Lấy danh sách nhóm đang bật
+  // đŸ§­ 4ï¸âƒ£ Láº¥y danh sĂ¡ch nhĂ³m Ä‘ang báº­t
   const activeGroups = [...allButtons]
     .filter(btn => btn.classList.contains("active"))
     .map(btn => (btn.dataset.group || "").trim().toLowerCase());
 
-  // 🧭 5️⃣ Duyệt từng sao để quyết định hiển thị
+  // đŸ§­ 5ï¸âƒ£ Duyá»‡t tá»«ng sao Ä‘á»ƒ quyáº¿t Ä‘á»‹nh hiá»ƒn thá»‹
   allSao.forEach(sao => {
     const raw = sao.dataset.groups || "";
     const groups = raw.split(",").map(g => g.trim().toLowerCase()).filter(Boolean);
 
-    // ⭐ Nếu sao có ÍT NHẤT 1 nhóm còn bật → hiện
+    // â­ Náº¿u sao cĂ³ ĂT NHáº¤T 1 nhĂ³m cĂ²n báº­t â†’ hiá»‡n
     const shouldShow = groups.some(g => activeGroups.includes(g));
 
     if (shouldShow) {
       sao.classList.remove("hidden");
-      sao.style.display = ""; // 🔥 đảm bảo hiện lại
+      sao.style.display = ""; // đŸ”¥ Ä‘áº£m báº£o hiá»‡n láº¡i
     } else {
       sao.classList.add("hidden");
-      sao.style.display = "none"; // 🔥 đảm bảo ẩn hẳn
+      sao.style.display = "none"; // đŸ”¥ Ä‘áº£m báº£o áº©n háº³n
     }
   });
 }
 
 
 
-// 🌟 TẠO NÚT ẨN / HIỆN TIỂU TINH
+// đŸŒŸ Táº O NĂT áº¨N / HIá»†N TIá»‚U TINH
 function taoNutTieuTinh() {
   if (document.querySelector("#tieuTinhControls")) return;
 
@@ -5277,7 +5282,7 @@ function taoNutTieuTinh() {
   });
 
   const title = document.createElement("div");
-  title.textContent = "Ẩn / Hiện Tiểu Tinh";
+  title.textContent = "áº¨n / Hiá»‡n Tiá»ƒu Tinh";
   Object.assign(title.style, {
     fontSize: "11px",
     fontStyle: "italic",
@@ -5294,18 +5299,18 @@ function taoNutTieuTinh() {
   });
 
   const buttons = [
-    { label: "Tất cả", group: "Tất Cả" },
-    { label: "Tình duyên", group: "Tình Duyên" },
-    { label: "Tiền bạc", group: "Tiền Bạc" },
-    { label: "Công danh", group: "Công Danh" },
-    { label: "Sức khỏe", group: "Sức Khỏe" },
+    { label: "Táº¥t cáº£", group: "Táº¥t Cáº£" },
+    { label: "TĂ¬nh duyĂªn", group: "TĂ¬nh DuyĂªn" },
+    { label: "Tiá»n báº¡c", group: "Tiá»n Báº¡c" },
+    { label: "CĂ´ng danh", group: "CĂ´ng Danh" },
+    { label: "Sá»©c khá»e", group: "Sá»©c Khá»e" },
   ];
 
   buttons.forEach(btn => {
     const b = document.createElement("button");
     b.textContent = btn.label;
     b.dataset.group = btn.group;
-b.className = "nut-tieutinh"; // ❌ bỏ active mặc định
+b.className = "nut-tieutinh"; // âŒ bá» active máº·c Ä‘á»‹nh
     b.addEventListener("click", (e) => toggleTieuTinh(e.target.dataset.group));
     btnRow.appendChild(b);
   });
@@ -5316,7 +5321,7 @@ b.className = "nut-tieutinh"; // ❌ bỏ active mặc định
 }
 
 // =====================================================
-// 🌙 CẬP NHẬT HẠN & TÍNH TUỔI (THEO ÂM LỊCH CHUẨN TỬ VI)
+// đŸŒ™ Cáº¬P NHáº¬T Háº N & TĂNH TUá»”I (THEO Ă‚M Lá»CH CHUáº¨N Tá»¬ VI)
 // -----------------------------------------------------
 function capNhatHan() {
   if (!window.dataGlobal || !window.dataGlobal.lunar) return;
@@ -5326,19 +5331,19 @@ function capNhatHan() {
   const ngayXem = parseInt(document.getElementById("luuNgay")?.value || 0);
   const [ngaySinh, thangSinh, namSinh] = window.dataGlobal.lunar;
 
-  // 🧮 Tính tuổi âm (âm lịch)
+  // đŸ§® TĂ­nh tuá»•i Ă¢m (Ă¢m lá»‹ch)
 let tuoiAm = 1;
 
 if (namXem > namSinh) {
-  // Bước 1: cộng theo năm
+  // BÆ°á»›c 1: cá»™ng theo nÄƒm
   tuoiAm = (namXem - namSinh) + 1;
 
-  // Bước 2: nếu có chọn tháng
+  // BÆ°á»›c 2: náº¿u cĂ³ chá»n thĂ¡ng
   if (thangXem) {
     if (thangXem > thangSinh) {
-      tuoiAm++; // tháng xem > tháng sinh → thêm 1 tuổi
+      tuoiAm++; // thĂ¡ng xem > thĂ¡ng sinh â†’ thĂªm 1 tuá»•i
     } else if (thangXem === thangSinh) {
-      // tháng xem = tháng sinh → cộng thêm 1 nếu ngày xem >= ngày sinh hoặc chưa chọn ngày
+      // thĂ¡ng xem = thĂ¡ng sinh â†’ cá»™ng thĂªm 1 náº¿u ngĂ y xem >= ngĂ y sinh hoáº·c chÆ°a chá»n ngĂ y
       if (!ngayXem || ngayXem >= ngaySinh) {
         tuoiAm++;
       }
@@ -5346,18 +5351,18 @@ if (namXem > namSinh) {
   }
 }
 
-// đảm bảo không nhỏ hơn 1
+// Ä‘áº£m báº£o khĂ´ng nhá» hÆ¡n 1
 if (tuoiAm < 1) tuoiAm = 1;
 
 
-  // 🌙 Thiết lập múi giờ Việt Nam
+  // đŸŒ™ Thiáº¿t láº­p mĂºi giá» Viá»‡t Nam
   const tz = 7.0;
 
-  // ===== TÍNH CAN CHI NĂM =====
+  // ===== TĂNH CAN CHI NÄ‚M =====
   const canChiNam = canChiYear(namXem || namSinh);
   const [canNam] = canChiNam.split(" ");
 
-  // ===== TÍNH CAN CHI THÁNG (nếu có) =====
+  // ===== TĂNH CAN CHI THĂNG (náº¿u cĂ³) =====
   let canChiThang = "";
   if (thangXem) {
     const canThang = CAN_THANG[canNam][(thangXem - 1 + 12) % 12];
@@ -5365,33 +5370,33 @@ if (tuoiAm < 1) tuoiAm = 1;
     canChiThang = `${canThang} ${chiThang}`;
   }
 
-  // ===== TÍNH CAN CHI NGÀY (nếu có) =====
+  // ===== TĂNH CAN CHI NGĂ€Y (náº¿u cĂ³) =====
   let canChiNgay = "";
   if (ngayXem && thangXem) {
-// ✅ Kiểm tra nếu tháng được chọn là nhuận (ví dụ 6N)
+// âœ… Kiá»ƒm tra náº¿u thĂ¡ng Ä‘Æ°á»£c chá»n lĂ  nhuáº­n (vĂ­ dá»¥ 6N)
 const thangVal = document.getElementById("luuThang")?.value || "";
 const isLeap = thangVal.endsWith("N") || window.dataGlobal?.isLeapMonth === true;
 
-// 👉 Chuyển đổi âm → dương có xét tháng nhuận
+// đŸ‘‰ Chuyá»ƒn Ä‘á»•i Ă¢m â†’ dÆ°Æ¡ng cĂ³ xĂ©t thĂ¡ng nhuáº­n
 const [dSolar, mSolar, ySolar] = convertLunarToSolar(ngayXem, parseInt(thangXem), namXem, isLeap ? 1 : 0, tz);
     canChiNgay = canChiDay(ySolar, mSolar, dSolar);
   }
 
-  // ===== HIỂN THỊ KẾT QUẢ =====
+  // ===== HIá»‚N THá» Káº¾T QUáº¢ =====
   const lbl = document.getElementById("tuoiAmLabel");
   if (lbl) {
     const parts = [];
-    parts.push(`Năm ${canChiNam}`);
-    if (canChiThang) parts.push(`Tháng ${canChiThang}`);
-    if (canChiNgay) parts.push(`Ngày ${canChiNgay}`);
+    parts.push(`NÄƒm ${canChiNam}`);
+    if (canChiThang) parts.push(`ThĂ¡ng ${canChiThang}`);
+    if (canChiNgay) parts.push(`NgĂ y ${canChiNgay}`);
 
     lbl.innerHTML = `
-      <span style="font-weight:600;">${parts.join(" – ")}</span>
-      <span style="color:#c00;font-weight:bold;"> – Tuổi: ${tuoiAm}</span>
+      <span style="font-weight:600;">${parts.join(" â€“ ")}</span>
+      <span style="color:#c00;font-weight:bold;"> â€“ Tuá»•i: ${tuoiAm}</span>
     `;
   }
 
-  // 🔁 Lưu dữ liệu
+  // đŸ” LÆ°u dá»¯ liá»‡u
   window.dataGlobal.luuHan = {
     namAm: namXem,
     thangAm: thangXem,
@@ -5401,52 +5406,52 @@ const [dSolar, mSolar, ySolar] = convertLunarToSolar(ngayXem, parseInt(thangXem)
     canChiNgay,
     tuoiAm,
     chieuDaiVan:
-      (window.dataGlobal.gender === "Nam" && window.dataGlobal.menh.includes("Dương")) ||
-      (window.dataGlobal.gender === "Nữ" && window.dataGlobal.menh.includes("Âm"))
-        ? "thuận"
-        : "nghịch",
-    chieuTieuVan: "ngược"
+      (window.dataGlobal.gender === "Nam" && window.dataGlobal.menh.includes("DÆ°Æ¡ng")) ||
+      (window.dataGlobal.gender === "Ná»¯" && window.dataGlobal.menh.includes("Ă‚m"))
+        ? "thuáº­n"
+        : "nghá»‹ch",
+    chieuTieuVan: "ngÆ°á»£c"
   };
 
 
-// 🌀 Gọi lại các lớp vận
+// đŸŒ€ Gá»i láº¡i cĂ¡c lá»›p váº­n
 setTimeout(() => {
 
-  // 1️⃣ An lại tất cả sao Lưu
+  // 1ï¸âƒ£ An láº¡i táº¥t cáº£ sao LÆ°u
   if (typeof anLop9_LuuDaiVan === "function") anLop9_LuuDaiVan(window.dataGlobal);
   if (typeof anLop10_LuuTieuVan === "function") anLop10_LuuTieuVan(window.dataGlobal);
   if (typeof anLop10_5_LuuNguyetVan === "function") anLop10_5_LuuNguyetVan(window.dataGlobal);
   if (typeof anSaoLuu_NguyetVan === "function") anSaoLuu_NguyetVan(window.dataGlobal);
   if (typeof anLop11_LuuNhatVan === "function") anLop11_LuuNhatVan(window.dataGlobal);
 
-  // 🟢 2️⃣ KHỞI TẠO LẠI BẢNG TICK & EVENT — BẮT BUỘC!
-  // ❗ Phải gọi initSaoLuuFull(), KHÔNG được gọi dongBoAnHienSaoLuu()
+  // đŸŸ¢ 2ï¸âƒ£ KHá»I Táº O Láº I Báº¢NG TICK & EVENT â€” Báº®T BUá»˜C!
+  // â— Pháº£i gá»i initSaoLuuFull(), KHĂ”NG Ä‘Æ°á»£c gá»i dongBoAnHienSaoLuu()
   if (typeof initSaoLuuFull === "function") {
-    console.log("🔁 Re-init Tick Sao Lưu sau khi reset");
+    console.log("đŸ” Re-init Tick Sao LÆ°u sau khi reset");
     initSaoLuuFull();
   }
 
 }, 400);
 
 
-// 🌙 Gọi sau khi Tiểu Vận đã an xong
+// đŸŒ™ Gá»i sau khi Tiá»ƒu Váº­n Ä‘Ă£ an xong
 setTimeout(() => {
   if (typeof anThangHan === "function") anThangHan(window.dataGlobal);
 }, 600);
 
-} // 👈 Kết thúc hàm capNhatHan()
+} // đŸ‘ˆ Káº¿t thĂºc hĂ m capNhatHan()
 
 
 
 
 
 // =====================================================
-// 🌙🌙🌙  LỚP 10.2 – AN THÁNG HẠN (th.1 → th.12)
+// đŸŒ™đŸŒ™đŸŒ™  Lá»P 10.2 â€“ AN THĂNG Háº N (th.1 â†’ th.12)
 // -----------------------------------------------------
-// 🎯 Quy tắc chuẩn Tử Vi:
-// Năm hạn là cung khởi đầu (tháng 1)
-// → Đếm NGƯỢC theo số tháng sinh → tới cung Giờ Tý
-// → Từ đó đếm THUẬN theo giờ sinh → cung Th.1
+// đŸ¯ Quy táº¯c chuáº©n Tá»­ Vi:
+// NÄƒm háº¡n lĂ  cung khá»Ÿi Ä‘áº§u (thĂ¡ng 1)
+// â†’ Äáº¿m NGÆ¯á»¢C theo sá»‘ thĂ¡ng sinh â†’ tá»›i cung Giá» TĂ½
+// â†’ Tá»« Ä‘Ă³ Ä‘áº¿m THUáº¬N theo giá» sinh â†’ cung Th.1
 // =====================================================
 function anThangHan(data) {
   if (!data || !data.luuHan) return;
@@ -5454,16 +5459,16 @@ function anThangHan(data) {
   const chiNamHan = (han.canChiNam || "").split(" ")[1];
   if (!chiNamHan) return;
 
-  // 🧭 12 cung thuận Tử Vi
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // đŸ§­ 12 cung thuáº­n Tá»­ Vi
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const CUNG_TO_CELL = {
-    "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,"Thìn":5,"Dậu":6,
-    "Mão":7,"Tuất":8,"Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+    "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,"ThĂ¬n":5,"Dáº­u":6,
+    "MĂ£o":7,"Tuáº¥t":8,"Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
   };
 
-  // 🎨 Style hiển thị
+  // đŸ¨ Style hiá»ƒn thá»‹
   const THANGHAN_STYLE = {
-    position: "absolute",   // ✅ THÊM DÒNG NÀY — giúp top/right có tác dụng
+    position: "absolute",   // âœ… THĂM DĂ’NG NĂ€Y â€” giĂºp top/right cĂ³ tĂ¡c dá»¥ng
     top: "25px",
     right: "10px",
     fontSize: "11px",
@@ -5472,30 +5477,30 @@ function anThangHan(data) {
     fontWeight: "500"
   };
 
-  // 🧹 Xóa cũ
+  // đŸ§¹ XĂ³a cÅ©
   document.querySelectorAll(".layer-10-thang").forEach(e => e.remove());
 
-  // 🌟 B1: Năm hạn → cung khởi đầu (coi là Tháng 1 tạm thời)
+  // đŸŒŸ B1: NÄƒm háº¡n â†’ cung khá»Ÿi Ä‘áº§u (coi lĂ  ThĂ¡ng 1 táº¡m thá»i)
   const idxNamHan = CUNG_THUAN.indexOf(chiNamHan);
   if (idxNamHan < 0) return;
 
-  // 🌟 B2: Lấy tháng sinh (1–12) và giờ sinh (Chi)
+  // đŸŒŸ B2: Láº¥y thĂ¡ng sinh (1â€“12) vĂ  giá» sinh (Chi)
   const thangSinh = data.thangAm || 1;
-  const chiGioSinh = (data.canChiGio || "").split(" ")[1] || "Tý";
-  const CHI_LIST = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const chiGioSinh = (data.canChiGio || "").split(" ")[1] || "TĂ½";
+  const CHI_LIST = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const idxChiGio = CHI_LIST.indexOf(chiGioSinh);
   if (idxChiGio < 0) return;
 
-  // 🌙 B3: Từ cung năm hạn (Tháng 1) → đếm NGƯỢC theo tháng sinh → dừng tại cung Giờ Tý
+  // đŸŒ™ B3: Tá»« cung nÄƒm háº¡n (ThĂ¡ng 1) â†’ Ä‘áº¿m NGÆ¯á»¢C theo thĂ¡ng sinh â†’ dá»«ng táº¡i cung Giá» TĂ½
   let idxGioTy = idxNamHan;
-  for (let i = 1; i < thangSinh; i++) { // lùi đúng số tháng sinh - 1
+  for (let i = 1; i < thangSinh; i++) { // lĂ¹i Ä‘Ăºng sá»‘ thĂ¡ng sinh - 1
     idxGioTy = (idxGioTy - 1 + 12) % 12;
   }
 
-  // 🌙 B4: Từ cung Giờ Tý → đếm THUẬN theo Chi giờ sinh → cung Tháng 1 thật
+  // đŸŒ™ B4: Tá»« cung Giá» TĂ½ â†’ Ä‘áº¿m THUáº¬N theo Chi giá» sinh â†’ cung ThĂ¡ng 1 tháº­t
   let idxTh1 = (idxGioTy + idxChiGio) % 12;
 
-  // 🌙 B5: An 12 tháng thuận kim đồng hồ
+  // đŸŒ™ B5: An 12 thĂ¡ng thuáº­n kim Ä‘á»“ng há»“
   for (let i = 0; i < 12; i++) {
     const idx = (idxTh1 + i) % 12;
     const cell = document.getElementById("cell" + CUNG_TO_CELL[CUNG_THUAN[idx]]);
@@ -5504,18 +5509,18 @@ function anThangHan(data) {
     const div = document.createElement("div");
     div.className = "layer-10-thang";
     div.textContent = `th.${i + 1}`;
-    Object.assign(div.style, THANGHAN_STYLE);  // ✅ vị trí bây giờ hoạt động chính xác
+    Object.assign(div.style, THANGHAN_STYLE);  // âœ… vá»‹ trĂ­ bĂ¢y giá» hoáº¡t Ä‘á»™ng chĂ­nh xĂ¡c
     cell.appendChild(div);
   }
 
   console.log(
-    `🗓️ Tháng hạn: Năm hạn ${chiNamHan}, Tháng sinh ${thangSinh}, Giờ sinh ${chiGioSinh} 
-→ Giờ Tý tại ${CUNG_THUAN[idxGioTy]}, Th.1 tại ${CUNG_THUAN[idxTh1]}`
+    `đŸ—“ï¸ ThĂ¡ng háº¡n: NÄƒm háº¡n ${chiNamHan}, ThĂ¡ng sinh ${thangSinh}, Giá» sinh ${chiGioSinh} 
+â†’ Giá» TĂ½ táº¡i ${CUNG_THUAN[idxGioTy]}, Th.1 táº¡i ${CUNG_THUAN[idxTh1]}`
   );
 }
 
 // =====================================================
-// 🌙 TẠO DROPDOWN & GIỚI HẠN NĂM/THÁNG/NGÀY HỢP LÝ (HIỂN THỊ THÁNG NHUẬN)
+// đŸŒ™ Táº O DROPDOWN & GIá»I Háº N NÄ‚M/THĂNG/NGĂ€Y Há»¢P LĂ (HIá»‚N THá» THĂNG NHUáº¬N)
 // -----------------------------------------------------
 function gioiHanNamHan() {
   const hanSection = document.getElementById("xemHanSection");
@@ -5525,107 +5530,107 @@ function gioiHanNamHan() {
   const namMax = new Date().getFullYear() + 120;
   const tz = 7.0;
 
-  // 🧹 Xóa input cũ
+  // đŸ§¹ XĂ³a input cÅ©
   ["luuNam","luuThang","luuNgay"].forEach(id => {
     const old = document.getElementById(id);
     if (old) old.remove();
   });
 
-  // 🧭 Dropdown Năm
+  // đŸ§­ Dropdown NÄƒm
   const selNam = document.createElement("select");
   selNam.id = "luuNam";
   for (let y = namSinh; y <= namMax; y++) selNam.appendChild(new Option(y, y));
   selNam.value = (namSinh > 2025 ? namSinh : 2025);
   hanSection.querySelector("label[for='luuNam']").after(selNam);
 
-  // 🧭 Dropdown Tháng (có tháng nhuận)
+  // đŸ§­ Dropdown ThĂ¡ng (cĂ³ thĂ¡ng nhuáº­n)
   const selThang = document.createElement("select");
   selThang.id = "luuThang";
   hanSection.querySelector("label[for='luuThang']").after(selThang);
 
-  // 🧭 Dropdown Ngày
+  // đŸ§­ Dropdown NgĂ y
   const selNgay = document.createElement("select");
   selNgay.id = "luuNgay";
   hanSection.querySelector("label[for='luuNgay']").after(selNgay);
 
-  // 🔹 Hàm dựng lại danh sách tháng của năm chọn (tự dùng công thức bạn đã có)
+  // đŸ”¹ HĂ m dá»±ng láº¡i danh sĂ¡ch thĂ¡ng cá»§a nÄƒm chá»n (tá»± dĂ¹ng cĂ´ng thá»©c báº¡n Ä‘Ă£ cĂ³)
 function rebuildThangDropdown(year) {
   selThang.innerHTML = "";
-  selThang.appendChild(new Option("—", ""));
+  selThang.appendChild(new Option("â€”", ""));
 
-  // 🌙 Xác định tháng nhuận của năm âm dựa theo công thức bạn gửi
-  const leap = getLeapMonthOfYear(year, tz); // nếu 0 => không có nhuận
+  // đŸŒ™ XĂ¡c Ä‘á»‹nh thĂ¡ng nhuáº­n cá»§a nÄƒm Ă¢m dá»±a theo cĂ´ng thá»©c báº¡n gá»­i
+  const leap = getLeapMonthOfYear(year, tz); // náº¿u 0 => khĂ´ng cĂ³ nhuáº­n
 
   for (let m = 1; m <= 12; m++) {
-    // Tháng thường
+    // ThĂ¡ng thÆ°á»ng
     selThang.appendChild(new Option(m, m));
 
-    // Nếu trúng tháng nhuận thì chèn thêm tháng (nhuận)
+    // Náº¿u trĂºng thĂ¡ng nhuáº­n thĂ¬ chĂ¨n thĂªm thĂ¡ng (nhuáº­n)
     if (m === leap) {
-      const opt = new Option(`${m} (nhuận)`, `${m}N`);
+      const opt = new Option(`${m} (nhuáº­n)`, `${m}N`);
       opt.dataset.leap = "1";
       selThang.appendChild(opt);
     }
   }
 
-  console.log(`📅 Năm ${year} có tháng nhuận: ${leap > 0 ? leap : "Không có"}`);
+  console.log(`đŸ“… NÄƒm ${year} cĂ³ thĂ¡ng nhuáº­n: ${leap > 0 ? leap : "KhĂ´ng cĂ³"}`);
 }
 
 
 
 
 
-  // 🔹 Hàm dựng lại ngày (1–30)
+  // đŸ”¹ HĂ m dá»±ng láº¡i ngĂ y (1â€“30)
   function rebuildNgayDropdown() {
     selNgay.innerHTML = "";
-    selNgay.appendChild(new Option("—", ""));
+    selNgay.appendChild(new Option("â€”", ""));
     for (let d = 1; d <= 30; d++) selNgay.appendChild(new Option(d, d));
   }
 
   rebuildThangDropdown(parseInt(selNam.value));
   rebuildNgayDropdown();
 
-  // 🔁 Giới hạn hợp lý
+  // đŸ” Giá»›i háº¡n há»£p lĂ½
   function updateLimits() {
     const year = parseInt(selNam.value);
     const monthVal = selThang.value;
     const month = parseInt(monthVal);
     const isLeap = monthVal.endsWith("N");
 
-    // Năm = năm sinh → chỉ cho tháng >= tháng sinh
+    // NÄƒm = nÄƒm sinh â†’ chá»‰ cho thĂ¡ng >= thĂ¡ng sinh
     for (const opt of selThang.options) {
-      if (!opt.value || opt.value === "—") continue;
+      if (!opt.value || opt.value === "â€”") continue;
       const mVal = parseInt(opt.value);
       opt.disabled = (year === namSinh && mVal < thangSinh);
     }
 
-    // Năm & tháng = sinh → ngày >= ngày sinh
+    // NÄƒm & thĂ¡ng = sinh â†’ ngĂ y >= ngĂ y sinh
     for (const opt of selNgay.options) {
-      if (!opt.value || opt.value === "—") continue;
+      if (!opt.value || opt.value === "â€”") continue;
       const dVal = parseInt(opt.value);
       opt.disabled = (year === namSinh && month === thangSinh && dVal < ngaySinh);
     }
 
-    // 🔁 Lưu trạng thái tháng nhuận để capNhatHan() tự xử lý trong convertLunarToSolar
+    // đŸ” LÆ°u tráº¡ng thĂ¡i thĂ¡ng nhuáº­n Ä‘á»ƒ capNhatHan() tá»± xá»­ lĂ½ trong convertLunarToSolar
     window.dataGlobal.isLeapMonth = isLeap;
 
-    // ✅ Gọi lại tính toán
+    // âœ… Gá»i láº¡i tĂ­nh toĂ¡n
     capNhatHan();
   }
 
-  // 🔗 Sự kiện thay đổi
+  // đŸ”— Sá»± kiá»‡n thay Ä‘á»•i
   selNam.addEventListener("change", () => { rebuildThangDropdown(parseInt(selNam.value)); updateLimits(); });
   selThang.addEventListener("change", updateLimits);
   selNgay.addEventListener("change", updateLimits);
 
-  // Khởi tạo ban đầu
+  // Khá»Ÿi táº¡o ban Ä‘áº§u
   updateLimits();
   capNhatHan();
 
-  console.log(`✅ Dropdown (có tháng nhuận) hoạt động: ${namSinh}–${namMax}`);
+  console.log(`âœ… Dropdown (cĂ³ thĂ¡ng nhuáº­n) hoáº¡t Ä‘á»™ng: ${namSinh}â€“${namMax}`);
 }
 
-// 🌟 Theo dõi DOM
+// đŸŒŸ Theo dĂµi DOM
 const observerHan = new MutationObserver(() => {
   const hanSection = document.getElementById("xemHanSection");
   if (hanSection && !hanSection.classList.contains("ready")) {
@@ -5649,80 +5654,80 @@ observerHan.observe(document.body, { childList: true, subtree: true });
 
 
 // =====================================================
-// 🌟 LỚP 9 – LƯU ĐẠI VẬN (phiên bản chuẩn – lấy MỆNH thật)
+// đŸŒŸ Lá»P 9 â€“ LÆ¯U Äáº I Váº¬N (phiĂªn báº£n chuáº©n â€“ láº¥y Má»†NH tháº­t)
 // -----------------------------------------------------
 function anLop9_LuuDaiVan(data) {
   const han = data.luuHan;
   if (!han || !data.cucSo) return;
 
-  // 🧹 Xóa toàn bộ Đại Vận cũ (dù nằm trong cell nào)
+  // đŸ§¹ XĂ³a toĂ n bá»™ Äáº¡i Váº­n cÅ© (dĂ¹ náº±m trong cell nĂ o)
   document.querySelectorAll("[id^='cell'] .layer-9, .layer-9").forEach(e => e.remove());
 
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const CUNG_TO_CELL = {
-    "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,
-    "Thìn":5,"Dậu":6,"Mão":7,"Tuất":8,
-    "Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+    "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,
+    "ThĂ¬n":5,"Dáº­u":6,"MĂ£o":7,"Tuáº¥t":8,
+    "Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
   };
 
-  // 🔹 Lấy đúng cung MỆNH đã an thật (không tính lại theo tháng & giờ)
+  // đŸ”¹ Láº¥y Ä‘Ăºng cung Má»†NH Ä‘Ă£ an tháº­t (khĂ´ng tĂ­nh láº¡i theo thĂ¡ng & giá»)
   const cungMenh = data.tenCungMenh || window.dataGlobal?.tenCungMenh;
   if (!cungMenh) {
-    console.warn("⚠️ Chưa có tên Cung Mệnh để an Đại Vận.");
+    console.warn("â ï¸ ChÆ°a cĂ³ tĂªn Cung Má»‡nh Ä‘á»ƒ an Äáº¡i Váº­n.");
     return;
   }
   const idxMenh = CUNG_THUAN.indexOf(cungMenh);
   if (idxMenh === -1) {
-    console.warn("⚠️ Không tìm thấy chỉ số cung Mệnh:", cungMenh);
+    console.warn("â ï¸ KhĂ´ng tĂ¬m tháº¥y chá»‰ sá»‘ cung Má»‡nh:", cungMenh);
     return;
   }
 
-  // 🔹 Xác định chiều Đại Vận theo Âm Dương Nam Nữ
+  // đŸ”¹ XĂ¡c Ä‘á»‹nh chiá»u Äáº¡i Váº­n theo Ă‚m DÆ°Æ¡ng Nam Ná»¯
   const chieuDaiVan =
-    (data.gender === "Nam" && data.menh?.includes("Dương")) ||
-    (data.gender === "Nữ" && data.menh?.includes("Âm"))
-      ? "thuận"
-      : "nghịch";
-  console.log(`📍 Đại vận tính theo cung Mệnh ${cungMenh} (${chieuDaiVan})`);
+    (data.gender === "Nam" && data.menh?.includes("DÆ°Æ¡ng")) ||
+    (data.gender === "Ná»¯" && data.menh?.includes("Ă‚m"))
+      ? "thuáº­n"
+      : "nghá»‹ch";
+  console.log(`đŸ“ Äáº¡i váº­n tĂ­nh theo cung Má»‡nh ${cungMenh} (${chieuDaiVan})`);
 
-  // 🔹 Giá trị khởi vận theo từng loại Cục
+  // đŸ”¹ GiĂ¡ trá»‹ khá»Ÿi váº­n theo tá»«ng loáº¡i Cá»¥c
   const baseCuc = {
-    "Thủy nhị cục": 2,
-    "Mộc tam cục": 3,
-    "Kim tứ cục": 4,
-    "Thổ ngũ cục": 5,
-    "Hỏa lục cục": 6
+    "Thá»§y nhá»‹ cá»¥c": 2,
+    "Má»™c tam cá»¥c": 3,
+    "Kim tá»© cá»¥c": 4,
+    "Thá»• ngÅ© cá»¥c": 5,
+    "Há»a lá»¥c cá»¥c": 6
   }[data.cucSo];
   if (!baseCuc) return;
 
-  // 🔹 Xác định block vận theo tuổi Âm
+  // đŸ”¹ XĂ¡c Ä‘á»‹nh block váº­n theo tuá»•i Ă‚m
   const tuoi = han.tuoiAm;
   if (tuoi < baseCuc) return;
   const block = Math.floor((tuoi - baseCuc) / 10);
 
-  // 🔹 Tính vị trí Đại Vận theo chiều
-  const idxDaiVan = (chieuDaiVan === "thuận")
+  // đŸ”¹ TĂ­nh vá»‹ trĂ­ Äáº¡i Váº­n theo chiá»u
+  const idxDaiVan = (chieuDaiVan === "thuáº­n")
     ? (idxMenh + block) % 12
     : (idxMenh - block + 12) % 12;
   const cungDaiVan = CUNG_THUAN[idxDaiVan];
   han.viTriDaiVan = cungDaiVan;
 
-  // 🔹 Tên tắt 12 cung
+  // đŸ”¹ TĂªn táº¯t 12 cung
   const CUNG_CHUC_VIETTAT = [
-    "MỆNH","HUYNH","PHU","TỬ",
-    "TÀI","TẬT","DI","NÔ",
-    "QUAN","ĐIỀN","PHÚC","PHỤ"
+    "Má»†NH","HUYNH","PHU","Tá»¬",
+    "TĂ€I","Táº¬T","DI","NĂ”",
+    "QUAN","ÄIá»€N","PHĂC","PHá»¤"
   ];
 
-  // 🔹 Vẽ nhãn ĐẠI VẬN trên từng cung
+  // đŸ”¹ Váº½ nhĂ£n Äáº I Váº¬N trĂªn tá»«ng cung
   for (let i = 0; i < 12; i++) {
-    const idx = (idxDaiVan - i + 12) % 12; // NGHỊCH chiều kim đồng hồ (ĐV chuẩn)
+    const idx = (idxDaiVan - i + 12) % 12; // NGHá»CH chiá»u kim Ä‘á»“ng há»“ (ÄV chuáº©n)
     const cell = document.getElementById("cell" + CUNG_TO_CELL[CUNG_THUAN[idx]]);
     if (!cell) continue;
 
     const div = document.createElement("div");
     div.className = "layer-9";
-    div.textContent = "ĐV. " + CUNG_CHUC_VIETTAT[i];
+    div.textContent = "ÄV. " + CUNG_CHUC_VIETTAT[i];
     Object.assign(div.style, {
       position: "absolute",
       bottom: "2px",
@@ -5734,29 +5739,29 @@ function anLop9_LuuDaiVan(data) {
     cell.appendChild(div);
   }
 
-  console.log(`🔶 Lưu Đại Vận tại ${cungDaiVan} (${tuoi} tuổi, ${data.cucSo})`);
+  console.log(`đŸ”¶ LÆ°u Äáº¡i Váº­n táº¡i ${cungDaiVan} (${tuoi} tuá»•i, ${data.cucSo})`);
 }
 
 
 // =====================================================
-// 🌟 LỚP 10 – LƯU TIỂU VẬN
+// đŸŒŸ Lá»P 10 â€“ LÆ¯U TIá»‚U Váº¬N
 // -----------------------------------------------------
 function anLop10_LuuTieuVan(data) {
   const han = data.luuHan;
   if (!han) return;
 
-  // Xóa lớp cũ
+  // XĂ³a lá»›p cÅ©
   document.querySelectorAll(".layer-10").forEach(e => e.remove());
 
   const chiNam = (han.canChiNam || "").split(" ")[1];
   if (!chiNam) return;
 
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
-  const CUNG_TO_CELL = {"Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,"Thìn":5,"Dậu":6,"Mão":7,"Tuất":8,"Dần":9,"Sửu":10,"Tý":11,"Hợi":12};
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
+  const CUNG_TO_CELL = {"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,"ThĂ¬n":5,"Dáº­u":6,"MĂ£o":7,"Tuáº¥t":8,"Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12};
   const idxStart = CUNG_THUAN.indexOf(chiNam);
   if (idxStart === -1) return;
 
-  const CUNG_CHUC_VIETTAT = ["MỆNH","HUYNH","PHU","TỬ","TÀI","TẬT","DI","NÔ","QUAN","ĐIỀN","PHÚC","PHỤ"];
+  const CUNG_CHUC_VIETTAT = ["Má»†NH","HUYNH","PHU","Tá»¬","TĂ€I","Táº¬T","DI","NĂ”","QUAN","ÄIá»€N","PHĂC","PHá»¤"];
   for (let i = 0; i < 12; i++) {
     const idx = (idxStart - i + 12) % 12;
     const cell = document.getElementById("cell" + CUNG_TO_CELL[CUNG_THUAN[idx]]);
@@ -5775,10 +5780,10 @@ function anLop10_LuuTieuVan(data) {
     });
     cell.appendChild(div);
   }
-  console.log(`🔷 Lưu Tiểu Vận bắt đầu tại ${chiNam}`);
+  console.log(`đŸ”· LÆ°u Tiá»ƒu Váº­n báº¯t Ä‘áº§u táº¡i ${chiNam}`);
 }
 // =====================================================
-// 🌙 LỚP 10.5 – LƯU NGUYỆT VẬN (vòng MỆNH NGƯỢC CHIỀU)
+// đŸŒ™ Lá»P 10.5 â€“ LÆ¯U NGUYá»†T Váº¬N (vĂ²ng Má»†NH NGÆ¯á»¢C CHIá»€U)
 // -----------------------------------------------------
 function anLop10_5_LuuNguyetVan(data) {
   if (!data?.luuHan) return;
@@ -5786,28 +5791,28 @@ function anLop10_5_LuuNguyetVan(data) {
   const chiNamHan = (han.canChiNam || "").split(" ")[1];
   if (!chiNamHan) return;
 
-  // 🧹 Xóa lớp cũ mỗi lần đổi hạn
+  // đŸ§¹ XĂ³a lá»›p cÅ© má»—i láº§n Ä‘á»•i háº¡n
   document.querySelectorAll(".layer-10-5").forEach(e => e.remove());
 
-  // 🧭 12 cung thuận Tử Vi
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // đŸ§­ 12 cung thuáº­n Tá»­ Vi
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const CUNG_TO_CELL = {
-    "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,"Thìn":5,"Dậu":6,
-    "Mão":7,"Tuất":8,"Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+    "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,"ThĂ¬n":5,"Dáº­u":6,
+    "MĂ£o":7,"Tuáº¥t":8,"Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
   };
 
-  // 🪶 Lấy tháng & giờ sinh từ dữ liệu gốc
+  // đŸª¶ Láº¥y thĂ¡ng & giá» sinh tá»« dá»¯ liá»‡u gá»‘c
   const thangSinh = data.thangAm || 1;
-  const chiGioSinh = (data.canChiGio || "").split(" ")[1] || "Tý";
+  const chiGioSinh = (data.canChiGio || "").split(" ")[1] || "TĂ½";
 
   // =====================================================
-  // 1️⃣  NĂM HẠN là cung khởi đầu (coi là tháng 1 tạm)
+  // 1ï¸âƒ£  NÄ‚M Háº N lĂ  cung khá»Ÿi Ä‘áº§u (coi lĂ  thĂ¡ng 1 táº¡m)
   // =====================================================
   const idxNamHan = CUNG_THUAN.indexOf(chiNamHan);
   if (idxNamHan < 0) return;
 
   // =====================================================
-  // 2️⃣  Đếm NGƯỢC theo tháng sinh để tìm cung Giờ Tý
+  // 2ï¸âƒ£  Äáº¿m NGÆ¯á»¢C theo thĂ¡ng sinh Ä‘á»ƒ tĂ¬m cung Giá» TĂ½
   // =====================================================
   let idxGioTy = idxNamHan;
   for (let i = 1; i < thangSinh; i++) {
@@ -5815,10 +5820,10 @@ function anLop10_5_LuuNguyetVan(data) {
   }
 
   // =====================================================
-  // 3️⃣  Từ cung Giờ Tý → đếm THUẬN theo Chi giờ sinh
-  //      để ra cung Mệnh của Tháng 1
+  // 3ï¸âƒ£  Tá»« cung Giá» TĂ½ â†’ Ä‘áº¿m THUáº¬N theo Chi giá» sinh
+  //      Ä‘á»ƒ ra cung Má»‡nh cá»§a ThĂ¡ng 1
   // =====================================================
-  const CHI_LIST = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const CHI_LIST = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
   const idxChiGio = CHI_LIST.indexOf(chiGioSinh);
   if (idxChiGio < 0) return;
 
@@ -5826,22 +5831,22 @@ function anLop10_5_LuuNguyetVan(data) {
   const cungMenhThang1 = CUNG_THUAN[idxTh1];
 
   console.log(
-    `🩵 Lưu Nguyệt Vận: Năm hạn ${chiNamHan}, Tháng sinh ${thangSinh}, Giờ sinh ${chiGioSinh}
-→ Giờ Tý tại ${CUNG_THUAN[idxGioTy]}, Th.1 tại ${cungMenhThang1}`
+    `đŸ©µ LÆ°u Nguyá»‡t Váº­n: NÄƒm háº¡n ${chiNamHan}, ThĂ¡ng sinh ${thangSinh}, Giá» sinh ${chiGioSinh}
+â†’ Giá» TĂ½ táº¡i ${CUNG_THUAN[idxGioTy]}, Th.1 táº¡i ${cungMenhThang1}`
   );
 
 // =====================================================
-// 4️⃣  HIỂN THỊ 12 THÁNG – THUẬN KIM ĐỒNG HỒ
-//      nhưng cung chức chạy NGƯỢC (chuẩn Tử Vi)
+// 4ï¸âƒ£  HIá»‚N THá» 12 THĂNG â€“ THUáº¬N KIM Äá»’NG Há»’
+//      nhÆ°ng cung chá»©c cháº¡y NGÆ¯á»¢C (chuáº©n Tá»­ Vi)
 // =====================================================
-const CUNG_CHUC_VIETTAT = ["MỆNH","HUYNH","PHU","TỬ","TÀI","TẬT","DI","NÔ","QUAN","ĐIỀN","PHÚC","PHỤ"];
+const CUNG_CHUC_VIETTAT = ["Má»†NH","HUYNH","PHU","Tá»¬","TĂ€I","Táº¬T","DI","NĂ”","QUAN","ÄIá»€N","PHĂC","PHá»¤"];
 
-// 🗓️ Lấy tháng hạn hiện đang chọn (1–12)
+// đŸ—“ï¸ Láº¥y thĂ¡ng háº¡n hiá»‡n Ä‘ang chá»n (1â€“12)
 const thangHienTai = parseInt(data?.luuHan?.thangAm || 1);
-const dichThang = (thangHienTai - 1 + 12) % 12;  // số bước dịch từ tháng 1
+const dichThang = (thangHienTai - 1 + 12) % 12;  // sá»‘ bÆ°á»›c dá»‹ch tá»« thĂ¡ng 1
 
 for (let i = 0; i < 12; i++) {
-  // 🌀 Tháng chạy THUẬN, bắt đầu từ cung Mệnh tháng hiện tại
+  // đŸŒ€ ThĂ¡ng cháº¡y THUáº¬N, báº¯t Ä‘áº§u tá»« cung Má»‡nh thĂ¡ng hiá»‡n táº¡i
   const idxThang = (idxTh1 + dichThang + i) % 12;
 
   const cell = document.getElementById("cell" + CUNG_TO_CELL[CUNG_THUAN[idxThang]]);
@@ -5850,7 +5855,7 @@ for (let i = 0; i < 12; i++) {
   const div = document.createElement("div");
   div.className = "layer-10-5 luuNguyetVan";
 
-  // 🔁 Cung chức chạy NGƯỢC
+  // đŸ” Cung chá»©c cháº¡y NGÆ¯á»¢C
   div.textContent = "Ng. " + CUNG_CHUC_VIETTAT[(12 - i) % 12];
   Object.assign(div.style, {
     position: "absolute",
@@ -5864,62 +5869,62 @@ for (let i = 0; i < 12; i++) {
 }
 
 
-  console.log(`🌙 Cung Mệnh Tháng 1: ${cungMenhThang1}`);
+  console.log(`đŸŒ™ Cung Má»‡nh ThĂ¡ng 1: ${cungMenhThang1}`);
 }
 
 
 // =====================================================
-// ☀️ LỚP 11 – LƯU NHẬT VẬN (chuẩn: Nh. Mệnh = N. Mệnh lúc ngày 1)
+// â˜€ï¸ Lá»P 11 â€“ LÆ¯U NHáº¬T Váº¬N (chuáº©n: Nh. Má»‡nh = N. Má»‡nh lĂºc ngĂ y 1)
 // -----------------------------------------------------
 function anLop11_LuuNhatVan(data) {
   const han = data?.luuHan;
   if (!han) return;
 
-  // Dữ liệu cần: năm hạn (can chi), tháng hạn (âm), ngày hạn (âm), tháng sinh (âm), chi giờ sinh
+  // Dá»¯ liá»‡u cáº§n: nÄƒm háº¡n (can chi), thĂ¡ng háº¡n (Ă¢m), ngĂ y háº¡n (Ă¢m), thĂ¡ng sinh (Ă¢m), chi giá» sinh
   const chiNamHan = (han.canChiNam || "").split(" ")[1];
   const thangHan = parseInt(han.thangAm || 1);
   const ngayHan  = parseInt(han.ngayAm  || 1);
   const thangSinh = parseInt(data.thangAm || 1);
-  const chiGioSinh = (data.canChiGio || "").split(" ")[1] || "Tý";
+  const chiGioSinh = (data.canChiGio || "").split(" ")[1] || "TĂ½";
 
   if (!chiNamHan || !chiGioSinh || !thangSinh) return;
 
-  // 🧹 Xóa lớp cũ
+  // đŸ§¹ XĂ³a lá»›p cÅ©
   document.querySelectorAll(".layer-11").forEach(e => e.remove());
 
-  // Bảng chuẩn
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  // Báº£ng chuáº©n
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const CUNG_TO_CELL = {
-    "Tỵ":1,"Ngọ":2,"Mùi":3,"Thân":4,"Thìn":5,"Dậu":6,
-    "Mão":7,"Tuất":8,"Dần":9,"Sửu":10,"Tý":11,"Hợi":12
+    "Tá»µ":1,"Ngá»":2,"MĂ¹i":3,"ThĂ¢n":4,"ThĂ¬n":5,"Dáº­u":6,
+    "MĂ£o":7,"Tuáº¥t":8,"Dáº§n":9,"Sá»­u":10,"TĂ½":11,"Há»£i":12
   };
-  const CHI_LIST = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const CHI_LIST = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
-  // 1) Năm hạn → coi là "tháng 1 tạm" tại chiNamHan
+  // 1) NÄƒm háº¡n â†’ coi lĂ  "thĂ¡ng 1 táº¡m" táº¡i chiNamHan
   const idxNamHan = CUNG_THUAN.indexOf(chiNamHan);
   if (idxNamHan < 0) return;
 
-  // 2) Đếm NGƯỢC theo tháng sinh để tới cung Giờ Tý
+  // 2) Äáº¿m NGÆ¯á»¢C theo thĂ¡ng sinh Ä‘á»ƒ tá»›i cung Giá» TĂ½
   let idxGioTy = idxNamHan;
   for (let i = 1; i < thangSinh; i++) {
     idxGioTy = (idxGioTy - 1 + 12) % 12;
   }
 
-  // 3) Từ cung Giờ Tý → đếm THUẬN theo chi giờ sinh để ra MỆNH tháng 1
+  // 3) Tá»« cung Giá» TĂ½ â†’ Ä‘áº¿m THUáº¬N theo chi giá» sinh Ä‘á»ƒ ra Má»†NH thĂ¡ng 1
   const idxChiGio = CHI_LIST.indexOf(chiGioSinh);
   if (idxChiGio < 0) return;
-  const idxTh1 = (idxGioTy + idxChiGio) % 12; // vị trí N. Mệnh của tháng 1
+  const idxTh1 = (idxGioTy + idxChiGio) % 12; // vá»‹ trĂ­ N. Má»‡nh cá»§a thĂ¡ng 1
 
-  // 4) MỆNH tháng hiện tại (Nguyệt Mệnh) = Th1 dịch thuận (thangHan-1)
+  // 4) Má»†NH thĂ¡ng hiá»‡n táº¡i (Nguyá»‡t Má»‡nh) = Th1 dá»‹ch thuáº­n (thangHan-1)
   const idxNguyetMenh = (idxTh1 + ((thangHan - 1) % 12)) % 12;
 
-  // ✅ 5) NHẬT MỆNH: trùng N. Mệnh ở NGÀY 1, sau đó chạy THUẬN theo ngày âm
+  // âœ… 5) NHáº¬T Má»†NH: trĂ¹ng N. Má»‡nh á»Ÿ NGĂ€Y 1, sau Ä‘Ă³ cháº¡y THUáº¬N theo ngĂ y Ă¢m
   const idxNhatMenh = (idxNguyetMenh + ((ngayHan - 1) % 12)) % 12;
 
-  // Vẽ 12 nhãn Nh. MỆNH → Nh. PHỤ chạy THUẬN từ Nh. Mệnh
-  const CUNG_CHUC_VIETTAT = ["MỆNH","HUYNH","PHU","TỬ","TÀI","TẬT","DI","NÔ","QUAN","ĐIỀN","PHÚC","PHỤ"];
+  // Váº½ 12 nhĂ£n Nh. Má»†NH â†’ Nh. PHá»¤ cháº¡y THUáº¬N tá»« Nh. Má»‡nh
+  const CUNG_CHUC_VIETTAT = ["Má»†NH","HUYNH","PHU","Tá»¬","TĂ€I","Táº¬T","DI","NĂ”","QUAN","ÄIá»€N","PHĂC","PHá»¤"];
   for (let i = 0; i < 12; i++) {
-  // 🔁 Đếm NGƯỢC từ Nh. Mệnh
+  // đŸ” Äáº¿m NGÆ¯á»¢C tá»« Nh. Má»‡nh
   const idx = (idxNhatMenh - i + 12) % 12;
   const cell = document.getElementById("cell" + CUNG_TO_CELL[CUNG_THUAN[idx]]);
   if (!cell) continue;
@@ -5939,10 +5944,10 @@ function anLop11_LuuNhatVan(data) {
 }
 
 
-  // (tuỳ chọn) lưu lại để dùng nơi khác
+  // (tuá»³ chá»n) lÆ°u láº¡i Ä‘á»ƒ dĂ¹ng nÆ¡i khĂ¡c
   han.viTriNguyetMenh = CUNG_THUAN[idxNguyetMenh];
   han.viTriNhatMenh   = CUNG_THUAN[idxNhatMenh];
-  console.log(`☀️ Nh. Mệnh ngày ${ngayHan}: ${han.viTriNhatMenh} (N. Mệnh tháng ${thangHan}: ${han.viTriNguyetMenh})`);
+  console.log(`â˜€ï¸ Nh. Má»‡nh ngĂ y ${ngayHan}: ${han.viTriNhatMenh} (N. Má»‡nh thĂ¡ng ${thangHan}: ${han.viTriNguyetMenh})`);
 }
 
 
@@ -5957,38 +5962,38 @@ function anLop11_LuuNhatVan(data) {
 
 
 // =====================================================
-// 🌙 AN SAO LƯU – NGUYỆT VẬN (theo Can Chi THÁNG HẠN)
+// đŸŒ™ AN SAO LÆ¯U â€“ NGUYá»†T Váº¬N (theo Can Chi THĂNG Háº N)
 // -----------------------------------------------------
 function anSaoLuu_NguyetVan(data) {
   if (!data?.luuHan?.canChiThang) return;
 
-  // 🧹 Xóa sao Lưu Nguyệt Vận cũ (prefix "N.")
+  // đŸ§¹ XĂ³a sao LÆ°u Nguyá»‡t Váº­n cÅ© (prefix "N.")
   document.querySelectorAll(".sao-nguyet-van, .sao-luu-nguyet").forEach(e => e.remove());
 
-  // 🌙 Dùng Can Chi tháng hạn để an sao
+  // đŸŒ™ DĂ¹ng Can Chi thĂ¡ng háº¡n Ä‘á»ƒ an sao
   const clone = structuredClone(data);
-  clone.canChiNam = data.luuHan.canChiThang; // tái sử dụng hàm anToanBoSaoLuu()
+  clone.canChiNam = data.luuHan.canChiThang; // tĂ¡i sá»­ dá»¥ng hĂ m anToanBoSaoLuu()
 
-  console.log(`🩵 Lưu Nguyệt Vận theo ${clone.canChiNam}`);
+  console.log(`đŸ©µ LÆ°u Nguyá»‡t Váº­n theo ${clone.canChiNam}`);
 window.__dangAnNguyetVan = true;
 anToanBoSaoLuu(clone, "N");
 window.__dangAnNguyetVan = false;
 }
 
 // =====================================================
-// ☀️ AN SAO LƯU – NHẬT VẬN (theo Can Chi NGÀY HẠN)
+// â˜€ï¸ AN SAO LÆ¯U â€“ NHáº¬T Váº¬N (theo Can Chi NGĂ€Y Háº N)
 // -----------------------------------------------------
 function anSaoLuu_NhatVan(data) {
   if (!data?.luuHan?.canChiNgay) return;
 
-  // 🧹 Xóa sao Lưu Nhật Vận cũ (prefix "Nh.")
+  // đŸ§¹ XĂ³a sao LÆ°u Nháº­t Váº­n cÅ© (prefix "Nh.")
   document.querySelectorAll(".sao-luu.luu-nhat").forEach(e => e.remove());
 
-  // ☀️ Dùng Can Chi NGÀY HẠN để an sao
+  // â˜€ï¸ DĂ¹ng Can Chi NGĂ€Y Háº N Ä‘á»ƒ an sao
   const clone = structuredClone(data);
-  clone.canChiNam = data.luuHan.canChiNgay; // tái sử dụng anToanBoSaoLuu()
+  clone.canChiNam = data.luuHan.canChiNgay; // tĂ¡i sá»­ dá»¥ng anToanBoSaoLuu()
 
-  console.log(`☀️ Lưu Nhật Vận theo ${clone.canChiNam}`);
+  console.log(`â˜€ï¸ LÆ°u Nháº­t Váº­n theo ${clone.canChiNam}`);
   window.__dangAnNhatVan = true;
   anToanBoSaoLuu(clone, "Nh");
   window.__dangAnNhatVan = false;
@@ -6007,30 +6012,30 @@ function anSaoLuu_NhatVan(data) {
 
 
 // =====================================================
-// 🌟 LỚP 10.3 – SAO LƯU (ĐẠI VẬN & TIỂU VẬN) – BẢN CHUẨN
+// đŸŒŸ Lá»P 10.3 â€“ SAO LÆ¯U (Äáº I Váº¬N & TIá»‚U Váº¬N) â€“ Báº¢N CHUáº¨N
 // -----------------------------------------------------
-// ✅ Màu sao theo Ngũ hành gốc
-// ✅ Tách riêng nhóm Khôi – Việt
-// ✅ Hiển thị đầy đủ ĐV. và L.
+// âœ… MĂ u sao theo NgÅ© hĂ nh gá»‘c
+// âœ… TĂ¡ch riĂªng nhĂ³m KhĂ´i â€“ Viá»‡t
+// âœ… Hiá»ƒn thá»‹ Ä‘áº§y Ä‘á»§ ÄV. vĂ  L.
 // =====================================================
 
-// 🎨 Màu ngũ hành cố định
+// đŸ¨ MĂ u ngÅ© hĂ nh cá»‘ Ä‘á»‹nh
 const MAU_NGUHANH = {
-  "Hỏa": "#ff4d4d",   // 🔥 đỏ tươi sáng – rõ, dễ đọc
-  "Thổ": "#e69500",   // 🟠 cam đất đậm – rõ chữ
-  "Mộc": "#007a29",   // 🌿 xanh lá đậm hơn một chút
-  "Kim": "#000000",   // ⚫ đen thuần – giữ nguyên
-  "Thủy": "#004cff"   // 💧 xanh dương đậm sáng
+  "Há»a": "#ff4d4d",   // đŸ”¥ Ä‘á» tÆ°Æ¡i sĂ¡ng â€“ rĂµ, dá»… Ä‘á»c
+  "Thá»•": "#e69500",   // đŸŸ  cam Ä‘áº¥t Ä‘áº­m â€“ rĂµ chá»¯
+  "Má»™c": "#007a29",   // đŸŒ¿ xanh lĂ¡ Ä‘áº­m hÆ¡n má»™t chĂºt
+  "Kim": "#000000",   // â« Ä‘en thuáº§n â€“ giá»¯ nguyĂªn
+  "Thá»§y": "#004cff"   // đŸ’§ xanh dÆ°Æ¡ng Ä‘áº­m sĂ¡ng
 };
 
 
-// 🔹 Hàm dò màu ngũ hành thật của sao (ưu tiên sao gốc)
+// đŸ”¹ HĂ m dĂ² mĂ u ngÅ© hĂ nh tháº­t cá»§a sao (Æ°u tiĂªn sao gá»‘c)
 function layMauNguHanhTheoSao(tenSao) {
-  // 1. Từ saoNguHanhMap (nếu có)
+  // 1. Tá»« saoNguHanhMap (náº¿u cĂ³)
   const map = window.dataGlobal?.saoNguHanhMap || {};
   if (map[tenSao]) return MAU_NGUHANH[map[tenSao]] || "#333";
 
-  // 2. Nếu không có, dò ngược từ saoToCung (đã an sao gốc)
+  // 2. Náº¿u khĂ´ng cĂ³, dĂ² ngÆ°á»£c tá»« saoToCung (Ä‘Ă£ an sao gá»‘c)
   const saoNguHanh = window.dataGlobal?.saoNguHanh || {};
   if (saoNguHanh[tenSao]) return MAU_NGUHANH[saoNguHanh[tenSao]] || "#333";
 
@@ -6038,18 +6043,18 @@ function layMauNguHanhTheoSao(tenSao) {
 }
 
 // =====================================================
-// 🧱 BẢNG ẨN/HIỆN SAO LƯU – BẢN NHỎ GỌN, NỀN BÁN TRONG SUỐT
+// đŸ§± Báº¢NG áº¨N/HIá»†N SAO LÆ¯U â€“ Báº¢N NHá» Gá»ŒN, Ná»€N BĂN TRONG SUá»T
 // -----------------------------------------------------
-// 💠 Nhóm mới: 
-//  1️⃣ Lộc / Kỵ
-//  2️⃣ Khoa / Quyền
-//  3️⃣ Kình / Đà
-//  4️⃣ Lộc / Mã
-//  5️⃣ Khôi / Việt
-//  6️⃣ Xương / Khúc
+// đŸ’  NhĂ³m má»›i: 
+//  1ï¸âƒ£ Lá»™c / Ká»µ
+//  2ï¸âƒ£ Khoa / Quyá»n
+//  3ï¸âƒ£ KĂ¬nh / ÄĂ 
+//  4ï¸âƒ£ Lá»™c / MĂ£
+//  5ï¸âƒ£ KhĂ´i / Viá»‡t
+//  6ï¸âƒ£ XÆ°Æ¡ng / KhĂºc
 // =====================================================
 function taoBangTickSaoLuu() {
-  // xoá bảng cũ
+  // xoĂ¡ báº£ng cÅ©
   const old = document.getElementById("bangNhomSaoLuu");
   if (old) old.remove();
 
@@ -6072,16 +6077,16 @@ function taoBangTickSaoLuu() {
   `;
 
   div.innerHTML = `
-<b>Ẩn / Hiện Hạn</b><br>
-<label><input type="checkbox" class="chk-nhom" data-nhom="loc-ky" checked> Lộc / Kỵ</label><br>
-<label><input type="checkbox" class="chk-nhom" data-nhom="khoa-quyen"> Khoa / Quyền</label><br>
-<label><input type="checkbox" class="chk-nhom" data-nhom="kinh-da" checked> Kình / Đà</label><br>
-<label><input type="checkbox" class="chk-nhom" data-nhom="loc-ma"> Lộc / Mã</label><br>
-<label><input type="checkbox" class="chk-nhom" data-nhom="khoi-viet"> Khôi / Việt</label><br>
-<label><input type="checkbox" class="chk-nhom" data-nhom="xuong-khuc"> Xương / Khúc</label>
+<b>áº¨n / Hiá»‡n Háº¡n</b><br>
+<label><input type="checkbox" class="chk-nhom" data-nhom="loc-ky" checked> Lá»™c / Ká»µ</label><br>
+<label><input type="checkbox" class="chk-nhom" data-nhom="khoa-quyen"> Khoa / Quyá»n</label><br>
+<label><input type="checkbox" class="chk-nhom" data-nhom="kinh-da" checked> KĂ¬nh / ÄĂ </label><br>
+<label><input type="checkbox" class="chk-nhom" data-nhom="loc-ma"> Lá»™c / MĂ£</label><br>
+<label><input type="checkbox" class="chk-nhom" data-nhom="khoi-viet"> KhĂ´i / Viá»‡t</label><br>
+<label><input type="checkbox" class="chk-nhom" data-nhom="xuong-khuc"> XÆ°Æ¡ng / KhĂºc</label>
 `;
 
-  // gắn vào lá số
+  // gáº¯n vĂ o lĂ¡ sá»‘
   const container = document.getElementById("lasoContainer");
   container.style.position = "relative";
 container.appendChild(div);
@@ -6092,7 +6097,7 @@ container.appendChild(div);
 
 
 // =====================================================
-// 🔁 ẨN / HIỆN SAO LƯU – ĐỒNG BỘ 4 CẤP (ĐV, TV, NV, NhV)
+// đŸ” áº¨N / HIá»†N SAO LÆ¯U â€“ Äá»’NG Bá»˜ 4 Cáº¤P (ÄV, TV, NV, NhV)
 // =====================================================
 function dongBoAnHienSaoLuu() {
   const btns = {
@@ -6105,12 +6110,12 @@ function dongBoAnHienSaoLuu() {
   const bangTick = document.getElementById("bangNhomSaoLuu");
   if (!bangTick || Object.values(btns).some(btn => !btn)) return;
 
-  // XÓA LISTENER CŨ CHUẨN — clone 1 lần
+  // XĂ“A LISTENER CÅ¨ CHUáº¨N â€” clone 1 láº§n
   Object.keys(btns).forEach(key => {
     const old = btns[key];
     const newBtn = old.cloneNode(true);
     old.parentNode.replaceChild(newBtn, old);
-    btns[key] = newBtn; // CẬP NHẬT biến thật sự
+    btns[key] = newBtn; // Cáº¬P NHáº¬T biáº¿n tháº­t sá»±
   });
 
   const nutDV  = btns.dai;
@@ -6157,7 +6162,7 @@ function dongBoAnHienSaoLuu() {
     });
   };
 
-  // gắn lại listener mới
+  // gáº¯n láº¡i listener má»›i
   [nutDV, nutTV, nutNV, nutNhV].forEach(btn => {
     btn.addEventListener("click", () => {
       btn.classList.toggle("off");
@@ -6174,9 +6179,9 @@ function dongBoAnHienSaoLuu() {
   capNhatMauNut();
   capNhatHienThi();
 
-  // 🔁 Lưu lại hàm toàn cục để dùng lại khi cần
+  // đŸ” LÆ°u láº¡i hĂ m toĂ n cá»¥c Ä‘á»ƒ dĂ¹ng láº¡i khi cáº§n
   window.__capNhatHienThiSaoLuu = capNhatHienThi;
-  console.log("✅ Gắn event sao Lưu (ĐV + TV + NV + NhV)");
+  console.log("âœ… Gáº¯n event sao LÆ°u (ÄV + TV + NV + NhV)");
 }
 
 
@@ -6185,7 +6190,7 @@ function dongBoAnHienSaoLuu() {
 
 
 // =====================================================
-// 🧹 XÓA SAO LƯU CŨ
+// đŸ§¹ XĂ“A SAO LÆ¯U CÅ¨
 // =====================================================
 function xoaSaoLuu() {
   document.querySelectorAll(".sao-luu").forEach(e => e.remove());
@@ -6194,45 +6199,45 @@ function xoaSaoLuu() {
 
 
 // =====================================================
-// 🪶 THÊM SAO LƯU – GẮN CHUẨN CLASS ĐỂ ẨN/HIỆN
+// đŸª¶ THĂM SAO LÆ¯U â€“ Gáº®N CHUáº¨N CLASS Äá»‚ áº¨N/HIá»†N
 // =====================================================
 function themSaoLuu(cung, ten, nhom, loai, prefix) {
   if (!cung) return;
   const cell = document.querySelector(`#cell${CUNG_TO_CELL[cung]} .layer-6 .${loai}-tinh`);
   if (!cell) return;
 
-  // 🔹 Chuẩn hóa hành của sao
-const tenGoc = ten.replace(/^(ĐV\.|L\.|N\.|Nh\.)\s*/i, "").trim();
+  // đŸ”¹ Chuáº©n hĂ³a hĂ nh cá»§a sao
+const tenGoc = ten.replace(/^(ÄV\.|L\.|N\.|Nh\.)\s*/i, "").trim();
   const hanhSao = {
-    "Tử Vi": "Thổ", "Thiên Cơ": "Mộc", "Thái Dương": "Hỏa", "Vũ Khúc": "Kim",
-    "Thiên Đồng": "Thủy", "Liêm Trinh": "Hỏa", "Thiên Phủ": "Thổ", "Thái Âm": "Thủy",
-    "Tham Lang": "Mộc", "Cự Môn": "Thủy", "Thiên Tướng": "Thủy", "Thiên Lương": "Mộc",
-    "Thất Sát": "Kim", "Phá Quân": "Thủy", "Thiên Khôi": "Hỏa", "Thiên Việt": "Hỏa",
-    "Lộc Tồn": "Thổ", "Thiên Mã": "Hỏa", "Hóa Lộc": "Mộc", "Hóa Quyền": "Mộc",
-    "Hóa Khoa": "Mộc", "Hóa Kỵ": "Kim", "Kình Dương": "Kim", "Đà La": "Kim",
-    "Văn Xương": "Kim", "Văn Khúc": "Thủy", "Linh Tinh": "Hỏa", "Hỏa Tinh": "Hỏa",
-    "Địa Không": "Hỏa", "Địa Kiếp": "Hỏa", "Tả Phù": "Thổ"
+    "Tá»­ Vi": "Thá»•", "ThiĂªn CÆ¡": "Má»™c", "ThĂ¡i DÆ°Æ¡ng": "Há»a", "VÅ© KhĂºc": "Kim",
+    "ThiĂªn Äá»“ng": "Thá»§y", "LiĂªm Trinh": "Há»a", "ThiĂªn Phá»§": "Thá»•", "ThĂ¡i Ă‚m": "Thá»§y",
+    "Tham Lang": "Má»™c", "Cá»± MĂ´n": "Thá»§y", "ThiĂªn TÆ°á»›ng": "Thá»§y", "ThiĂªn LÆ°Æ¡ng": "Má»™c",
+    "Tháº¥t SĂ¡t": "Kim", "PhĂ¡ QuĂ¢n": "Thá»§y", "ThiĂªn KhĂ´i": "Há»a", "ThiĂªn Viá»‡t": "Há»a",
+    "Lá»™c Tá»“n": "Thá»•", "ThiĂªn MĂ£": "Há»a", "HĂ³a Lá»™c": "Má»™c", "HĂ³a Quyá»n": "Má»™c",
+    "HĂ³a Khoa": "Má»™c", "HĂ³a Ká»µ": "Kim", "KĂ¬nh DÆ°Æ¡ng": "Kim", "ÄĂ  La": "Kim",
+    "VÄƒn XÆ°Æ¡ng": "Kim", "VÄƒn KhĂºc": "Thá»§y", "Linh Tinh": "Há»a", "Há»a Tinh": "Há»a",
+    "Äá»‹a KhĂ´ng": "Há»a", "Äá»‹a Kiáº¿p": "Há»a", "Táº£ PhĂ¹": "Thá»•"
   };
   const hanh = hanhSao[tenGoc] || "";
   const colorMap = {
-    "Hỏa": "#c72d2d", "Thổ": "#d99000", "Mộc": "#006400",
-    "Kim": "#000000", "Thủy": "#003399"
+    "Há»a": "#c72d2d", "Thá»•": "#d99000", "Má»™c": "#006400",
+    "Kim": "#000000", "Thá»§y": "#003399"
   };
   const color = colorMap[hanh] || "#333";
 
-  // 🌟 Tạo phần tử sao
+  // đŸŒŸ Táº¡o pháº§n tá»­ sao
   const div = document.createElement("div");
   div.textContent = `${prefix}. ${ten}`;
 let loaiVan = "luu-tieu";
-if (prefix === "ĐV") loaiVan = "luu-dai";
+if (prefix === "ÄV") loaiVan = "luu-dai";
 else if (prefix === "N") loaiVan = "luu-nguyet";
-else if (prefix === "Nh") loaiVan = "luu-nhat"; // ✅ thêm dòng này
+else if (prefix === "Nh") loaiVan = "luu-nhat"; // âœ… thĂªm dĂ²ng nĂ y
 
 
 div.className = `sao-luu ${loaiVan} nhom-${nhom} ${loai}-tinh`;
-div.dataset.nhom = nhom; // 🔹 Gán nhóm để tick bảng nhận diện
+div.dataset.nhom = nhom; // đŸ”¹ GĂ¡n nhĂ³m Ä‘á»ƒ tick báº£ng nháº­n diá»‡n
 
-  // 🪶 Style sao
+  // đŸª¶ Style sao
   div.style.fontSize = "11px";
   div.style.margin = "1px 0";
   div.style.fontStyle = "italic";
@@ -6245,50 +6250,50 @@ div.dataset.nhom = nhom; // 🔹 Gán nhóm để tick bảng nhận diện
 
 
 // =====================================================
-// 🌞 AN SAO LƯU – ĐẠI VẬN (theo Can Chi năm sinh chuẩn từng cung)
+// đŸŒ AN SAO LÆ¯U â€“ Äáº I Váº¬N (theo Can Chi nÄƒm sinh chuáº©n tá»«ng cung)
 // -----------------------------------------------------
 function anSaoLuu_DaiVan(data) {
   if (!data || !data.luuHan?.viTriDaiVan) return;
 
-  // 🧩 Nếu đang vẽ lớp Đại Vận (Lớp 9) thì bỏ qua để tránh x2
+  // đŸ§© Náº¿u Ä‘ang váº½ lá»›p Äáº¡i Váº­n (Lá»›p 9) thĂ¬ bá» qua Ä‘á»ƒ trĂ¡nh x2
   if (window.__dangVeLop9_DaiVan) return;
 
-  // 🧭 Lấy cung hiện tại của Đại Vận
+  // đŸ§­ Láº¥y cung hiá»‡n táº¡i cá»§a Äáº¡i Váº­n
   const cungDai = data.luuHan.viTriDaiVan;
 
-  // 🪶 Tính lại Can Chi của cung Đại Vận theo năm sinh gốc
+  // đŸª¶ TĂ­nh láº¡i Can Chi cá»§a cung Äáº¡i Váº­n theo nÄƒm sinh gá»‘c
   const canChiDaiVan = (function layCanChiCuaCung(canChiNamSinh, tenCung) {
     const CAN_THANG = {
-      "Giáp":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
-      "Ất":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
-      "Bính":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
-      "Đinh":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
-      "Mậu":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"],
-      "Kỷ":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
-      "Canh":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
-      "Tân":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
-      "Nhâm":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
-      "Quý":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"]
+      "GiĂ¡p":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+      "áº¤t":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+      "BĂ­nh":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+      "Äinh":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+      "Máº­u":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"],
+      "Ká»·":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+      "Canh":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+      "TĂ¢n":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+      "NhĂ¢m":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+      "QuĂ½":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"]
     };
 
-    const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+    const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
     const canNam = canChiNamSinh.split(" ")[0];
     const chiIndex = CUNG_THUAN.indexOf(tenCung);
     if (chiIndex === -1) return "";
-    const list = CAN_THANG[canNam] || CAN_THANG["Giáp"];
+    const list = CAN_THANG[canNam] || CAN_THANG["GiĂ¡p"];
     const can = list[chiIndex];
     const chi = CUNG_THUAN[chiIndex];
     return `${can} ${chi}`;
   })(data.canChiNam, cungDai);
 
   if (!canChiDaiVan) {
-    console.warn("⚠️ Không xác định được Can Chi của Đại Vận:", cungDai);
+    console.warn("â ï¸ KhĂ´ng xĂ¡c Ä‘á»‹nh Ä‘Æ°á»£c Can Chi cá»§a Äáº¡i Váº­n:", cungDai);
     return;
   }
 
-  // 🧭 Ghi nhớ Can Chi năm Đại Vận
+  // đŸ§­ Ghi nhá»› Can Chi nÄƒm Äáº¡i Váº­n
   window.dataGlobal.canChiDaiVan = canChiDaiVan;
-// 🎯 Hiển thị lên khung Xem Hạn (Âm Lịch)
+// đŸ¯ Hiá»ƒn thá»‹ lĂªn khung Xem Háº¡n (Ă‚m Lá»‹ch)
 if (data.luuHan?.tuoiDaiVanBatDau && data.luuHan?.tuoiDaiVanKetThuc) {
   hienThiThongTinDaiVan(
     canChiDaiVan,
@@ -6296,7 +6301,7 @@ if (data.luuHan?.tuoiDaiVanBatDau && data.luuHan?.tuoiDaiVanKetThuc) {
     data.luuHan.tuoiDaiVanKetThuc
   );
 } else {
-  // 🔁 nếu chưa có, tạm tính theo thứ tự Đại Vận (mỗi cung = 10 năm)
+  // đŸ” náº¿u chÆ°a cĂ³, táº¡m tĂ­nh theo thá»© tá»± Äáº¡i Váº­n (má»—i cung = 10 nÄƒm)
   const indexDV = data.luuHan?.soThuTuDaiVan || 0;
   const tuoiBatDau = 5 + indexDV * 10;
   const tuoiKetThuc = tuoiBatDau + 9;
@@ -6304,25 +6309,25 @@ if (data.luuHan?.tuoiDaiVanBatDau && data.luuHan?.tuoiDaiVanKetThuc) {
 }
 
 
-  // 🔁 Gọi an sao lưu theo Can Chi Đại Vận này (nếu chưa bị khoá bởi lớp 9)
+  // đŸ” Gá»i an sao lÆ°u theo Can Chi Äáº¡i Váº­n nĂ y (náº¿u chÆ°a bá»‹ khoĂ¡ bá»Ÿi lá»›p 9)
   const clone = structuredClone(data);
   clone.canChiNam = canChiDaiVan;
 
-  console.log(`🌞 Lưu Đại Vận theo ${canChiDaiVan} (${cungDai})`);
+  console.log(`đŸŒ LÆ°u Äáº¡i Váº­n theo ${canChiDaiVan} (${cungDai})`);
 
-  // 🪐 Tiến hành an sao lưu (với prefix “ĐV.”)
+  // đŸª Tiáº¿n hĂ nh an sao lÆ°u (vá»›i prefix â€œÄV.â€)
   window.__dangVeLop9_DaiVan = true;
-  anToanBoSaoLuu(clone, "ĐV");
+  anToanBoSaoLuu(clone, "ÄV");
   setTimeout(() => (window.__dangVeLop9_DaiVan = false), 300);
 
-// 🖼️ Hiển thị lên khung Xem Hạn (Âm Lịch)
+// đŸ–¼ï¸ Hiá»ƒn thá»‹ lĂªn khung Xem Háº¡n (Ă‚m Lá»‹ch)
 if (data.luuHan?.tuoiAm && data.cucSo && data.luuHan?.viTriDaiVan) {
   const baseCuc = {
-    "Thủy nhị cục": 2,
-    "Mộc tam cục": 3,
-    "Kim tứ cục": 4,
-    "Thổ ngũ cục": 5,
-    "Hỏa lục cục": 6
+    "Thá»§y nhá»‹ cá»¥c": 2,
+    "Má»™c tam cá»¥c": 3,
+    "Kim tá»© cá»¥c": 4,
+    "Thá»• ngÅ© cá»¥c": 5,
+    "Há»a lá»¥c cá»¥c": 6
   }[data.cucSo];
   const tuoi = data.luuHan.tuoiAm;
   const block = Math.floor((tuoi - baseCuc) / 10);
@@ -6338,30 +6343,30 @@ if (data.luuHan?.tuoiAm && data.cucSo && data.luuHan?.viTriDaiVan) {
 
 
 // =====================================================
-// 🌙 AN SAO LƯU – TIỂU VẬN
+// đŸŒ™ AN SAO LÆ¯U â€“ TIá»‚U Váº¬N
 // =====================================================
 function anSaoLuu_TieuVan(data) {
   if (!data?.luuHan?.canChiNam) return;
   const clone = structuredClone(data);
   clone.canChiNam = data.luuHan.canChiNam;
-window.dataGlobal.canChiHan = data.luuHan.canChiNam; // 🧭 Ghi nhớ Can Chi năm Hạn
+window.dataGlobal.canChiHan = data.luuHan.canChiNam; // đŸ§­ Ghi nhá»› Can Chi nÄƒm Háº¡n
 
-  console.log(`🌙 Lưu Tiểu Vận theo ${clone.canChiNam}`);
+  console.log(`đŸŒ™ LÆ°u Tiá»ƒu Váº­n theo ${clone.canChiNam}`);
   anToanBoSaoLuu(clone, "L");
 }
 
 // =====================================================
-// ⚡ AN TOÀN BỘ SAO LƯU – PHIÊN BẢN 6 NHÓM GỌN
+// â¡ AN TOĂ€N Bá»˜ SAO LÆ¯U â€“ PHIĂN Báº¢N 6 NHĂ“M Gá»ŒN
 // -----------------------------------------------------
-// Nhóm dùng cho bảng tick:
+// NhĂ³m dĂ¹ng cho báº£ng tick:
 //  loc-ky, khoa-quyen, kinh-da, loc-ma, khoi-viet, xuong-khuc
 // =====================================================
 function anToanBoSaoLuu(data, prefix) {
 
 
-  const CAN = ["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"];
-  const CHI = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  const CAN = ["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"];
+  const CHI = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
 
   let canNam="", chiNam="";
   for (const c of CAN) if (data.canChiNam?.includes(c)) canNam=c;
@@ -6369,56 +6374,56 @@ function anToanBoSaoLuu(data, prefix) {
   if (!canNam || !chiNam) return;
 
   const LOC_TON_MAP = {
-    "Giáp":"Dần","Ất":"Mão","Bính":"Tỵ","Đinh":"Ngọ","Mậu":"Tỵ","Kỷ":"Ngọ",
-    "Canh":"Thân","Tân":"Dậu","Nhâm":"Hợi","Quý":"Tý"
+    "GiĂ¡p":"Dáº§n","áº¤t":"MĂ£o","BĂ­nh":"Tá»µ","Äinh":"Ngá»","Máº­u":"Tá»µ","Ká»·":"Ngá»",
+    "Canh":"ThĂ¢n","TĂ¢n":"Dáº­u","NhĂ¢m":"Há»£i","QuĂ½":"TĂ½"
   };
   const THIEN_MA_MAP = {
-    "Hợi":"Tỵ","Mão":"Tỵ","Mùi":"Tỵ","Tỵ":"Hợi","Dậu":"Hợi","Sửu":"Hợi",
-    "Dần":"Thân","Ngọ":"Thân","Tuất":"Thân","Thân":"Dần","Tý":"Dần","Thìn":"Dần"
+    "Há»£i":"Tá»µ","MĂ£o":"Tá»µ","MĂ¹i":"Tá»µ","Tá»µ":"Há»£i","Dáº­u":"Há»£i","Sá»­u":"Há»£i",
+    "Dáº§n":"ThĂ¢n","Ngá»":"ThĂ¢n","Tuáº¥t":"ThĂ¢n","ThĂ¢n":"Dáº§n","TĂ½":"Dáº§n","ThĂ¬n":"Dáº§n"
   };
 
-  // 💠 Lộc / Mã
-  themSaoLuu(LOC_TON_MAP[canNam], "Lộc Tồn", "loc-ma", "cat", prefix);
-  themSaoLuu(THIEN_MA_MAP[chiNam], "Thiên Mã", "loc-ma", "cat", prefix);
+  // đŸ’  Lá»™c / MĂ£
+  themSaoLuu(LOC_TON_MAP[canNam], "Lá»™c Tá»“n", "loc-ma", "cat", prefix);
+  themSaoLuu(THIEN_MA_MAP[chiNam], "ThiĂªn MĂ£", "loc-ma", "cat", prefix);
 
-  // ⚡ Kình / Đà
+  // â¡ KĂ¬nh / ÄĂ 
   const viTriA = LOC_TON_MAP[canNam];
   const iA = CUNG_THUAN.indexOf(viTriA);
   if (iA >= 0) {
-    themSaoLuu(CUNG_THUAN[(iA + 1) % 12], "Kình Dương", "kinh-da", "hung", prefix);
-    themSaoLuu(CUNG_THUAN[(iA - 1 + 12) % 12], "Đà La", "kinh-da", "hung", prefix);
+    themSaoLuu(CUNG_THUAN[(iA + 1) % 12], "KĂ¬nh DÆ°Æ¡ng", "kinh-da", "hung", prefix);
+    themSaoLuu(CUNG_THUAN[(iA - 1 + 12) % 12], "ÄĂ  La", "kinh-da", "hung", prefix);
   }
 
-  // 🌿 Khôi / Việt
+  // đŸŒ¿ KhĂ´i / Viá»‡t
   const KV = {
-    "Giáp":["Sửu","Mùi"],"Mậu":["Sửu","Mùi"],"Ất":["Tý","Thân"],"Kỷ":["Tý","Thân"],
-    "Canh":["Dần","Ngọ"],"Tân":["Dần","Ngọ"],"Bính":["Hợi","Dậu"],"Đinh":["Hợi","Dậu"],
-    "Nhâm":["Mão","Tỵ"],"Quý":["Mão","Tỵ"]
+    "GiĂ¡p":["Sá»­u","MĂ¹i"],"Máº­u":["Sá»­u","MĂ¹i"],"áº¤t":["TĂ½","ThĂ¢n"],"Ká»·":["TĂ½","ThĂ¢n"],
+    "Canh":["Dáº§n","Ngá»"],"TĂ¢n":["Dáº§n","Ngá»"],"BĂ­nh":["Há»£i","Dáº­u"],"Äinh":["Há»£i","Dáº­u"],
+    "NhĂ¢m":["MĂ£o","Tá»µ"],"QuĂ½":["MĂ£o","Tá»µ"]
   };
   const cap = KV[canNam];
   if (cap) {
-    themSaoLuu(cap[0], "Thiên Khôi", "khoi-viet", "cat", prefix);
-    themSaoLuu(cap[1], "Thiên Việt", "khoi-viet", "cat", prefix);
+    themSaoLuu(cap[0], "ThiĂªn KhĂ´i", "khoi-viet", "cat", prefix);
+    themSaoLuu(cap[1], "ThiĂªn Viá»‡t", "khoi-viet", "cat", prefix);
   }
 
   // ===========================================================
-// 🪶 VĂN XƯƠNG / VĂN KHÚC – theo CAN năm (theo bảng lưu niên bạn gửi)
+// đŸª¶ VÄ‚N XÆ¯Æ NG / VÄ‚N KHĂC â€“ theo CAN nÄƒm (theo báº£ng lÆ°u niĂªn báº¡n gá»­i)
 // ===========================================================
 const LUU_XUONG = {
-  "Giáp": "Tỵ", "Ất": "Ngọ", "Bính": "Thân", "Đinh": "Dậu",
-  "Mậu": "Thân", "Kỷ": "Dậu", "Canh": "Hợi", "Tân": "Tý",
-  "Nhâm": "Dần", "Quý": "Mão"
+  "GiĂ¡p": "Tá»µ", "áº¤t": "Ngá»", "BĂ­nh": "ThĂ¢n", "Äinh": "Dáº­u",
+  "Máº­u": "ThĂ¢n", "Ká»·": "Dáº­u", "Canh": "Há»£i", "TĂ¢n": "TĂ½",
+  "NhĂ¢m": "Dáº§n", "QuĂ½": "MĂ£o"
 };
 const LUU_KHUC = {
-  "Giáp": "Dậu", "Ất": "Thân", "Bính": "Ngọ", "Đinh": "Tỵ",
-  "Mậu": "Ngọ", "Kỷ": "Tỵ", "Canh": "Mão", "Tân": "Dần",
-  "Nhâm": "Tý", "Quý": "Hợi"
+  "GiĂ¡p": "Dáº­u", "áº¤t": "ThĂ¢n", "BĂ­nh": "Ngá»", "Äinh": "Tá»µ",
+  "Máº­u": "Ngá»", "Ká»·": "Tá»µ", "Canh": "MĂ£o", "TĂ¢n": "Dáº§n",
+  "NhĂ¢m": "TĂ½", "QuĂ½": "Há»£i"
 };
 
 if (canNam && LUU_XUONG[canNam]) {
   themSaoLuu(
     LUU_XUONG[canNam],
-    "Văn Xương",
+    "VÄƒn XÆ°Æ¡ng",
     "xuong-khuc",
     "cat",
     prefix
@@ -6427,7 +6432,7 @@ if (canNam && LUU_XUONG[canNam]) {
 if (canNam && LUU_KHUC[canNam]) {
   themSaoLuu(
     LUU_KHUC[canNam],
-    "Văn Khúc",
+    "VÄƒn KhĂºc",
     "xuong-khuc",
     "cat",
     prefix
@@ -6435,18 +6440,18 @@ if (canNam && LUU_KHUC[canNam]) {
 }
 
 
-  // 🌈 Tứ Hóa → chia lại nhóm: Lộc/Kỵ, Khoa/Quyền
+  // đŸŒˆ Tá»© HĂ³a â†’ chia láº¡i nhĂ³m: Lá»™c/Ká»µ, Khoa/Quyá»n
   const TU_HOA = {
-    "Giáp":{loc:"Liêm Trinh",quyen:"Phá Quân",khoa:"Vũ Khúc",ky:"Thái Dương"},
-    "Ất":{loc:"Thiên Cơ",quyen:"Thiên Lương",khoa:"Tử Vi",ky:"Thái Âm"},
-    "Bính":{loc:"Thiên Đồng",quyen:"Thiên Cơ",khoa:"Văn Xương",ky:"Liêm Trinh"},
-    "Đinh":{loc:"Thái Âm",quyen:"Thiên Đồng",khoa:"Thiên Cơ",ky:"Cự Môn"},
-    "Mậu":{loc:"Tham Lang",quyen:"Thái Âm",khoa:"Hữu Bật",ky:"Thiên Cơ"},
-    "Kỷ":{loc:"Vũ Khúc",quyen:"Tham Lang",khoa:"Thiên Lương",ky:"Văn Khúc"},
-    "Canh":{loc:"Thái Dương",quyen:"Vũ Khúc",khoa:"Thiên Đồng",ky:"Thái Âm"},
-    "Tân":{loc:"Cự Môn",quyen:"Thái Dương",khoa:"Văn Khúc",ky:"Văn Xương"},
-    "Nhâm":{loc:"Thiên Lương",quyen:"Tử Vi",khoa:"Tả Phù",ky:"Vũ Khúc"},
-    "Quý":{loc:"Phá Quân",quyen:"Cự Môn",khoa:"Thái Âm",ky:"Tham Lang"}
+    "GiĂ¡p":{loc:"LiĂªm Trinh",quyen:"PhĂ¡ QuĂ¢n",khoa:"VÅ© KhĂºc",ky:"ThĂ¡i DÆ°Æ¡ng"},
+    "áº¤t":{loc:"ThiĂªn CÆ¡",quyen:"ThiĂªn LÆ°Æ¡ng",khoa:"Tá»­ Vi",ky:"ThĂ¡i Ă‚m"},
+    "BĂ­nh":{loc:"ThiĂªn Äá»“ng",quyen:"ThiĂªn CÆ¡",khoa:"VÄƒn XÆ°Æ¡ng",ky:"LiĂªm Trinh"},
+    "Äinh":{loc:"ThĂ¡i Ă‚m",quyen:"ThiĂªn Äá»“ng",khoa:"ThiĂªn CÆ¡",ky:"Cá»± MĂ´n"},
+    "Máº­u":{loc:"Tham Lang",quyen:"ThĂ¡i Ă‚m",khoa:"Há»¯u Báº­t",ky:"ThiĂªn CÆ¡"},
+    "Ká»·":{loc:"VÅ© KhĂºc",quyen:"Tham Lang",khoa:"ThiĂªn LÆ°Æ¡ng",ky:"VÄƒn KhĂºc"},
+    "Canh":{loc:"ThĂ¡i DÆ°Æ¡ng",quyen:"VÅ© KhĂºc",khoa:"ThiĂªn Äá»“ng",ky:"ThĂ¡i Ă‚m"},
+    "TĂ¢n":{loc:"Cá»± MĂ´n",quyen:"ThĂ¡i DÆ°Æ¡ng",khoa:"VÄƒn KhĂºc",ky:"VÄƒn XÆ°Æ¡ng"},
+    "NhĂ¢m":{loc:"ThiĂªn LÆ°Æ¡ng",quyen:"Tá»­ Vi",khoa:"Táº£ PhĂ¹",ky:"VÅ© KhĂºc"},
+    "QuĂ½":{loc:"PhĂ¡ QuĂ¢n",quyen:"Cá»± MĂ´n",khoa:"ThĂ¡i Ă‚m",ky:"Tham Lang"}
   };
 
   const hoa = TU_HOA[canNam];
@@ -6455,9 +6460,9 @@ if (canNam && LUU_KHUC[canNam]) {
     const tim = s => {
   const k = s
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")   // bỏ dấu tổ hợp
-    .replace(/\u0110/g, "d")           // Đ → d
-    .replace(/\u0111/g, "d")           // đ → d
+    .replace(/[\u0300-\u036f]/g, "")   // bá» dáº¥u tá»• há»£p
+    .replace(/\u0110/g, "d")           // Ä â†’ d
+    .replace(/\u0111/g, "d")           // Ä‘ â†’ d
     .replace(/\s+/g, "")
     .trim()
     .toLowerCase();
@@ -6465,10 +6470,10 @@ if (canNam && LUU_KHUC[canNam]) {
   return mapSao[k];
 };
 
-    if (tim(hoa.loc))   themSaoLuu(tim(hoa.loc), "Hóa Lộc", "loc-ky", "cat", prefix);
-    if (tim(hoa.ky))    themSaoLuu(tim(hoa.ky), "Hóa Kỵ", "loc-ky", "hung", prefix);
-    if (tim(hoa.khoa))  themSaoLuu(tim(hoa.khoa), "Hóa Khoa", "khoa-quyen", "cat", prefix);
-    if (tim(hoa.quyen)) themSaoLuu(tim(hoa.quyen), "Hóa Quyền", "khoa-quyen", "cat", prefix);
+    if (tim(hoa.loc))   themSaoLuu(tim(hoa.loc), "HĂ³a Lá»™c", "loc-ky", "cat", prefix);
+    if (tim(hoa.ky))    themSaoLuu(tim(hoa.ky), "HĂ³a Ká»µ", "loc-ky", "hung", prefix);
+    if (tim(hoa.khoa))  themSaoLuu(tim(hoa.khoa), "HĂ³a Khoa", "khoa-quyen", "cat", prefix);
+    if (tim(hoa.quyen)) themSaoLuu(tim(hoa.quyen), "HĂ³a Quyá»n", "khoa-quyen", "cat", prefix);
   }
 }
 
@@ -6476,47 +6481,47 @@ if (canNam && LUU_KHUC[canNam]) {
 
 
 // =====================================================
-// 🔁 TÍCH HỢP CẬP NHẬT HẠN – KHÔNG RESET TUỔI
+// đŸ” TĂCH Há»¢P Cáº¬P NHáº¬T Háº N â€“ KHĂ”NG RESET TUá»”I
 // =====================================================
 const oldCapNhatHan = capNhatHan;
 capNhatHan = function() {
-  // ⚡ Gọi bản gốc để tính tuổi và hiển thị, KHÔNG reset form
+  // â¡ Gá»i báº£n gá»‘c Ä‘á»ƒ tĂ­nh tuá»•i vĂ  hiá»ƒn thá»‹, KHĂ”NG reset form
   oldCapNhatHan();
 
-  // 🧭 Lưu lại tuổi sau khi tính xong
+  // đŸ§­ LÆ°u láº¡i tuá»•i sau khi tĂ­nh xong
   const tuoiLabel = document.getElementById("tuoiAmLabel");
   const tuoiText = tuoiLabel ? tuoiLabel.textContent : "";
 
-  // 🕓 Sau khi sao lưu được vẽ, khôi phục lại tuổi
+  // đŸ•“ Sau khi sao lÆ°u Ä‘Æ°á»£c váº½, khĂ´i phá»¥c láº¡i tuá»•i
   setTimeout(() => {
     xoaSaoLuu();
 
-    // 🌞 An sao theo 4 cấp vận
+    // đŸŒ An sao theo 4 cáº¥p váº­n
     anSaoLuu_DaiVan(window.dataGlobal);
     anSaoLuu_TieuVan(window.dataGlobal);
     anSaoLuu_NguyetVan(window.dataGlobal);
-    anSaoLuu_NhatVan(window.dataGlobal); // ☀️ thêm dòng này cho Nhật Vận
+    anSaoLuu_NhatVan(window.dataGlobal); // â˜€ï¸ thĂªm dĂ²ng nĂ y cho Nháº­t Váº­n
 
-    // ✅ Giữ nguyên tuổi đã tính
+    // âœ… Giá»¯ nguyĂªn tuá»•i Ä‘Ă£ tĂ­nh
     if (tuoiLabel && tuoiText) tuoiLabel.textContent = tuoiText;
 
-    // 🔁 Cập nhật hiển thị theo tick nhóm
+    // đŸ” Cáº­p nháº­t hiá»ƒn thá»‹ theo tick nhĂ³m
     const hienThi = window.__capNhatHienThiSaoLuu;
     if (typeof hienThi === "function") hienThi();
   }, 800);
-  console.log("♻️ Cập nhật lại sao Lưu (ĐV + TV)");
+  console.log("â™»ï¸ Cáº­p nháº­t láº¡i sao LÆ°u (ÄV + TV)");
 };
 
-// 🌙 Tạo lại khung Xem Hạn (Âm Lịch) bên trong ô trung tâm
+// đŸŒ™ Táº¡o láº¡i khung Xem Háº¡n (Ă‚m Lá»‹ch) bĂªn trong Ă´ trung tĂ¢m
 function ensureXemHanSection() {
   const center = document.getElementById("centerCell");
   if (!center) {
-    // Nếu ô trung tâm chưa sẵn sàng, thử lại sau 1s
+    // Náº¿u Ă´ trung tĂ¢m chÆ°a sáºµn sĂ ng, thá»­ láº¡i sau 1s
     setTimeout(ensureXemHanSection, 1000);
     return;
   }
 
-  // Nếu đã có khung thì thôi
+  // Náº¿u Ä‘Ă£ cĂ³ khung thĂ¬ thĂ´i
   if (document.getElementById("xemHanSection")) return;
 
   const xemHanDiv = document.createElement("div");
@@ -6527,25 +6532,25 @@ function ensureXemHanSection() {
   xemHanDiv.style.lineHeight = "1.5";
  xemHanDiv.innerHTML = `
   <div style="font-weight:bold; margin-bottom:4px; display:flex; align-items:center; justify-content:center; gap:5px;">
-    <span style="font-size:16px;">🔮</span>
-    <span style="font-size:14px; font-weight:600;">XEM HẠN (ÂM LỊCH)</span>
+    <span style="font-size:16px;">đŸ”®</span>
+    <span style="font-size:14px; font-weight:600;">XEM Háº N (Ă‚M Lá»CH)</span>
   </div>
 
   <div style="display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; font-size:12px; margin-bottom:3px;">
     <div>
-      <label for="luuNam">Năm:</label>
+      <label for="luuNam">NÄƒm:</label>
       <select id="luuNam" style="width:78px; height:22px; border:1px solid #aaa; border-radius:3px; text-align:center; font-size:12px;"></select>
     </div>
 
     <div>
-      <label for="luuThang">Tháng:</label>
+      <label for="luuThang">ThĂ¡ng:</label>
       <select id="luuThang" style="width:55px; height:22px; border:1px solid #aaa; border-radius:3px; text-align:center; font-size:12px;">
         ${Array.from({ length: 12 }, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
       </select>
     </div>
 
     <div>
-      <label for="luuNgay">Ngày:</label>
+      <label for="luuNgay">NgĂ y:</label>
       <select id="luuNgay" style="width:55px; height:22px; border:1px solid #aaa; border-radius:3px; text-align:center; font-size:12px;">
         ${Array.from({ length: 30 }, (_, i) => `<option value="${i+1}">${i+1}</option>`).join('')}
       </select>
@@ -6553,15 +6558,15 @@ function ensureXemHanSection() {
   </div>
 
   <div style="margin-top:2px; font-size:12px;">
-    <span id="tuoiAmLabel" style="font-weight:bold; color:#c00;">Tuổi: —</span>
+    <span id="tuoiAmLabel" style="font-weight:bold; color:#c00;">Tuá»•i: â€”</span>
   </div>
 
 
-  <!-- ✅ Placeholder cho Đại Vận (chưa gắn dữ liệu) -->
+  <!-- âœ… Placeholder cho Äáº¡i Váº­n (chÆ°a gáº¯n dá»¯ liá»‡u) -->
   <div id="daiVanInfo"
      style="margin-top:4px; margin-bottom:4px; font-size:13px; color:#b24b00; font-weight:700; text-align:center; letter-spacing:0.3px;">
 
-    🌞 Đại Vận —
+    đŸŒ Äáº¡i Váº­n â€”
   </div>
 
 
@@ -6573,36 +6578,36 @@ function ensureXemHanSection() {
 <div id="vanControls"
      style="margin-top:8px; text-align:center; font-family:'Segoe UI',sans-serif;">
 
-  <!-- Dòng chữ trên cùng -->
+  <!-- DĂ²ng chá»¯ trĂªn cĂ¹ng -->
   <div style="font-size:12px; color:#222; margin-bottom:4px;">
-    Ẩn / Hiện Vận:
+    áº¨n / Hiá»‡n Váº­n:
   </div>
 
-  <!-- Hàng nút phía dưới -->
+  <!-- HĂ ng nĂºt phĂ­a dÆ°á»›i -->
   <div style="display:flex; justify-content:center; gap:6px; flex-wrap:nowrap;">
     <button id="btnDaiVan" data-van="dai" class="nut-van off"
             style="background:#ccc; color:#333; border:none; border-radius:5px;
                    padding:3px 8px; font-size:11px; cursor:pointer; transition:all 0.25s;">
-      Đại Vận
+      Äáº¡i Váº­n
     </button>
 
     <button id="btnTieuVan" data-van="tieu" class="nut-van off"
             style="background:#ccc; color:#333; border:none; border-radius:5px;
                    padding:3px 8px; font-size:11px; cursor:pointer; transition:all 0.25s;">
-      Tiểu Vận
+      Tiá»ƒu Váº­n
     </button>
 
     <button id="btnNguyetVan" data-van="nguyet" class="nut-van off"
             style="background:#ccc; color:#333; border:none; border-radius:5px;
                    padding:3px 8px; font-size:11px; cursor:pointer; transition:all 0.25s;">
-      Nguyệt Vận
+      Nguyá»‡t Váº­n
     </button>
 
-    <!-- 🆕 Thêm nút Nhật Vận -->
+    <!-- đŸ†• ThĂªm nĂºt Nháº­t Váº­n -->
     <button id="btnNhatVan" data-van="nhat" class="nut-van off"
             style="background:#ccc; color:#333; border:none; border-radius:5px;
                    padding:3px 8px; font-size:11px; cursor:pointer; transition:all 0.25s;">
-      Nhật Vận
+      Nháº­t Váº­n
     </button>
   </div>
 </div>
@@ -6623,7 +6628,7 @@ function ensureXemHanSection() {
 
 
 
-// 🧭 Điền danh sách năm vào dropdown
+// đŸ§­ Äiá»n danh sĂ¡ch nÄƒm vĂ o dropdown
 const yearSelect = document.getElementById("luuNam");
 for (let y = 1900; y <= 2100; y++) {
   const opt = document.createElement("option");
@@ -6633,113 +6638,113 @@ for (let y = 1900; y <= 2100; y++) {
   yearSelect.appendChild(opt);
 }
 
-  // 🧮 Gắn lại sự kiện tính tuổi và nút ẩn/hiện
+  // đŸ§® Gáº¯n láº¡i sá»± kiá»‡n tĂ­nh tuá»•i vĂ  nĂºt áº©n/hiá»‡n
   ["luuNam","luuThang","luuNgay"].forEach(id => {
   const el = document.getElementById(id);
   if (el) {
-    el.removeEventListener("change", capNhatHan); // 🧹 xóa sự kiện cũ (nếu có)
-    el.addEventListener("change", capNhatHan);    // 🔁 gắn lại mới
+    el.removeEventListener("change", capNhatHan); // đŸ§¹ xĂ³a sá»± kiá»‡n cÅ© (náº¿u cĂ³)
+    el.addEventListener("change", capNhatHan);    // đŸ” gáº¯n láº¡i má»›i
   }
 });
 
 
 
-}  // 👈 thêm dấu ngoặc này để kết thúc function ensureXemHanSection
+}  // đŸ‘ˆ thĂªm dáº¥u ngoáº·c nĂ y Ä‘á»ƒ káº¿t thĂºc function ensureXemHanSection
 
 
 
-// 🌟 Cập nhật dòng hiển thị Đại Vận trong khung Xem Hạn
+// đŸŒŸ Cáº­p nháº­t dĂ²ng hiá»ƒn thá»‹ Äáº¡i Váº­n trong khung Xem Háº¡n
 function hienThiThongTinDaiVan(canChiDaiVan, tuoiBatDau, tuoiKetThuc) {
   const daiVanInfo = document.getElementById("daiVanInfo");
-  if (!daiVanInfo) return; // nếu khung chưa sẵn
+  if (!daiVanInfo) return; // náº¿u khung chÆ°a sáºµn
 
-  // Định dạng chuỗi: 🌞 Đại Vận Ất Mùi (25–34 tuổi)
-  daiVanInfo.innerHTML = `🌞 Đại Vận <b>${canChiDaiVan}</b> (${tuoiBatDau}–${tuoiKetThuc} tuổi)`;
+  // Äá»‹nh dáº¡ng chuá»—i: đŸŒ Äáº¡i Váº­n áº¤t MĂ¹i (25â€“34 tuá»•i)
+  daiVanInfo.innerHTML = `đŸŒ Äáº¡i Váº­n <b>${canChiDaiVan}</b> (${tuoiBatDau}â€“${tuoiKetThuc} tuá»•i)`;
 }
 
 function capNhatDaiVanTheoNamHan(namHan) {
   const data = window.dataGlobal;
   if (!data || !data.luuHan) return;
 
-  // 🧮 Cập nhật lại vị trí Đại Vận theo công thức chuẩn
+  // đŸ§® Cáº­p nháº­t láº¡i vá»‹ trĂ­ Äáº¡i Váº­n theo cĂ´ng thá»©c chuáº©n
   anLop9_LuuDaiVan(data);
 
-  // 🔹 Lấy cung hiện tại của Đại Vận
+  // đŸ”¹ Láº¥y cung hiá»‡n táº¡i cá»§a Äáº¡i Váº­n
   const cungDai = data.luuHan.viTriDaiVan;
   if (!cungDai) return;
 
-  // 🔹 Dùng lại hàm bạn đã có: tính Can Chi Đại Vận (tức Can Chi của cung Mệnh Đại Vận)
+  // đŸ”¹ DĂ¹ng láº¡i hĂ m báº¡n Ä‘Ă£ cĂ³: tĂ­nh Can Chi Äáº¡i Váº­n (tá»©c Can Chi cá»§a cung Má»‡nh Äáº¡i Váº­n)
   const canChiDaiVan = (function layCanChiCuaCung(canChiNamSinh, tenCung) {
     const CAN_THANG = {
-      "Giáp":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
-      "Ất":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
-      "Bính":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
-      "Đinh":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
-      "Mậu":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"],
-      "Kỷ":["Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh"],
-      "Canh":["Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ"],
-      "Tân":["Canh","Tân","Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân"],
-      "Nhâm":["Nhâm","Quý","Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý"],
-      "Quý":["Giáp","Ất","Bính","Đinh","Mậu","Kỷ","Canh","Tân","Nhâm","Quý","Giáp","Ất"]
+      "GiĂ¡p":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+      "áº¤t":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+      "BĂ­nh":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+      "Äinh":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+      "Máº­u":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"],
+      "Ká»·":["BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh"],
+      "Canh":["Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·"],
+      "TĂ¢n":["Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n"],
+      "NhĂ¢m":["NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½"],
+      "QuĂ½":["GiĂ¡p","áº¤t","BĂ­nh","Äinh","Máº­u","Ká»·","Canh","TĂ¢n","NhĂ¢m","QuĂ½","GiĂ¡p","áº¤t"]
     };
-    const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+    const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
     const canNam = canChiNamSinh.split(" ")[0];
     const chiIndex = CUNG_THUAN.indexOf(tenCung);
     if (chiIndex === -1) return "";
-    const list = CAN_THANG[canNam] || CAN_THANG["Giáp"];
+    const list = CAN_THANG[canNam] || CAN_THANG["GiĂ¡p"];
     const can = list[chiIndex];
     const chi = CUNG_THUAN[chiIndex];
     return `${can} ${chi}`;
   })(data.canChiNam, cungDai);
 
-  // 🔹 Tính tuổi bắt đầu – kết thúc theo block
-    // 🔹 Tính tuổi bắt đầu – kết thúc đúng theo Cục
+  // đŸ”¹ TĂ­nh tuá»•i báº¯t Ä‘áº§u â€“ káº¿t thĂºc theo block
+    // đŸ”¹ TĂ­nh tuá»•i báº¯t Ä‘áº§u â€“ káº¿t thĂºc Ä‘Ăºng theo Cá»¥c
   const baseCuc = {
-    "Thủy nhị cục": 2,
-    "Mộc tam cục": 3,
-    "Kim tứ cục": 4,
-    "Thổ ngũ cục": 5,
-    "Hỏa lục cục": 6
+    "Thá»§y nhá»‹ cá»¥c": 2,
+    "Má»™c tam cá»¥c": 3,
+    "Kim tá»© cá»¥c": 4,
+    "Thá»• ngÅ© cá»¥c": 5,
+    "Há»a lá»¥c cá»¥c": 6
   }[data.cucSo];
   const tuoi = data.luuHan.tuoiAm;
   const block = Math.floor((tuoi - baseCuc) / 10);
   const tuoiBatDau = baseCuc + block * 10;
   const tuoiKetThuc = tuoiBatDau + 9;
 
-  // 🖼️ Hiển thị ra khung Xem Hạn
+  // đŸ–¼ï¸ Hiá»ƒn thá»‹ ra khung Xem Háº¡n
   hienThiThongTinDaiVan(canChiDaiVan, tuoiBatDau, tuoiKetThuc);
 
 }
 
 // =====================================================
-// 🚀 KHỞI TẠO LẠI BẢNG TICK + ĐỒNG BỘ HIỂN THỊ SAO LƯU
+// đŸ€ KHá»I Táº O Láº I Báº¢NG TICK + Äá»’NG Bá»˜ HIá»‚N THá» SAO LÆ¯U
 // =====================================================
 function initSaoLuuFull() {
-  console.log("🔁 Khởi tạo tick + sự kiện sao Lưu...");
+  console.log("đŸ” Khá»Ÿi táº¡o tick + sá»± kiá»‡n sao LÆ°u...");
 
-  // Xóa tick cũ
+  // XĂ³a tick cÅ©
   const old = document.getElementById("bangNhomSaoLuu");
   if (old) old.remove();
 
-  // Tạo bảng tick mới
+  // Táº¡o báº£ng tick má»›i
   taoBangTickSaoLuu();
 
-  // Gắn EVENT lại cho tick và 4 nút vận
+  // Gáº¯n EVENT láº¡i cho tick vĂ  4 nĂºt váº­n
   dongBoAnHienSaoLuu();
 
-  console.log("✅ Tick & sự kiện sao Lưu đã được gắn lại!");
+  console.log("âœ… Tick & sá»± kiá»‡n sao LÆ°u Ä‘Ă£ Ä‘Æ°á»£c gáº¯n láº¡i!");
 }
 
 
 // =====================================================
-// ❌ XOÁ — KHÔNG KHỞI TẠO TỰ ĐỘNG KHI LOAD TRANG
-// ❌ KHÔNG DÙNG setTimeout(initSaoLuuFull, 3000)
-// ❌ KHÔNG DÙNG đợi DOMContentLoaded
+// âŒ XOĂ â€” KHĂ”NG KHá»I Táº O Tá»° Äá»˜NG KHI LOAD TRANG
+// âŒ KHĂ”NG DĂ™NG setTimeout(initSaoLuuFull, 3000)
+// âŒ KHĂ”NG DĂ™NG Ä‘á»£i DOMContentLoaded
 // =====================================================
 
 
 
-// 🎯 Cập nhật Đại Vận khi chọn Năm hạn (giữ nguyên phần này)
+// đŸ¯ Cáº­p nháº­t Äáº¡i Váº­n khi chá»n NÄƒm háº¡n (giá»¯ nguyĂªn pháº§n nĂ y)
 document.addEventListener("DOMContentLoaded", () => {
   const selectNam = document.getElementById("luuNam");
   if (!selectNam) return;
@@ -6751,10 +6756,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* =====================================================
-   💾 LƯU / TẢI / XÓA LÁ SỐ — PHIÊN BẢN NHẸ & ỔN ĐỊNH
+   đŸ’¾ LÆ¯U / Táº¢I / XĂ“A LĂ Sá» â€” PHIĂN Báº¢N NHáº¸ & á»”N Äá»NH
    ===================================================== */
 
-// 📂 Lấy danh sách key lưu lá số (ưu tiên IndexedDB, fallback localStorage)
+// đŸ“‚ Láº¥y danh sĂ¡ch key lÆ°u lĂ¡ sá»‘ (Æ°u tiĂªn IndexedDB, fallback localStorage)
 function listTuviKeysFromIDB(callback) {
   const keys = [];
   const req = indexedDB.open("TuViDB", 1);
@@ -6791,13 +6796,13 @@ function listTuviKeys(callback) {
   });
 }
 
-// 🔹 Cập nhật danh sách dropdown
+// đŸ”¹ Cáº­p nháº­t danh sĂ¡ch dropdown
 function refreshSavedChartList() {
   const select = document.getElementById("savedCharts");
   if (!select) return;
 
   const current = select.value;
-  select.innerHTML = `<option value="">-- Chọn lá số đã lưu --</option>`;
+  select.innerHTML = `<option value="">-- Chá»n lĂ¡ sá»‘ Ä‘Ă£ lÆ°u --</option>`;
 
   listTuviKeys(keys => {
     const list = (keys && keys.length
@@ -6809,12 +6814,12 @@ function refreshSavedChartList() {
       const encodedName = k.replace("tuvi_", "");
       const decodedName = decodeURIComponent(encodedName);
       const opt = document.createElement("option");
-      opt.value = encodedName;      // lưu giá trị đã encode để load đúng key
+      opt.value = encodedName;      // lÆ°u giĂ¡ trá»‹ Ä‘Ă£ encode Ä‘á»ƒ load Ä‘Ăºng key
       opt.textContent = decodedName;
       select.appendChild(opt);
     });
 
-    // Giữ lựa chọn hiện tại (hỗ trợ cả giá trị đã decode trước đây)
+    // Giá»¯ lá»±a chá»n hiá»‡n táº¡i (há»— trá»£ cáº£ giĂ¡ trá»‹ Ä‘Ă£ decode trÆ°á»›c Ä‘Ă¢y)
     if (current) {
       select.value = current;
       if (!select.value) select.value = encodeURIComponent(current);
@@ -6825,11 +6830,11 @@ function refreshSavedChartList() {
 
 
 // =====================================================
-// 💾 LƯU / TẢI / XÓA LÁ SỐ — CHUẨN CHỈ LẤY DỮ LIỆU DƯƠNG LỊCH
+// đŸ’¾ LÆ¯U / Táº¢I / XĂ“A LĂ Sá» â€” CHUáº¨N CHá»ˆ Láº¤Y Dá»® LIá»†U DÆ¯Æ NG Lá»CH
 // =====================================================
 
 function saveChartToLocal() {
-  // 🧱 Popup nhập tên file lưu
+  // đŸ§± Popup nháº­p tĂªn file lÆ°u
   const overlay = document.createElement("div");
   overlay.style = `
     position:fixed;top:0;left:0;width:100%;height:100%;
@@ -6843,25 +6848,25 @@ function saveChartToLocal() {
     font-family:'Segoe UI',sans-serif;text-align:center;
   `;
   box.innerHTML = `
-    <h3 style="margin-top:0;margin-bottom:10px;">💾 Lưu lá số</h3>
+    <h3 style="margin-top:0;margin-bottom:10px;">đŸ’¾ LÆ°u lĂ¡ sá»‘</h3>
     <p style="margin:5px 0 10px 0;font-size:13px;">
-      Nhập tên <b>file lưu</b> (ví dụ: "Lá số Vy") hoặc chọn để ghi đè:
+      Nháº­p tĂªn <b>file lÆ°u</b> (vĂ­ dá»¥: "LĂ¡ sá»‘ Vy") hoáº·c chá»n Ä‘á»ƒ ghi Ä‘Ă¨:
     </p>
     <select id="saveChartSelect"
             style="width:100%;padding:5px;margin-bottom:10px;border:1px solid #aaa;border-radius:5px;">
-      <option value="">-- Chọn lá số đã lưu --</option>
+      <option value="">-- Chá»n lĂ¡ sá»‘ Ä‘Ă£ lÆ°u --</option>
     </select>
-    <input id="saveChartName" type="text" placeholder="Tên file lưu (ví dụ: Lá số Vy)"
+    <input id="saveChartName" type="text" placeholder="TĂªn file lÆ°u (vĂ­ dá»¥: LĂ¡ sá»‘ Vy)"
            style="width:100%;padding:6px;border:1px solid #aaa;border-radius:5px;margin-bottom:10px;">
     <div style="display:flex;justify-content:center;gap:8px;margin-top:5px;">
-      <button id="btnSaveConfirm" style="background:#337ab7;color:#fff;border:none;border-radius:5px;padding:5px 15px;cursor:pointer;">Lưu</button>
-      <button id="btnSaveCancel" style="background:#ccc;color:#333;border:none;border-radius:5px;padding:5px 15px;cursor:pointer;">Hủy</button>
+      <button id="btnSaveConfirm" style="background:#337ab7;color:#fff;border:none;border-radius:5px;padding:5px 15px;cursor:pointer;">LÆ°u</button>
+      <button id="btnSaveCancel" style="background:#ccc;color:#333;border:none;border-radius:5px;padding:5px 15px;cursor:pointer;">Há»§y</button>
     </div>
   `;
   overlay.appendChild(box);
   document.body.appendChild(overlay);
 
-  // 📜 Danh sách file lưu sẵn (ưu tiên IndexedDB, fallback localStorage)
+  // đŸ“œ Danh sĂ¡ch file lÆ°u sáºµn (Æ°u tiĂªn IndexedDB, fallback localStorage)
   const select = box.querySelector("#saveChartSelect");
   listTuviKeys(keys => {
     const list = keys.length
@@ -6880,24 +6885,24 @@ function saveChartToLocal() {
     box.querySelector("#saveChartName").value = e.target.value;
   });
 
-  // ✅ Khi bấm “Lưu”
+  // âœ… Khi báº¥m â€œLÆ°uâ€
   box.querySelector("#btnSaveConfirm").addEventListener("click", () => {
-    const fileName = box.querySelector("#saveChartName").value.trim(); // tên file lưu
-    if (!fileName) return alert("⚠️ Vui lòng nhập hoặc chọn tên file lưu!");
+    const fileName = box.querySelector("#saveChartName").value.trim(); // tĂªn file lÆ°u
+    if (!fileName) return alert("â ï¸ Vui lĂ²ng nháº­p hoáº·c chá»n tĂªn file lÆ°u!");
 
     const safeKey = "tuvi_" + encodeURIComponent(fileName);
-    if (localStorage.getItem(safeKey) && !confirm(`Tên file "${fileName}" đã tồn tại. Ghi đè?`)) return;
+    if (localStorage.getItem(safeKey) && !confirm(`TĂªn file "${fileName}" Ä‘Ă£ tá»“n táº¡i. Ghi Ä‘Ă¨?`)) return;
 
-    // === 1️⃣ Đọc trực tiếp dữ liệu từ bảng kết quả DƯƠNG LỊCH ===
+    // === 1ï¸âƒ£ Äá»c trá»±c tiáº¿p dá»¯ liá»‡u tá»« báº£ng káº¿t quáº£ DÆ¯Æ NG Lá»CH ===
     const table = document.querySelector("#output table");
-    if (!table) return alert("⚠️ Không tìm thấy bảng kết quả để lưu!");
+    if (!table) return alert("â ï¸ KhĂ´ng tĂ¬m tháº¥y báº£ng káº¿t quáº£ Ä‘á»ƒ lÆ°u!");
     const rows = table.querySelectorAll("tr");
     const namDL   = rows[1]?.cells[1]?.textContent?.trim() || "";
     const thangDL = rows[2]?.cells[1]?.textContent?.trim() || "";
     const ngayDL  = rows[3]?.cells[1]?.textContent?.trim() || "";
     const gioText = rows[4]?.cells[1]?.textContent?.trim() || "";
 
-    console.log("📆 [DEBUG] DỮ LIỆU TỪ CỘT DƯƠNG LỊCH:", { namDL, thangDL, ngayDL, gioText });
+    console.log("đŸ“† [DEBUG] Dá»® LIá»†U Tá»ª Cá»˜T DÆ¯Æ NG Lá»CH:", { namDL, thangDL, ngayDL, gioText });
 
     const year  = parseInt(namDL)  || 2000;
     const month = parseInt(thangDL) || 1;
@@ -6918,13 +6923,13 @@ function saveChartToLocal() {
       return 0;
     })();
 
-    // 🔹 Giữ tên thật người dùng trong lá số
-    const nameVal = document.getElementById("name")?.value || "(Không tên)";
+    // đŸ”¹ Giá»¯ tĂªn tháº­t ngÆ°á»i dĂ¹ng trong lĂ¡ sá»‘
+    const nameVal = document.getElementById("name")?.value || "(KhĂ´ng tĂªn)";
     const genderVal = document.getElementById("gender")?.value || "Nam";
 
-    // === 2️⃣ Dữ liệu lưu ===
+    // === 2ï¸âƒ£ Dá»¯ liá»‡u lÆ°u ===
     const dataToSave = {
-      name: nameVal, // tên thật trong lá số
+      name: nameVal, // tĂªn tháº­t trong lĂ¡ sá»‘
       gender: genderVal,
       calendarType: "solar",
       day,
@@ -6935,17 +6940,17 @@ function saveChartToLocal() {
       daXuLyGioTy: (hourVal === 23)
     };
 
-    console.log("💾 [DEBUG] DỮ LIỆU ĐÃ LƯU:", dataToSave);
+    console.log("đŸ’¾ [DEBUG] Dá»® LIá»†U ÄĂƒ LÆ¯U:", dataToSave);
     localStorage.setItem(safeKey, JSON.stringify(dataToSave));
     if (typeof saveToIndexedDB === "function")
       saveToIndexedDB(safeKey, JSON.stringify(dataToSave));
 
     refreshSavedChartList();
     document.body.removeChild(overlay);
-    alert(`✅ Đã lưu lá số: "${nameVal}" → file "${fileName}"`);
+    alert(`âœ… ÄĂ£ lÆ°u lĂ¡ sá»‘: "${nameVal}" â†’ file "${fileName}"`);
   });
 
-  // ❌ Hủy
+  // âŒ Há»§y
   box.querySelector("#btnSaveCancel").addEventListener("click", () => {
     document.body.removeChild(overlay);
   });
@@ -6955,17 +6960,17 @@ function saveChartToLocal() {
 }
 
 // =====================================================
-// 🔹 Xóa lá số
+// đŸ”¹ XĂ³a lĂ¡ sá»‘
 // =====================================================
 function deleteSelectedChart() {
   const select = document.getElementById("savedCharts");
   const encodedName = select?.value;
-  if (!encodedName) return alert("⚠️ Vui lòng chọn lá số cần xóa!");
+  if (!encodedName) return alert("â ï¸ Vui lĂ²ng chá»n lĂ¡ sá»‘ cáº§n xĂ³a!");
   const displayName = decodeURIComponent(encodedName);
-  if (!confirm(`Bạn có chắc muốn xóa lá số "${displayName}" không?`)) return;
+  if (!confirm(`Báº¡n cĂ³ cháº¯c muá»‘n xĂ³a lĂ¡ sá»‘ "${displayName}" khĂ´ng?`)) return;
   localStorage.removeItem("tuvi_" + encodedName);
   refreshSavedChartList();
-  alert("🗑️ Đã xóa lá số: " + displayName);
+  alert("đŸ—‘ï¸ ÄĂ£ xĂ³a lĂ¡ sá»‘: " + displayName);
 }
 
 
@@ -6982,22 +6987,22 @@ function loadChartFromLocal(encodedName) {
         const ls = localStorage.getItem(key);
         if (ls) { try { parsed = JSON.parse(ls); } catch (_) { parsed = null; } }
       }
-      if (!parsed) return alert(`⚠️ Không tìm thấy dữ liệu cho "${displayName || encodedName}"!`);
+      if (!parsed) return alert(`â ï¸ KhĂ´ng tĂ¬m tháº¥y dá»¯ liá»‡u cho "${displayName || encodedName}"!`);
       window.dataGlobal = parsed;
 
-      console.log("🔵 [LOAD] BẮT ĐẦU LOAD LÁ SỐ…");
+      console.log("đŸ”µ [LOAD] Báº®T Äáº¦U LOAD LĂ Sá»â€¦");
 
-      // 1) LUÔN LUÔN TẠO LẠI LAYOUT
+      // 1) LUĂ”N LUĂ”N Táº O Láº I LAYOUT
       taoLaSoTrang(parsed);
 
-      // 2) SAU ĐÓ XOÁ TẤT CẢ CÁC LỚP SAO CŨ
+      // 2) SAU ÄĂ“ XOĂ Táº¤T Cáº¢ CĂC Lá»P SAO CÅ¨
       clearAllLayers();
 
-      // 3) KHÔI PHỤC LUNAR
+      // 3) KHĂ”I PHá»¤C LUNAR
       window.__DISABLE_ONCHANGE = true;
       khoiPhucLunar(parsed);
       window.__DISABLE_ONCHANGE = false;
-      // 4) AN LẠI TỪ ĐẦU
+      // 4) AN Láº I Tá»ª Äáº¦U
       anLop1_ViTriCung(parsed);
       anLop2_Menh(parsed);
       anLop4_CucSo(parsed);
@@ -7022,18 +7027,18 @@ function loadChartFromLocal(encodedName) {
       if (typeof veThanhTuanTriet === "function") veThanhTuanTriet(parsed);
       if (typeof xacDinhCungThan === "function") xacDinhCungThan(parsed);
 
-      alert(`♻️ Đã tải lá số: ${displayName || encodedName}`);
+      alert(`â™»ï¸ ÄĂ£ táº£i lĂ¡ sá»‘: ${displayName || encodedName}`);
     });
 }
 
 
 
 // =====================================================
-// 📸 Xuất ảnh lá số Tử Vi
+// đŸ“¸ Xuáº¥t áº£nh lĂ¡ sá»‘ Tá»­ Vi
 // =====================================================
 function downloadChartAsImage() {
   const chart = document.getElementById("lasoContainer");
-  if (!chart) return alert("Không tìm thấy khung lá số!");
+  if (!chart) return alert("KhĂ´ng tĂ¬m tháº¥y khung lĂ¡ sá»‘!");
   html2canvas(chart, {
     scale: 3,
     backgroundColor: "#fff",
@@ -7057,7 +7062,7 @@ function downloadChartAsImage() {
 
 
 // =====================================================
-// 🚀 Sự kiện khởi tạo
+// đŸ€ Sá»± kiá»‡n khá»Ÿi táº¡o
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
   refreshSavedChartList();
@@ -7087,34 +7092,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /* =====================================================
-   📂 DANH SÁCH LÁ SỐ — XEM / XOÁ / ĐỔI TÊN (POPUP)
+   đŸ“‚ DANH SĂCH LĂ Sá» â€” XEM / XOĂ / Äá»”I TĂN (POPUP)
    ===================================================== */
 // =====================================================
-// 🔄 RESET TOÀN BỘ GIAO DIỆN SAO LƯU + TIỂU TINH + HẠN
+// đŸ”„ RESET TOĂ€N Bá»˜ GIAO DIá»†N SAO LÆ¯U + TIá»‚U TINH + Háº N
 // =====================================================
 
 function resetFullUI() {
-  console.log("🔁 Reset toàn bộ giao diện về trạng thái ban đầu...");
+  console.log("đŸ” Reset toĂ n bá»™ giao diá»‡n vá» tráº¡ng thĂ¡i ban Ä‘áº§u...");
 
-  // 1️⃣ Reset tất cả checkbox hiển thị lớp (nếu có)
+  // 1ï¸âƒ£ Reset táº¥t cáº£ checkbox hiá»ƒn thá»‹ lá»›p (náº¿u cĂ³)
   document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
     cb.checked = cb.defaultChecked;
   });
 
-  // 2️⃣ Ẩn toàn bộ bảng và khung phụ
+  // 2ï¸âƒ£ áº¨n toĂ n bá»™ báº£ng vĂ  khung phá»¥
   const hideList = [
-    "bangNhomSaoLuu",   // bảng tick nhóm sao lưu
-    "xemHanSection"     // khung xem hạn âm lịch
+    "bangNhomSaoLuu",   // báº£ng tick nhĂ³m sao lÆ°u
+    "xemHanSection"     // khung xem háº¡n Ă¢m lá»‹ch
   ];
   hideList.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = "none";
   });
 
-  // 3️⃣ Ẩn toàn bộ sao lưu (Đại vận, Tiểu vận)
+  // 3ï¸âƒ£ áº¨n toĂ n bá»™ sao lÆ°u (Äáº¡i váº­n, Tiá»ƒu váº­n)
   document.querySelectorAll(".sao-luu").forEach(e => e.style.display = "none");
 
-  // 4️⃣ Đặt lại trạng thái nút Đại Vận / Tiểu Vận
+  // 4ï¸âƒ£ Äáº·t láº¡i tráº¡ng thĂ¡i nĂºt Äáº¡i Váº­n / Tiá»ƒu Váº­n
   const nutDai = document.getElementById("btnDaiVan");
   const nutTieu = document.getElementById("btnTieuVan");
   [nutDai, nutTieu].forEach(btn => {
@@ -7125,25 +7130,25 @@ function resetFullUI() {
     btn.style.color = "#333";
   });
 
-  // 5️⃣ Reset bảng tick nhóm sao lưu (Ẩn / Hiện Hạn)
+  // 5ï¸âƒ£ Reset báº£ng tick nhĂ³m sao lÆ°u (áº¨n / Hiá»‡n Háº¡n)
   document.querySelectorAll(".chk-nhom").forEach(chk => {
-    chk.checked = true; // bật lại hết
+    chk.checked = true; // báº­t láº¡i háº¿t
   });
 
-  // 6️⃣ Xóa nội dung dropdown hạn (Năm / Tháng / Ngày)
+  // 6ï¸âƒ£ XĂ³a ná»™i dung dropdown háº¡n (NÄƒm / ThĂ¡ng / NgĂ y)
   ["luuNam", "luuThang", "luuNgay"].forEach(id => {
     const sel = document.getElementById(id);
     if (sel) sel.value = "";
   });
 
-  // 7️⃣ Reset nhãn “Tuổi: —”
+  // 7ï¸âƒ£ Reset nhĂ£n â€œTuá»•i: â€”â€
   const tuoiLabel = document.getElementById("tuoiAmLabel");
-  if (tuoiLabel) tuoiLabel.textContent = "Tuổi: —";
+  if (tuoiLabel) tuoiLabel.textContent = "Tuá»•i: â€”";
 
-  // 8️⃣ Xoá sao lưu cũ (Đại / Tiểu vận)
+  // 8ï¸âƒ£ XoĂ¡ sao lÆ°u cÅ© (Äáº¡i / Tiá»ƒu váº­n)
   document.querySelectorAll(".sao-luu").forEach(e => e.remove());
 
-  // 9️⃣ Reset toàn bộ nút Tiểu tinh (bật lại như ban đầu)
+  // 9ï¸âƒ£ Reset toĂ n bá»™ nĂºt Tiá»ƒu tinh (báº­t láº¡i nhÆ° ban Ä‘áº§u)
   const btnTieuTinhBox = document.querySelector("#tieuTinhControls");
   if (btnTieuTinhBox) {
     const buttons = btnTieuTinhBox.querySelectorAll(".nut-tieutinh");
@@ -7154,19 +7159,19 @@ function resetFullUI() {
     });
   }
 
-  // 🔟 Reset logic Tiểu tinh hiển thị
+  // đŸ”Ÿ Reset logic Tiá»ƒu tinh hiá»ƒn thá»‹
   if (typeof toggleTieuTinh === "function") {
-    // Bật lại toàn bộ nhóm Tiểu tinh
-    ["Tất Cả","Tình Duyên","Tiền Bạc","Công Danh","Sức Khỏe"].forEach(group => {
+    // Báº­t láº¡i toĂ n bá»™ nhĂ³m Tiá»ƒu tinh
+    ["Táº¥t Cáº£","TĂ¬nh DuyĂªn","Tiá»n Báº¡c","CĂ´ng Danh","Sá»©c Khá»e"].forEach(group => {
       toggleTieuTinh(group, true);
     });
   }
 
-  // 11️⃣ Hiện lại khung Tiểu tinh nếu bị ẩn
+  // 11ï¸âƒ£ Hiá»‡n láº¡i khung Tiá»ƒu tinh náº¿u bá»‹ áº©n
   const tieuTinhControls = document.getElementById("tieuTinhControls");
   if (tieuTinhControls) tieuTinhControls.style.display = "flex";
 
-  // 12️⃣ Cuộn về đầu trang để tránh lệch
+  // 12ï¸âƒ£ Cuá»™n vá» Ä‘áº§u trang Ä‘á»ƒ trĂ¡nh lá»‡ch
   window.scrollTo(0, 0);
 }
 
@@ -7177,12 +7182,12 @@ function resetFullUI() {
 
 
 
-// ⚠️ Xác nhận trước khi mở lá số
+// â ï¸ XĂ¡c nháº­n trÆ°á»›c khi má»Ÿ lĂ¡ sá»‘
 function confirmAndLoadChart(name) {
   const displayName = decodeURIComponent(name || "");
-  if (!confirm(`Bạn có chắc muốn mở lá số "${displayName}" không?`)) return;
+  if (!confirm(`Báº¡n cĂ³ cháº¯c muá»‘n má»Ÿ lĂ¡ sá»‘ "${displayName}" khĂ´ng?`)) return;
 
-  console.log("📂 Đang mở lá số:", displayName);
+  console.log("đŸ“‚ Äang má»Ÿ lĂ¡ sá»‘:", displayName);
   const key = "tuvi_" + name;
 
   loadFromIndexedDB(key, dataFromIDB => {
@@ -7194,20 +7199,20 @@ function confirmAndLoadChart(name) {
       const dataStr = localStorage.getItem(key);
       if (dataStr) { try { data = JSON.parse(dataStr); } catch (_) { data = null; } }
     }
-    if (!data) return alert(`⚠️ Không tìm thấy dữ liệu lá số "${displayName}"!`);
+    if (!data) return alert(`â ï¸ KhĂ´ng tĂ¬m tháº¥y dá»¯ liá»‡u lĂ¡ sá»‘ "${displayName}"!`);
 
     try {
-      // 🧠 Gán lại thông tin cơ bản
+      // đŸ§  GĂ¡n láº¡i thĂ´ng tin cÆ¡ báº£n
       document.getElementById("name").value = data.name || "";
       document.getElementById("gender").value = data.gender || "Nam";
 
-      // ✅ Luôn dùng ngày Dương gốc đã lưu (ổn định, không bị lệch 23h hay nhuận)
+      // âœ… LuĂ´n dĂ¹ng ngĂ y DÆ°Æ¡ng gá»‘c Ä‘Ă£ lÆ°u (á»•n Ä‘á»‹nh, khĂ´ng bá»‹ lá»‡ch 23h hay nhuáº­n)
       const day = String(data.day || data.ngayDuong || 1);
       const month = String(data.month || data.thangDuong || 1);
       const year = String(data.year || data.namDuong || 2000);
       const hour = String(data.hour || data.gioSinh || 0);
 
-      // 🗓️ Gán lại form theo ngày Dương
+      // đŸ—“ï¸ GĂ¡n láº¡i form theo ngĂ y DÆ°Æ¡ng
       document.getElementById("calendarType").value = "solar";
       const dayEl = document.getElementById("day");
       const monthEl = document.getElementById("month");
@@ -7219,28 +7224,28 @@ function confirmAndLoadChart(name) {
       if ([...yearEl.options].some(o => o.value === year)) yearEl.value = year;
       if ([...gioEl.options].some(o => o.value === hour)) gioEl.value = hour;
 
-      // 🕛 Ghi cờ Giờ Tý (nếu có)
+      // đŸ•› Ghi cá» Giá» TĂ½ (náº¿u cĂ³)
       if (data.daXuLyGioTy && hour === "23") {
-        console.log("🕛 Giờ Tý đã được xử lý sẵn khi lưu → không cần cộng lại ngày âm.");
+        console.log("đŸ•› Giá» TĂ½ Ä‘Ă£ Ä‘Æ°á»£c xá»­ lĂ½ sáºµn khi lÆ°u â†’ khĂ´ng cáº§n cá»™ng láº¡i ngĂ y Ă¢m.");
         window.dataGlobal = { ...data, daXuLyGioTy: true };
       }
 
-      console.log(`🧭 Đã nạp form: ${day}/${month}/${year} (Dương) - Giờ ${hour}`);
+      console.log(`đŸ§­ ÄĂ£ náº¡p form: ${day}/${month}/${year} (DÆ°Æ¡ng) - Giá» ${hour}`);
     } catch (err) {
-      console.warn("⚠️ Lỗi khi gán form:", err);
+      console.warn("â ï¸ Lá»—i khi gĂ¡n form:", err);
     }
 
-    // Ẩn popup danh sách
+    // áº¨n popup danh sĂ¡ch
     const popup = document.getElementById("chartListPopup");
     if (popup) popup.style.display = "none";
 
-    // 🔄 Gọi lại nút “Chuyển đổi” để hệ thống tự tính lại Âm lịch
+    // đŸ”„ Gá»i láº¡i nĂºt â€œChuyá»ƒn Ä‘á»•iâ€ Ä‘á»ƒ há»‡ thá»‘ng tá»± tĂ­nh láº¡i Ă‚m lá»‹ch
     const btnConvert = document.getElementById("convert");
     if (btnConvert) {
-      console.log("🔄 Đang an lại toàn bộ lá số bằng nút 'Chuyển đổi' (từ Dương)...");
+      console.log("đŸ”„ Äang an láº¡i toĂ n bá»™ lĂ¡ sá»‘ báº±ng nĂºt 'Chuyá»ƒn Ä‘á»•i' (tá»« DÆ°Æ¡ng)...");
       btnConvert.click();
     } else {
-      alert("⚠️ Không tìm thấy nút 'Chuyển đổi'!");
+      alert("â ï¸ KhĂ´ng tĂ¬m tháº¥y nĂºt 'Chuyá»ƒn Ä‘á»•i'!");
     }
   });
 }
@@ -7264,12 +7269,12 @@ function confirmAndLoadChart(name) {
 
 
 
-// 🔹 Hiển thị danh sách popup
+// đŸ”¹ Hiá»ƒn thá»‹ danh sĂ¡ch popup
   function showChartListPopup() {
     const popup = document.getElementById("chartListPopup");
     const container = document.getElementById("chartListItems");
     if (!popup || !container) return;
-      // 🟦 Cập nhật giao diện popup to hơn, căn giữa, có đổ bóng
+      // đŸŸ¦ Cáº­p nháº­t giao diá»‡n popup to hÆ¡n, cÄƒn giá»¯a, cĂ³ Ä‘á»• bĂ³ng
     Object.assign(popup.style, {
       position: "fixed",
       top: "62%",
@@ -7291,7 +7296,7 @@ function confirmAndLoadChart(name) {
     container.style.overflowY = "auto";
     container.style.padding = "8px";
   
-    // 🧠 Lấy danh sách keys từ IndexedDB trước, fallback localStorage
+    // đŸ§  Láº¥y danh sĂ¡ch keys tá»« IndexedDB trÆ°á»›c, fallback localStorage
     listTuviKeysFromIDB(keysFromIDB => {
       const charts = (keysFromIDB.length
         ? keysFromIDB
@@ -7299,13 +7304,13 @@ function confirmAndLoadChart(name) {
       ).map(k => k.replace("tuvi_", ""));
   
       if (!charts.length) {
-        container.innerHTML = "<p><i>Chưa có lá số nào được lưu.</i></p>";
+        container.innerHTML = "<p><i>ChÆ°a cĂ³ lĂ¡ sá»‘ nĂ o Ä‘Æ°á»£c lÆ°u.</i></p>";
       } else {
         container.innerHTML = charts.map(encodedName => {
           const name = decodeURIComponent(encodedName);
           const noteKey = "note_" + encodedName;
-          const hasNote = !!localStorage.getItem(noteKey); // ✅ kiểm tra ghi chú (chỉ localStorage)
-          const noteIcon = hasNote ? "📌" : "📄"; // ✅ có note dùng 📌, chưa có dùng 📄
+          const hasNote = !!localStorage.getItem(noteKey); // âœ… kiá»ƒm tra ghi chĂº (chá»‰ localStorage)
+          const noteIcon = hasNote ? "đŸ“Œ" : "đŸ“„"; // âœ… cĂ³ note dĂ¹ng đŸ“Œ, chÆ°a cĂ³ dĂ¹ng đŸ“„
   
           return `
             <div style="
@@ -7317,11 +7322,11 @@ function confirmAndLoadChart(name) {
               <span style="cursor:pointer;color:#007bff;flex:1;"
                     onclick="confirmAndLoadChart('${encodedName}')">${name}</span>
               <span style="cursor:pointer;margin-left:8px;"
-                    title="Đổi tên" onclick="renameChartByName('${encodedName}')">✏️</span>
+                    title="Äá»•i tĂªn" onclick="renameChartByName('${encodedName}')">âœï¸</span>
               <span style="cursor:pointer;margin-left:8px;"
-                    title="Ghi chú riêng" onclick="editNoteByName('${encodedName}')">${noteIcon}</span>
+                    title="Ghi chĂº riĂªng" onclick="editNoteByName('${encodedName}')">${noteIcon}</span>
               <span style="cursor:pointer;margin-left:8px;color:#c00;"
-                    title="Xoá" onclick="deleteChartByName('${encodedName}')">🗑️</span>
+                    title="XoĂ¡" onclick="deleteChartByName('${encodedName}')">đŸ—‘ï¸</span>
             </div>
           `;
         }).join("");
@@ -7331,13 +7336,13 @@ function confirmAndLoadChart(name) {
     });
   }
 
-// 🔹 Ghi chú riêng cho từng lá số — thêm overlay, xác nhận khi đóng, có nút ✖ góc phải
+// đŸ”¹ Ghi chĂº riĂªng cho tá»«ng lĂ¡ sá»‘ â€” thĂªm overlay, xĂ¡c nháº­n khi Ä‘Ă³ng, cĂ³ nĂºt âœ– gĂ³c pháº£i
 function editNoteByName(encodedName) {
   const name = decodeURIComponent(encodedName);
   const noteKey = "note_" + encodedName;
   const oldNote = localStorage.getItem(noteKey) || "";
 
-  // 🩵 Tạo overlay nếu chưa có
+  // đŸ©µ Táº¡o overlay náº¿u chÆ°a cĂ³
   let overlay = document.getElementById("noteOverlay");
   if (!overlay) {
     overlay = document.createElement("div");
@@ -7355,7 +7360,7 @@ function editNoteByName(encodedName) {
   }
   overlay.style.display = "flex";
 
-  // 🩶 Tạo popup nếu chưa có
+  // đŸ©¶ Táº¡o popup náº¿u chÆ°a cĂ³
   let noteBox = document.getElementById("notePopup");
   if (!noteBox) {
     noteBox = document.createElement("div");
@@ -7373,26 +7378,26 @@ function editNoteByName(encodedName) {
     });
 
     noteBox.innerHTML = `
-      <!-- Nút ✖ góc phải -->
+      <!-- NĂºt âœ– gĂ³c pháº£i -->
       <div style="position:absolute;top:8px;right:10px;cursor:pointer;font-size:18px;color:#666;"
-           title="Đóng" onclick="closeNotePopup()">✖</div>
+           title="ÄĂ³ng" onclick="closeNotePopup()">âœ–</div>
 
-      <h3 style="margin-top:0;text-align:center;color:#007bff;">📝 Ghi chú lá số</h3>
+      <h3 style="margin-top:0;text-align:center;color:#007bff;">đŸ“ Ghi chĂº lĂ¡ sá»‘</h3>
       <div id="noteTitle" style="font-weight:bold;text-align:center;margin-bottom:8px;color:#444;"></div>
 
       <div id="toolbarNote" style="display:none;text-align:center;margin-bottom:6px;border-bottom:1px solid #ddd;padding-bottom:4px;">
         <button onclick="execCmd('bold')"><b>B</b></button>
         <button onclick="execCmd('italic')"><i>I</i></button>
         <button onclick="execCmd('underline')"><u>U</u></button>
-        <button onclick="execCmd('justifyLeft')">⯇</button>
-        <button onclick="execCmd('justifyCenter')">☰</button>
-        <button onclick="execCmd('justifyRight')">⯈</button>
+        <button onclick="execCmd('justifyLeft')">â¯‡</button>
+        <button onclick="execCmd('justifyCenter')">â˜°</button>
+        <button onclick="execCmd('justifyRight')">â¯ˆ</button>
         <select onchange="execCmd('fontSize', this.value)">
-          <option value="3">Cỡ</option>
-          <option value="2">Nhỏ</option>
-          <option value="3">Vừa</option>
+          <option value="3">Cá»¡</option>
+          <option value="2">Nhá»</option>
+          <option value="3">Vá»«a</option>
           <option value="5">To</option>
-          <option value="7">Rất to</option>
+          <option value="7">Ráº¥t to</option>
         </select>
         <input type="color" onchange="execCmd('foreColor', this.value)">
       </div>
@@ -7407,30 +7412,30 @@ function editNoteByName(encodedName) {
       "></div>
 
       <div style="text-align:right;margin-top:10px;">
-        <button id="noteEditBtn" style="background:#f0ad4e;color:#fff;border:none;border-radius:4px;padding:5px 12px;cursor:pointer;">✏️ Chỉnh sửa</button>
-<button id="noteSaveBtn" style="background:#37474f;color:#fff;border:none;border-radius:4px;padding:5px 12px;cursor:pointer;display:none;">🪶 Lưu</button>
-        <button id="noteCloseBtn" style="background:#ccc;border:none;border-radius:4px;padding:5px 12px;margin-left:6px;cursor:pointer;">✖ Đóng</button>
+        <button id="noteEditBtn" style="background:#f0ad4e;color:#fff;border:none;border-radius:4px;padding:5px 12px;cursor:pointer;">âœï¸ Chá»‰nh sá»­a</button>
+<button id="noteSaveBtn" style="background:#37474f;color:#fff;border:none;border-radius:4px;padding:5px 12px;cursor:pointer;display:none;">đŸª¶ LÆ°u</button>
+        <button id="noteCloseBtn" style="background:#ccc;border:none;border-radius:4px;padding:5px 12px;margin-left:6px;cursor:pointer;">âœ– ÄĂ³ng</button>
       </div>
     `;
     overlay.appendChild(noteBox);
   }
 
-  // 📋 Gán nội dung ban đầu
+  // đŸ“‹ GĂ¡n ná»™i dung ban Ä‘áº§u
   document.getElementById("noteTitle").textContent = name;
   const noteView = document.getElementById("noteView");
-  noteView.innerHTML = oldNote || "<i>Chưa có ghi chú.</i>";
+  noteView.innerHTML = oldNote || "<i>ChÆ°a cĂ³ ghi chĂº.</i>";
   noteView.contentEditable = "false";
 
-  // 🧭 Reset trạng thái
+  // đŸ§­ Reset tráº¡ng thĂ¡i
   document.getElementById("toolbarNote").style.display = "none";
   document.getElementById("noteSaveBtn").style.display = "none";
   document.getElementById("noteEditBtn").style.display = "inline-block";
   noteView.style.background = "#fafafa";
   overlay.style.display = "flex";
 
-  let edited = false; // cờ kiểm tra có chỉnh sửa hay không
+  let edited = false; // cá» kiá»ƒm tra cĂ³ chá»‰nh sá»­a hay khĂ´ng
 
-  // 🎨 Các nút
+  // đŸ¨ CĂ¡c nĂºt
   const editBtn = document.getElementById("noteEditBtn");
   const saveBtn = document.getElementById("noteSaveBtn");
   const closeBtn = document.getElementById("noteCloseBtn");
@@ -7446,13 +7451,13 @@ function editNoteByName(encodedName) {
   };
 
 
-// 🪶 Lưu ghi chú lá số
+// đŸª¶ LÆ°u ghi chĂº lĂ¡ sá»‘
 
   saveBtn.onclick = () => {
     const html = noteView.innerHTML.trim();
     if (!html) {
       localStorage.removeItem(noteKey);
-      noteView.innerHTML = "<i>Chưa có ghi chú.</i>";
+      noteView.innerHTML = "<i>ChÆ°a cĂ³ ghi chĂº.</i>";
     } else {
       localStorage.setItem(noteKey, html);
     }
@@ -7467,27 +7472,27 @@ function editNoteByName(encodedName) {
 
   closeBtn.onclick = () => {
     if (edited && noteView.isContentEditable) {
-      if (!confirm("⚠️ Ghi chú chưa được lưu. Bạn có chắc muốn đóng?")) return;
+      if (!confirm("â ï¸ Ghi chĂº chÆ°a Ä‘Æ°á»£c lÆ°u. Báº¡n cĂ³ cháº¯c muá»‘n Ä‘Ă³ng?")) return;
     }
     overlay.style.display = "none";
   };
 
-  // ❌ Không cho click ra ngoài đóng popup
+  // âŒ KhĂ´ng cho click ra ngoĂ i Ä‘Ă³ng popup
   overlay.addEventListener("click", e => {
     if (e.target.id === "noteOverlay") {
       if (edited && noteView.isContentEditable) {
-        alert("Vui lòng bấm 💾 Lưu hoặc ✖ Đóng để thoát.");
+        alert("Vui lĂ²ng báº¥m đŸ’¾ LÆ°u hoáº·c âœ– ÄĂ³ng Ä‘á»ƒ thoĂ¡t.");
       }
     }
   });
 }
 
-// 🎨 Lệnh định dạng
+// đŸ¨ Lá»‡nh Ä‘á»‹nh dáº¡ng
 function execCmd(cmd, val = null) {
   document.execCommand(cmd, false, val);
 }
 
-// 🧩 Hàm đóng popup khi click ✖ góc phải — có xác nhận nếu chưa lưu
+// đŸ§© HĂ m Ä‘Ă³ng popup khi click âœ– gĂ³c pháº£i â€” cĂ³ xĂ¡c nháº­n náº¿u chÆ°a lÆ°u
 function closeNotePopup() {
   const overlay = document.getElementById("noteOverlay");
   const noteView = document.getElementById("noteView");
@@ -7496,7 +7501,7 @@ function closeNotePopup() {
   const isEditing = noteView.isContentEditable;
   if (isEditing) {
     const edited = noteView.innerHTML.trim() !== "" && noteView.style.background === "rgb(255, 255, 255)";
-    if (edited && !confirm("⚠️ Ghi chú chưa được lưu. Bạn có chắc muốn đóng?")) return;
+    if (edited && !confirm("â ï¸ Ghi chĂº chÆ°a Ä‘Æ°á»£c lÆ°u. Báº¡n cĂ³ cháº¯c muá»‘n Ä‘Ă³ng?")) return;
   }
 
   overlay.style.display = "none";
@@ -7504,24 +7509,24 @@ function closeNotePopup() {
 
 
 
-// 🔹 Đổi tên lá số
+// đŸ”¹ Äá»•i tĂªn lĂ¡ sá»‘
   function renameChartByName(encodedName) {
     const oldName = decodeURIComponent(encodedName);
-    const newName = prompt(`✏️ Nhập tên mới cho lá số "${oldName}":`, oldName);
+    const newName = prompt(`âœï¸ Nháº­p tĂªn má»›i cho lĂ¡ sá»‘ "${oldName}":`, oldName);
     if (!newName || newName.trim() === "" || newName === oldName) return;
   
     const newEncoded = encodeURIComponent(newName.trim());
     const oldKey = "tuvi_" + encodedName;
     const newKey = "tuvi_" + newEncoded;
   
-    // 🔸 Kiểm tra trùng tên (IndexedDB trước, rồi localStorage)
+    // đŸ”¸ Kiá»ƒm tra trĂ¹ng tĂªn (IndexedDB trÆ°á»›c, rá»“i localStorage)
     loadFromIndexedDB(newKey, exists => {
       if (exists || localStorage.getItem(newKey)) {
-        alert("⚠️ Tên này đã tồn tại. Vui lòng chọn tên khác!");
+        alert("â ï¸ TĂªn nĂ y Ä‘Ă£ tá»“n táº¡i. Vui lĂ²ng chá»n tĂªn khĂ¡c!");
         return;
       }
   
-      // 🔹 Lấy dữ liệu cũ
+      // đŸ”¹ Láº¥y dá»¯ liá»‡u cÅ©
       loadFromIndexedDB(oldKey, chartData => {
         let dataToMove = chartData;
         if (!dataToMove) {
@@ -7529,7 +7534,7 @@ function closeNotePopup() {
           if (ls) dataToMove = ls;
         }
         if (!dataToMove) {
-          alert("❌ Không tìm thấy dữ liệu lá số cũ!");
+          alert("âŒ KhĂ´ng tĂ¬m tháº¥y dá»¯ liá»‡u lĂ¡ sá»‘ cÅ©!");
           return;
         }
   
@@ -7537,12 +7542,12 @@ function closeNotePopup() {
         const noteKeyNew = "note_" + newEncoded;
         const noteData = localStorage.getItem(noteKeyOld);
   
-        // 🔹 Lưu lại với tên mới
+        // đŸ”¹ LÆ°u láº¡i vá»›i tĂªn má»›i
         saveToIndexedDB(newKey, dataToMove);
         if (noteData) localStorage.setItem(noteKeyNew, noteData);
         try { localStorage.setItem(newKey, dataToMove); } catch (_) {}
   
-        // 🔹 Xoá bản cũ
+        // đŸ”¹ XoĂ¡ báº£n cÅ©
         const req = indexedDB.open("TuViDB", 1);
         req.onsuccess = e => {
           const db = e.target.result;
@@ -7554,17 +7559,17 @@ function closeNotePopup() {
         localStorage.removeItem(oldKey);
         localStorage.removeItem(noteKeyOld);
   
-        alert(`✅ Đã đổi tên "${oldName}" thành "${newName}".`);
+        alert(`âœ… ÄĂ£ Ä‘á»•i tĂªn "${oldName}" thĂ nh "${newName}".`);
         refreshSavedChartList();
-        showChartListPopup(); // cập nhật danh sách
+        showChartListPopup(); // cáº­p nháº­t danh sĂ¡ch
       });
     });
   }
   
-  // 🔹 Xoá lá số theo tên
+  // đŸ”¹ XoĂ¡ lĂ¡ sá»‘ theo tĂªn
   function deleteChartByName(encodedName) {
-    const name = decodeURIComponent(encodedName); // ✅ hiển thị đúng tên
-    if (!confirm(`🗑️ Xoá lá số "${name}"?`)) return;
+    const name = decodeURIComponent(encodedName); // âœ… hiá»ƒn thá»‹ Ä‘Ăºng tĂªn
+    if (!confirm(`đŸ—‘ï¸ XoĂ¡ lĂ¡ sá»‘ "${name}"?`)) return;
     const key = "tuvi_" + encodedName;
   
     const req = indexedDB.open("TuViDB", 1);
@@ -7580,7 +7585,7 @@ function closeNotePopup() {
     showChartListPopup();
   }
 
-// 🔹 Đóng popup khi click ra ngoài
+// đŸ”¹ ÄĂ³ng popup khi click ra ngoĂ i
 document.addEventListener("click", e => {
   const popup = document.getElementById("chartListPopup");
   if (!popup) return;
@@ -7591,93 +7596,93 @@ document.addEventListener("click", e => {
 
 
 // =====================================================
-// 🌟 CÂY TRA CỨU SAO – CÓ POPUP, SỬA TÊN, KÉO THẢ
+// đŸŒŸ CĂ‚Y TRA Cá»¨U SAO â€“ CĂ“ POPUP, Sá»¬A TĂN, KĂ‰O THáº¢
 // =====================================================
 
-// Dữ liệu đầy đủ (nếu có localStorage thì dùng bản người dùng)
+// Dá»¯ liá»‡u Ä‘áº§y Ä‘á»§ (náº¿u cĂ³ localStorage thĂ¬ dĂ¹ng báº£n ngÆ°á»i dĂ¹ng)
 window.DANH_MUC_SAO = JSON.parse(localStorage.getItem("DANH_MUC_SAO")) || {
-  "Chính Tinh": [
-    "Tử Vi","Thiên Cơ","Thái Dương","Vũ Khúc","Thiên Đồng",
-    "Liêm Trinh","Thiên Phủ","Thái Âm","Tham Lang",
-    "Cự Môn","Thiên Tướng","Thiên Lương","Thất Sát","Phá Quân"
+  "ChĂ­nh Tinh": [
+    "Tá»­ Vi","ThiĂªn CÆ¡","ThĂ¡i DÆ°Æ¡ng","VÅ© KhĂºc","ThiĂªn Äá»“ng",
+    "LiĂªm Trinh","ThiĂªn Phá»§","ThĂ¡i Ă‚m","Tham Lang",
+    "Cá»± MĂ´n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","Tháº¥t SĂ¡t","PhĂ¡ QuĂ¢n"
   ],
 
-  "Trung Tinh – Cát Tinh": [
-    "Thiên Khôi","Thiên Việt","Tả Phù","Hữu Bật","Văn Xương","Văn Khúc"
+  "Trung Tinh â€“ CĂ¡t Tinh": [
+    "ThiĂªn KhĂ´i","ThiĂªn Viá»‡t","Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc"
   ],
 
-  "Trung Tinh – Hung Tinh": [
-    "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp"
+  "Trung Tinh â€“ Hung Tinh": [
+    "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p"
   ],
 
-  "Tứ Hóa": ["Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ"],
-  "Lộc – Mã": ["Lộc Tồn","Thiên Mã"],
+  "Tá»© HĂ³a": ["HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ"],
+  "Lá»™c â€“ MĂ£": ["Lá»™c Tá»“n","ThiĂªn MĂ£"],
 
-  // 🌟 TIỂU TINH GỘP CHUNG, NHƯNG CHIA NHÓM CON
-  "Tiểu Tinh": {
-    "Theo Thái Tuế": [
-      "Thái Tuế","Thiếu Dương","Tang Môn","Thiếu Âm","Quan Phù","Tử Phù",
-      "Tuế Phá","Long Đức","Bạch Hổ","Phúc Đức","Điếu Khách","Trực Phù"
+  // đŸŒŸ TIá»‚U TINH Gá»˜P CHUNG, NHÆ¯NG CHIA NHĂ“M CON
+  "Tiá»ƒu Tinh": {
+    "Theo ThĂ¡i Tuáº¿": [
+      "ThĂ¡i Tuáº¿","Thiáº¿u DÆ°Æ¡ng","Tang MĂ´n","Thiáº¿u Ă‚m","Quan PhĂ¹","Tá»­ PhĂ¹",
+      "Tuáº¿ PhĂ¡","Long Äá»©c","Báº¡ch Há»•","PhĂºc Äá»©c","Äiáº¿u KhĂ¡ch","Trá»±c PhĂ¹"
     ],
-    "Theo Địa Chi Năm Sinh": [
-      "Phượng Các","Giải Thần","Long Trì","Nguyệt Đức","Thiên Đức","Thiên Hỷ",
-      "Thiên Khốc","Thiên Hư","Đào Hoa","Hồng Loan","Hoa Cái","Kiếp Sát",
-      "Phá Toái","Cô Thần","Quả Tú"
+    "Theo Äá»‹a Chi NÄƒm Sinh": [
+      "PhÆ°á»£ng CĂ¡c","Giáº£i Tháº§n","Long TrĂ¬","Nguyá»‡t Äá»©c","ThiĂªn Äá»©c","ThiĂªn Há»·",
+      "ThiĂªn Khá»‘c","ThiĂªn HÆ°","ÄĂ o Hoa","Há»“ng Loan","Hoa CĂ¡i","Kiáº¿p SĂ¡t",
+      "PhĂ¡ ToĂ¡i","CĂ´ Tháº§n","Quáº£ TĂº"
     ],
-    "Theo Tháng Sinh": [
-      "Thiên Hình","Thiên Riêu","Thiên Y","Thiên Giải","Địa Giải"
+    "Theo ThĂ¡ng Sinh": [
+      "ThiĂªn HĂ¬nh","ThiĂªn RiĂªu","ThiĂªn Y","ThiĂªn Giáº£i","Äá»‹a Giáº£i"
     ],
-    "Theo Giờ Sinh": ["Thai Phụ","Phong Cáo"],
-    "Theo Lộc Tồn": [
-      "Bác Sĩ","Lực Sĩ","Thanh Long","Tiểu Hao","Tướng Quân","Tấu Thư",
-      "Phi Liêm","Hỷ Thần","Bệnh Phù","Đại Hao","Phục Binh","Quan Phủ"
+    "Theo Giá» Sinh": ["Thai Phá»¥","Phong CĂ¡o"],
+    "Theo Lá»™c Tá»“n": [
+      "BĂ¡c SÄ©","Lá»±c SÄ©","Thanh Long","Tiá»ƒu Hao","TÆ°á»›ng QuĂ¢n","Táº¥u ThÆ°",
+      "Phi LiĂªm","Há»· Tháº§n","Bá»‡nh PhĂ¹","Äáº¡i Hao","Phá»¥c Binh","Quan Phá»§"
     ],
-    "Theo Can / Ngày / Tạp Tinh": [
-      "Thiên Quý","Ân Quang","Tam Thai","Bát Tọa","Lưu Hà","Quốc Ấn",
-      "Đường Phù","Văn Tinh","Thiên Quan","Thiên Phúc","Thiên Trù",
-      "Đẩu Quân","Thiên Không","Thiên Tài","Thiên Thọ","Thiên Thương",
-      "Thiên Sứ","Thiên La","Địa Võng"
+    "Theo Can / NgĂ y / Táº¡p Tinh": [
+      "ThiĂªn QuĂ½","Ă‚n Quang","Tam Thai","BĂ¡t Tá»a","LÆ°u HĂ ","Quá»‘c áº¤n",
+      "ÄÆ°á»ng PhĂ¹","VÄƒn Tinh","ThiĂªn Quan","ThiĂªn PhĂºc","ThiĂªn TrĂ¹",
+      "Äáº©u QuĂ¢n","ThiĂªn KhĂ´ng","ThiĂªn TĂ i","ThiĂªn Thá»","ThiĂªn ThÆ°Æ¡ng",
+      "ThiĂªn Sá»©","ThiĂªn La","Äá»‹a VĂµng"
      ],
 
-  // 🟢 NHÓM MỚI — VÒNG TRÀNG SINH
-  "Vòng Tràng Sinh": [
-    "Trường Sinh","Mộc Dục","Quan Đới","Lâm Quan","Đế Vượng",
-    "Suy","Bệnh","Tử","Mộ","Tuyệt","Thai","Dưỡng"
+  // đŸŸ¢ NHĂ“M Má»I â€” VĂ’NG TRĂ€NG SINH
+  "VĂ²ng TrĂ ng Sinh": [
+    "TrÆ°á»ng Sinh","Má»™c Dá»¥c","Quan Äá»›i","LĂ¢m Quan","Äáº¿ VÆ°á»£ng",
+    "Suy","Bá»‡nh","Tá»­","Má»™","Tuyá»‡t","Thai","DÆ°á»¡ng"
   ]
   },
 
   "Cung": [
-    "Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch","Tật Ách",
-    "Thiên Di","Nô Bộc","Quan Lộc","Điền Trạch","Phúc Đức","Phụ Mẫu","An Thân"
+    "Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch","Táº­t Ăch",
+    "ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c","Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u","An ThĂ¢n"
   ],
 
-  "Tuần – Triệt": ["Tuần Không","Triệt Không"]
+  "Tuáº§n â€“ Triá»‡t": ["Tuáº§n KhĂ´ng","Triá»‡t KhĂ´ng"]
 };
 
 // =====================================================
-// 🌳 TẠO CÂY TỰ ĐỘNG — Gom Trung Tinh, hiển thị Tiểu Tinh đúng nhóm
+// đŸŒ³ Táº O CĂ‚Y Tá»° Äá»˜NG â€” Gom Trung Tinh, hiá»ƒn thá»‹ Tiá»ƒu Tinh Ä‘Ăºng nhĂ³m
 // =====================================================
 window.renderSidebar = function () {
   const sidebar = document.getElementById("sidebarTraCuu");
   if (!sidebar) return;
 
-  sidebar.innerHTML = `<h3>🔮 <b>TỪ ĐIỂN SAO</b></h3>`;
+  sidebar.innerHTML = `<h3>đŸ”® <b>Tá»ª ÄIá»‚N SAO</b></h3>`;
 
   const roman = ["I", "II", "III", "IV", "V", "VI", "VII"];
   let groupIndex = 0;
 
-  // ✅ Gom nhóm Trung Tinh thành 2 nhóm con
+  // âœ… Gom nhĂ³m Trung Tinh thĂ nh 2 nhĂ³m con
   const DANH_MUC_GOP = {
-    "Chính Tinh": DANH_MUC_SAO["Chính Tinh"],
+    "ChĂ­nh Tinh": DANH_MUC_SAO["ChĂ­nh Tinh"],
     "Trung Tinh": {
-      "Lục Cát Tinh": DANH_MUC_SAO["Trung Tinh – Cát Tinh"],
-      "Lục Sát Tinh": DANH_MUC_SAO["Trung Tinh – Hung Tinh"]
+      "Lá»¥c CĂ¡t Tinh": DANH_MUC_SAO["Trung Tinh â€“ CĂ¡t Tinh"],
+      "Lá»¥c SĂ¡t Tinh": DANH_MUC_SAO["Trung Tinh â€“ Hung Tinh"]
     },
-    "Tứ Hóa": DANH_MUC_SAO["Tứ Hóa"],
-    "Lộc – Mã": DANH_MUC_SAO["Lộc – Mã"],
-    "Tiểu Tinh": DANH_MUC_SAO["Tiểu Tinh"],  // 👈 Object gồm nhiều nhóm
+    "Tá»© HĂ³a": DANH_MUC_SAO["Tá»© HĂ³a"],
+    "Lá»™c â€“ MĂ£": DANH_MUC_SAO["Lá»™c â€“ MĂ£"],
+    "Tiá»ƒu Tinh": DANH_MUC_SAO["Tiá»ƒu Tinh"],  // đŸ‘ˆ Object gá»“m nhiá»u nhĂ³m
     "Cung": DANH_MUC_SAO["Cung"],
-    "Tuần – Triệt": DANH_MUC_SAO["Tuần – Triệt"]
+    "Tuáº§n â€“ Triá»‡t": DANH_MUC_SAO["Tuáº§n â€“ Triá»‡t"]
   };
 
   Object.entries(DANH_MUC_GOP).forEach(([nhom, ds]) => {
@@ -7686,7 +7691,7 @@ window.renderSidebar = function () {
     const div = document.createElement("div");
     div.className = "group";
 
-    // 🔹 Nhóm có mảng trực tiếp (Chính Tinh, Tứ Hóa, Lộc – Mã, Cung, Tuần – Triệt)
+    // đŸ”¹ NhĂ³m cĂ³ máº£ng trá»±c tiáº¿p (ChĂ­nh Tinh, Tá»© HĂ³a, Lá»™c â€“ MĂ£, Cung, Tuáº§n â€“ Triá»‡t)
     if (Array.isArray(ds)) {
       let html = `<div class="group-title">${romanNum}. ${nhom}</div><ul style="display:none;">`;
       ds.forEach((sao, idx) => {
@@ -7696,7 +7701,7 @@ window.renderSidebar = function () {
       div.innerHTML = html;
     }
 
-    // 🔸 Trung Tinh — có 2 nhóm con
+    // đŸ”¸ Trung Tinh â€” cĂ³ 2 nhĂ³m con
     else if (nhom === "Trung Tinh" && typeof ds === "object") {
       let html = `<div class="group-title">${romanNum}. ${nhom}</div><ul class="subgroup-list" style="display:none;">`;
       let subIdx = 0;
@@ -7719,8 +7724,8 @@ window.renderSidebar = function () {
       div.innerHTML = html;
     }
 
-    // 🔹 Tiểu Tinh — có nhiều nhóm nhỏ, không đánh số sao
-    else if (nhom === "Tiểu Tinh" && typeof ds === "object") {
+    // đŸ”¹ Tiá»ƒu Tinh â€” cĂ³ nhiá»u nhĂ³m nhá», khĂ´ng Ä‘Ă¡nh sá»‘ sao
+    else if (nhom === "Tiá»ƒu Tinh" && typeof ds === "object") {
       let html = `<div class="group-title">${romanNum}. ${nhom}</div><ul class="subgroup-list" style="display:none;">`;
       let subIndex = 0;
 
@@ -7745,7 +7750,7 @@ window.renderSidebar = function () {
     sidebar.appendChild(div);
   });
 
-  // === Toggle nhóm chính ===
+  // === Toggle nhĂ³m chĂ­nh ===
   document.querySelectorAll("#sidebarTraCuu .group-title").forEach((el) => {
     el.addEventListener("click", (e) => {
       if (e.target.tagName === "LI") return;
@@ -7755,7 +7760,7 @@ window.renderSidebar = function () {
     });
   });
 
-  // === Toggle nhóm con ===
+  // === Toggle nhĂ³m con ===
   document.querySelectorAll("#sidebarTraCuu .sub-title").forEach((el) => {
     el.addEventListener("click", (e) => {
       if (e.target.tagName === "LI") return;
@@ -7767,7 +7772,7 @@ window.renderSidebar = function () {
 
   attachSidebarEvents();
 
-  // 🔹 Khi click vào tiêu đề "TỪ ĐIỂN SAO" → chỉ thu nhóm SAO, KHÔNG ẩn CHUYÊN ĐỀ
+  // đŸ”¹ Khi click vĂ o tiĂªu Ä‘á» "Tá»ª ÄIá»‚N SAO" â†’ chá»‰ thu nhĂ³m SAO, KHĂ”NG áº©n CHUYĂN Äá»€
   const title = sidebar.querySelector("h3");
   if (title) {
     title.style.cursor = "pointer";
@@ -7781,14 +7786,14 @@ window.renderSidebar = function () {
 
 
 
-// ✅ Thêm phần 📘 CHUYÊN ĐỀ (độc lập)
+// âœ… ThĂªm pháº§n đŸ“˜ CHUYĂN Äá»€ (Ä‘á»™c láº­p)
 const chuyenDeBox = document.createElement("div");
 chuyenDeBox.id = "chuyenDeBox";
 chuyenDeBox.innerHTML = `
   <hr style="border:none; border-top:1px solid #ccc; margin:12px 0;">
-  <h3 id="titleChuyenDe" style="text-align:center; color:#3a0ca3; cursor:pointer;">📘 CHUYÊN ĐỀ</h3>
+  <h3 id="titleChuyenDe" style="text-align:center; color:#3a0ca3; cursor:pointer;">đŸ“˜ CHUYĂN Äá»€</h3>
 
-  <!-- ✅ Danh sách chuyên đề -->
+  <!-- âœ… Danh sĂ¡ch chuyĂªn Ä‘á» -->
   <ul id="listChuyenDe" style="
     list-style:none;
     padding-left:10px;
@@ -7796,7 +7801,7 @@ chuyenDeBox.innerHTML = `
     position:relative;
   "></ul>
 
-  <!-- ✅ Hai nút Thêm và Sửa nằm cạnh nhau -->
+  <!-- âœ… Hai nĂºt ThĂªm vĂ  Sá»­a náº±m cáº¡nh nhau -->
   <div style="display:flex; gap:8px; justify-content:center; margin-top:8px;">
     <button id="btnAddChuyenDe" style="
       flex:1;
@@ -7806,7 +7811,7 @@ chuyenDeBox.innerHTML = `
       border-radius:6px;
       padding:5px 10px;
       cursor:pointer;
-    ">➕ Thêm chuyên đề</button>
+    ">â• ThĂªm chuyĂªn Ä‘á»</button>
 
     <button id="btnToggleEdit" style="
       background: linear-gradient(145deg, #ffb300, #ff8f00);
@@ -7818,12 +7823,12 @@ chuyenDeBox.innerHTML = `
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
       transition: all 0.2s ease;
-    ">✏️ Sửa</button>
+    ">âœï¸ Sá»­a</button>
   </div>
 
-  <!-- 🎨 CSS nhỏ gọn hiển thị dấu 🔹 cho mục có con -->
+  <!-- đŸ¨ CSS nhá» gá»n hiá»ƒn thá»‹ dáº¥u đŸ”¹ cho má»¥c cĂ³ con -->
   <style>
-    /* Mỗi dòng chuyên đề */
+    /* Má»—i dĂ²ng chuyĂªn Ä‘á» */
     #listChuyenDe li {
       margin-bottom: 5px;
       line-height: 1.5;
@@ -7832,15 +7837,15 @@ chuyenDeBox.innerHTML = `
       color: #3a0ca3;
     }
 
-    /* Mục có danh sách con */
+    /* Má»¥c cĂ³ danh sĂ¡ch con */
     #listChuyenDe li:has(> ul) {
       position: relative;
       padding-left: 16px;
     }
 
-    /* Dấu 🔹 cho mục có con */
+    /* Dáº¥u đŸ”¹ cho má»¥c cĂ³ con */
     #listChuyenDe li:has(> ul)::before {
-      content: "🔹";
+      content: "đŸ”¹";
       position: absolute;
       left: 0;
       top: 2px;
@@ -7848,7 +7853,7 @@ chuyenDeBox.innerHTML = `
       color: #6a0dad;
     }
 
-    /* Các cấp con lùi nhẹ */
+    /* CĂ¡c cáº¥p con lĂ¹i nháº¹ */
     #listChuyenDe li ul {
       margin-left: 12px;
       border-left: 1px dotted #ccc;
@@ -7859,19 +7864,19 @@ chuyenDeBox.innerHTML = `
 
 sidebar.appendChild(chuyenDeBox);
 
-// ✅ Thêm phần 📘 CÁCH CỤC (ngay dưới CHUYÊN ĐỀ)
+// âœ… ThĂªm pháº§n đŸ“˜ CĂCH Cá»¤C (ngay dÆ°á»›i CHUYĂN Äá»€)
 const cachCucBox = document.createElement("div");
 cachCucBox.id = "cachCucBox";
 cachCucBox.innerHTML = `
   <hr style="border:none; border-top:1px solid #ccc; margin:12px 0;">
-  <h3 id="titleCachCuc" style="text-align:center; color:#5a189a; cursor:pointer;">📘 CÁCH CỤC</h3>
+  <h3 id="titleCachCuc" style="text-align:center; color:#5a189a; cursor:pointer;">đŸ“˜ CĂCH Cá»¤C</h3>
 
   <div id="cachCucPanel" style="padding:6px; position:relative;">
     <div id="listCachCuc" style="max-height:250px;overflow-y:auto;padding-left:5px;font-size:14px; position:relative;"></div>
-    <button id="btnAddCachCuc" style="margin-top:6px;background:#7b2cbf;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;">➕ Thêm Cách Cục</button>
+    <button id="btnAddCachCuc" style="margin-top:6px;background:#7b2cbf;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;">â• ThĂªm CĂ¡ch Cá»¥c</button>
   </div>
 
-  <!-- Popup thêm mới -->
+  <!-- Popup thĂªm má»›i -->
 <div id="popupCachCuc"
      style="
        display:none;
@@ -7888,16 +7893,16 @@ cachCucBox.innerHTML = `
        background:#fff;
        padding:24px 28px;
        border-radius:12px;
-       width:800px !important;      /* ⭐ cố định thực sự */
-       height:500px !important;     /* ⭐ cố định thực sự */
+       width:800px !important;      /* â­ cá»‘ Ä‘á»‹nh thá»±c sá»± */
+       height:500px !important;     /* â­ cá»‘ Ä‘á»‹nh thá»±c sá»± */
        overflow-y:auto;
        box-shadow:0 6px 22px rgba(0,0,0,0.3);
      ">
 
 
-      <h3 style="margin-top:0;">🪶 Thêm Cách Cục mới</h3>
+      <h3 style="margin-top:0;">đŸª¶ ThĂªm CĂ¡ch Cá»¥c má»›i</h3>
 
-      <label>Tên Cách Cục:</label><br>
+      <label>TĂªn CĂ¡ch Cá»¥c:</label><br>
       <input class="cc-ten-input"
              style="width:100%;padding:5px;margin-bottom:8px;border:1px solid #ccc;border-radius:4px;">
 
@@ -7905,17 +7910,17 @@ cachCucBox.innerHTML = `
 
       <button id="btnAddDieuKien"
               style="margin-top:8px;background:#eee;padding:4px 8px;border-radius:4px;cursor:pointer;">
-              ➕ Thêm Điều Kiện
+              â• ThĂªm Äiá»u Kiá»‡n
       </button>
 
       <div style="margin-top:12px;text-align:right;">
         <button id="btnSaveCachCuc"
                 style="background:#5a189a;color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;">
-                Lưu
+                LÆ°u
         </button>
         <button id="btnCloseCachCuc"
                 style="background:#888;color:#fff;border:none;border-radius:6px;padding:6px 12px;margin-left:5px;cursor:pointer;">
-                Đóng
+                ÄĂ³ng
         </button>
       </div>
     </div>
@@ -7923,12 +7928,12 @@ cachCucBox.innerHTML = `
   </div>
 `;
 sidebar.appendChild(cachCucBox);
-// 👉 DI CHUYỂN POPUP RA NGOÀI SIDEBAR ĐỂ KHÔNG BỊ CHE
+// đŸ‘‰ DI CHUYá»‚N POPUP RA NGOĂ€I SIDEBAR Äá»‚ KHĂ”NG Bá» CHE
 const popup = document.getElementById("popupCachCuc");
 document.body.appendChild(popup);
 
 
-// ✅ Cách Cục: sẽ được nạp từ IndexedDB (fallback localStorage)
+// âœ… CĂ¡ch Cá»¥c: sáº½ Ä‘Æ°á»£c náº¡p tá»« IndexedDB (fallback localStorage)
 window.CACH_CUC_DATA = [];
 
 
@@ -7943,7 +7948,7 @@ window.CACH_CUC_DATA = [];
 
 
 
-// 🚀 Kích hoạt render & nút thêm
+// đŸ€ KĂ­ch hoáº¡t render & nĂºt thĂªm
 setTimeout(() => {
   const btnAdd = document.getElementById("btnAddChuyenDe");
   if (btnAdd) btnAdd.onclick = window.themChuyenDe;
@@ -7953,7 +7958,7 @@ setTimeout(() => {
 
   renderChuyenDe(false);
 
-  // 🔹 Khi bấm vào tiêu đề "📘 CHUYÊN ĐỀ" → thu gọn toàn bộ cây
+  // đŸ”¹ Khi báº¥m vĂ o tiĂªu Ä‘á» "đŸ“˜ CHUYĂN Äá»€" â†’ thu gá»n toĂ n bá»™ cĂ¢y
   setTimeout(() => {
     const titleCD = document.getElementById("titleChuyenDe");
     if (!titleCD) return;
@@ -7968,7 +7973,7 @@ setTimeout(() => {
 }, 200);
 ;
 
-// 🧩 Đừng quên đóng ngoặc kết thúc hàm renderSidebar
+// đŸ§© Äá»«ng quĂªn Ä‘Ă³ng ngoáº·c káº¿t thĂºc hĂ m renderSidebar
 };
 
 
@@ -7980,15 +7985,15 @@ setTimeout(() => {
 
 
 // =====================================================
-// 🎯 KẾT NỐI SỰ KIỆN (CLICK, ĐỔI TÊN, DRAG DROP)
+// đŸ¯ Káº¾T Ná»I Sá»° KIá»†N (CLICK, Äá»”I TĂN, DRAG DROP)
 // =====================================================
 function attachSidebarEvents() {
-  // ⚙️ Xóa sự kiện cũ
+  // â™ï¸ XĂ³a sá»± kiá»‡n cÅ©
   document.querySelectorAll("#sidebarTraCuu li").forEach(li => {
     li.replaceWith(li.cloneNode(true));
   });
 
-  // 🎯 Gắn lại sự kiện CHỈ CHO các sao thật (li có data-sao)
+  // đŸ¯ Gáº¯n láº¡i sá»± kiá»‡n CHá»ˆ CHO cĂ¡c sao tháº­t (li cĂ³ data-sao)
   document.querySelectorAll("#sidebarTraCuu li[data-sao]").forEach(li => {
     li.addEventListener("click", (e) => {
       e.preventDefault();
@@ -8001,7 +8006,7 @@ function attachSidebarEvents() {
     });
 
 
-    // 🧲 drag drop
+    // đŸ§² drag drop
     li.addEventListener("dragstart", e => {
       e.stopPropagation();
       e.dataTransfer.setData("text/plain", li.dataset.sao);
@@ -8010,7 +8015,7 @@ function attachSidebarEvents() {
     li.addEventListener("dragend", () => li.classList.remove("dragging"));
   });
 
-  // 🧭 Xử lý drop danh sách
+  // đŸ§­ Xá»­ lĂ½ drop danh sĂ¡ch
   document.querySelectorAll("#sidebarTraCuu ul").forEach(ul => {
     ul.addEventListener("dragover", e => e.preventDefault());
     ul.addEventListener("drop", e => {
@@ -8027,7 +8032,7 @@ function attachSidebarEvents() {
     });
   });
 
-  // 🔹 Toggle nhóm con (đảm bảo mở ra Tiểu Tinh hoặc Lục Cát / Lục Sát)
+  // đŸ”¹ Toggle nhĂ³m con (Ä‘áº£m báº£o má»Ÿ ra Tiá»ƒu Tinh hoáº·c Lá»¥c CĂ¡t / Lá»¥c SĂ¡t)
   document.querySelectorAll("#sidebarTraCuu .sub-title").forEach(el => {
     el.addEventListener("click", e => {
       e.stopPropagation();
@@ -8038,7 +8043,7 @@ function attachSidebarEvents() {
 }
 
 // =====================================================
-// 🔎 HÀM HỖ TRỢ: tìm key trong SAO_DATA theo tên hiển thị
+// đŸ” HĂ€M Há»– TRá»¢: tĂ¬m key trong SAO_DATA theo tĂªn hiá»ƒn thá»‹
 // =====================================================
 function timKeySao(ten) {
   if (!window.SAO_DATA) return null;
@@ -8049,7 +8054,7 @@ function timKeySao(ten) {
     const tenSao = sao?.short?.ten ? __norm(sao.short.ten) : "";
 
 
-    // ✅ chỉ khớp chính xác
+    // âœ… chá»‰ khá»›p chĂ­nh xĂ¡c
     return tenSao === ten || k.toLowerCase() === ten;
   });
 
@@ -8058,34 +8063,34 @@ function timKeySao(ten) {
 
 window.moPopupSao_Ten = moPopupSao_Ten;
 
-// Trường hợp chưa có dữ liệu trong SAO_DATA
+// TrÆ°á»ng há»£p chÆ°a cĂ³ dá»¯ liá»‡u trong SAO_DATA
 function moPopupSao_Ten(ten) {
-  // ⚠️ Lấy vị trí cung hiện tại từ DOM nếu chưa có
+  // â ï¸ Láº¥y vá»‹ trĂ­ cung hiá»‡n táº¡i tá»« DOM náº¿u chÆ°a cĂ³
   if (!window.currentCung) {
     const activeStar = document.querySelector(`[data-sao*="${ten}"]`);
     if (activeStar) {
       const cungEl = activeStar.closest("[id^='cell']"); // cell11, cell12,...
       if (cungEl) {
         const idx = parseInt(cungEl.id.replace("cell", ""), 10);
-        const VI_TRI_CUNG = ["", "Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+        const VI_TRI_CUNG = ["", "TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
         window.currentCung = VI_TRI_CUNG[idx] || null;
       }
     }
   }
 
-  // Luôn set currentSao
+  // LuĂ´n set currentSao
   window.currentSao = ten;
 
-  // render Tab2 nếu popup đã mở
+  // render Tab2 náº¿u popup Ä‘Ă£ má»Ÿ
   renderTab2(ten);
 
-  // Phần code cũ
-  renderBangCungChuc(window.currentCung); // KHÔNG truyền "ten" vào đây nữa
+  // Pháº§n code cÅ©
+  renderBangCungChuc(window.currentCung); // KHĂ”NG truyá»n "ten" vĂ o Ä‘Ă¢y ná»¯a
 
 
   const box = document.getElementById("popupThongTin");
 
-  // Nếu popupTenSao chưa tồn tại thì tạo mới
+  // Náº¿u popupTenSao chÆ°a tá»“n táº¡i thĂ¬ táº¡o má»›i
   let titleEl = document.getElementById("popupTenSao");
   if (!titleEl) {
     titleEl = document.createElement("h2");
@@ -8098,14 +8103,14 @@ function moPopupSao_Ten(ten) {
 
   titleEl.innerText = ten.toUpperCase();
 
-  box.innerHTML = `<p style="text-align:center;"><i>Chưa có mô tả chi tiết cho sao / cung này.</i></p>`;
+  box.innerHTML = `<p style="text-align:center;"><i>ChÆ°a cĂ³ mĂ´ táº£ chi tiáº¿t cho sao / cung nĂ y.</i></p>`;
   document.getElementById("saoPopup").style.display = "flex";
   if (typeof setPopupMode === "function") setPopupMode("view");
 }
 
 function cleanSaoKey(name) {
   return __norm(
-    (name || "").replace(/^(L\.|ĐV\.|N\.|Nh\.|TL\.)\s*/i, "")
+    (name || "").replace(/^(L\.|ÄV\.|N\.|Nh\.|TL\.)\s*/i, "")
   );
 }
 
@@ -8114,7 +8119,7 @@ function renderTab2(sao) {
   if (!table) return;
 
   // =========================
-  // 1️⃣ LẤY NỘI DUNG THEO SAO
+  // 1ï¸âƒ£ Láº¤Y Ná»˜I DUNG THEO SAO
   // =========================
   let data = {};
 
@@ -8124,21 +8129,21 @@ function renderTab2(sao) {
   }
 
   const CUNG = [
-    "Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch",
-    "Tật Ách","Thiên Di","Nô Bộc","Quan Lộc",
-    "Điền Trạch","Phúc Đức","Phụ Mẫu"
+    "Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch",
+    "Táº­t Ăch","ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c",
+    "Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u"
   ];
 
   // =========================
-  // 2️⃣ RENDER BẢNG NỘI DUNG
+  // 2ï¸âƒ£ RENDER Báº¢NG Ná»˜I DUNG
   // =========================
   let html = `
     <tr>
       <th rowspan="2" style="width:140px; text-align:center;">Cung</th>
-      <th colspan="2" style="text-align:center;">Ý nghĩa tại các cung chức</th>
+      <th colspan="2" style="text-align:center;">Ă nghÄ©a táº¡i cĂ¡c cung chá»©c</th>
     </tr>
     <tr>
-      <th style="text-align:center; color:green;">Cát</th>
+      <th style="text-align:center; color:green;">CĂ¡t</th>
       <th style="text-align:center; color:red;">Hung</th>
     </tr>
   `;
@@ -8160,51 +8165,51 @@ function renderTab2(sao) {
 
 
   // =========================
-// 3️⃣ HIGHLIGHT TAB 2 (Sao thường hoặc Tuần/Triệt)
+// 3ï¸âƒ£ HIGHLIGHT TAB 2 (Sao thÆ°á»ng hoáº·c Tuáº§n/Triá»‡t)
 // =========================
 try {
-  const map = window.dataGlobal?.cungChucMap; // Ví dụ: { "Tý":"Phúc Đức", "Sửu":"Phụ Mẫu", ... }
+  const map = window.dataGlobal?.cungChucMap; // VĂ­ dá»¥: { "TĂ½":"PhĂºc Äá»©c", "Sá»­u":"Phá»¥ Máº«u", ... }
   if (!map) return;
 
-  // Xóa highlight cũ
+  // XĂ³a highlight cÅ©
   document.querySelectorAll("#bangCungChuc tr")
     .forEach(tr => tr.classList.remove("cung-highlight"));
 
   const CHUC_CANON = {
-    "MỆNH": "Mệnh",
-    "HUYNH ĐỆ": "Huynh Đệ",
-    "PHU THÊ": "Phu Thê",
-    "TỬ TỨC": "Tử Tức",
-    "TÀI BẠCH": "Tài Bạch",
-    "TẬT ÁCH": "Tật Ách",
-    "THIÊN DI": "Thiên Di",
-    "NÔ BỘC": "Nô Bộc",
-    "QUAN LỘC": "Quan Lộc",
-    "ĐIỀN TRẠCH": "Điền Trạch",
-    "PHÚC ĐỨC": "Phúc Đức",
-    "PHỤ MẪU": "Phụ Mẫu"
+    "Má»†NH": "Má»‡nh",
+    "HUYNH Äá»†": "Huynh Äá»‡",
+    "PHU THĂ": "Phu ThĂª",
+    "Tá»¬ Tá»¨C": "Tá»­ Tá»©c",
+    "TĂ€I Báº CH": "TĂ i Báº¡ch",
+    "Táº¬T ĂCH": "Táº­t Ăch",
+    "THIĂN DI": "ThiĂªn Di",
+    "NĂ” Bá»˜C": "NĂ´ Bá»™c",
+    "QUAN Lá»˜C": "Quan Lá»™c",
+    "ÄIá»€N TRáº CH": "Äiá»n Tráº¡ch",
+    "PHĂC Äá»¨C": "PhĂºc Äá»©c",
+    "PHá»¤ MáºªU": "Phá»¥ Máº«u"
   };
 
-  // Danh sách sẽ highlight (có thể 1 hoặc 2 cung)
+  // Danh sĂ¡ch sáº½ highlight (cĂ³ thá»ƒ 1 hoáº·c 2 cung)
   const list = [];
 
-  // 🟢 Trường hợp sao bình thường
+  // đŸŸ¢ TrÆ°á»ng há»£p sao bĂ¬nh thÆ°á»ng
   if (window.currentCung) {
-    const raw = map[window.currentCung]; // ví dụ: Tý → Phúc Đức
+    const raw = map[window.currentCung]; // vĂ­ dá»¥: TĂ½ â†’ PhĂºc Äá»©c
     if (raw) list.push(raw);
   }
 
-  // 🟣 Trường hợp Tuần / Triệt → chặn 2 cung
+  // đŸŸ£ TrÆ°á»ng há»£p Tuáº§n / Triá»‡t â†’ cháº·n 2 cung
   if (window.blockedCung?.length === 2) {
     const [c1, c2] = window.blockedCung;
     if (map[c1]) list.push(map[c1]);
     if (map[c2]) list.push(map[c2]);
   }
 
-  // Không có gì để tô sáng
+  // KhĂ´ng cĂ³ gĂ¬ Ä‘á»ƒ tĂ´ sĂ¡ng
   if (!list.length) return;
 
-  // 🔥 Highlight các dòng tương ứng
+  // đŸ”¥ Highlight cĂ¡c dĂ²ng tÆ°Æ¡ng á»©ng
   document.querySelectorAll("#bangCungChuc tr").forEach(tr => {
     const td = tr.querySelector("td");
     if (!td) return;
@@ -8233,19 +8238,19 @@ function renderTab3(sao) {
   const data = SAO_DATA[sao].tuHoa;
 
   const HOA = [
-    "Hóa Lộc",
-    "Hóa Quyền",
-    "Hóa Khoa",
-    "Hóa Kỵ"
+    "HĂ³a Lá»™c",
+    "HĂ³a Quyá»n",
+    "HĂ³a Khoa",
+    "HĂ³a Ká»µ"
   ];
 
   let html = `
   <tr>
-    <th rowspan="2" style="width:140px; text-align:center;">Tứ Hóa</th>
-    <th colspan="2" style="text-align:center;">Ý nghĩa</th>
+    <th rowspan="2" style="width:140px; text-align:center;">Tá»© HĂ³a</th>
+    <th colspan="2" style="text-align:center;">Ă nghÄ©a</th>
   </tr>
   <tr>
-    <th style="text-align:center; color:green;">Cát</th>
+    <th style="text-align:center; color:green;">CĂ¡t</th>
     <th style="text-align:center; color:red;">Hung</th>
   </tr>
   `;
@@ -8267,7 +8272,7 @@ function renderTab3(sao) {
 
 
 // =====================================================
-// 💾 Lưu và phục hồi cây (phiên bản chuẩn, không phá cấu trúc Tiểu Tinh)
+// đŸ’¾ LÆ°u vĂ  phá»¥c há»“i cĂ¢y (phiĂªn báº£n chuáº©n, khĂ´ng phĂ¡ cáº¥u trĂºc Tiá»ƒu Tinh)
 // =====================================================
 function updateDanhMucFromDOM() {
   const newMap = {};
@@ -8276,7 +8281,7 @@ function updateDanhMucFromDOM() {
     const groupTitle = div.querySelector(".group-title")?.innerText || "";
     const subgroupEls = div.querySelectorAll(":scope > ul.subgroup-list > li.subgroup");
 
-    // Nếu có nhóm con (như Trung Tinh, Tiểu Tinh)
+    // Náº¿u cĂ³ nhĂ³m con (nhÆ° Trung Tinh, Tiá»ƒu Tinh)
     if (subgroupEls.length > 0) {
       const subgroupMap = {};
       subgroupEls.forEach(sub => {
@@ -8289,7 +8294,7 @@ function updateDanhMucFromDOM() {
       });
       newMap[groupTitle] = subgroupMap;
     }
-    // Nếu chỉ có 1 danh sách phẳng (như Chính Tinh, Tứ Hóa, Cung...)
+    // Náº¿u chá»‰ cĂ³ 1 danh sĂ¡ch pháº³ng (nhÆ° ChĂ­nh Tinh, Tá»© HĂ³a, Cung...)
     else {
       const saoEls = div.querySelectorAll("ul li[data-sao]");
       const saoNames = Array.from(saoEls)
@@ -8304,96 +8309,96 @@ function updateDanhMucFromDOM() {
 
 
 // =====================================================
-// 💾 Lưu trạng thái sidebar (tạm: chỉ cập nhật danh mục)
+// đŸ’¾ LÆ°u tráº¡ng thĂ¡i sidebar (táº¡m: chá»‰ cáº­p nháº­t danh má»¥c)
 // =====================================================
 function saveSidebarState() {
   try {
     updateDanhMucFromDOM();
-    console.log("💾 Sidebar state saved.");
+    console.log("đŸ’¾ Sidebar state saved.");
   } catch (err) {
-    console.warn("⚠️ Không thể lưu sidebar state:", err);
+    console.warn("â ï¸ KhĂ´ng thá»ƒ lÆ°u sidebar state:", err);
   }
 }
 
-// 🧩 Hàm tạo ID duy nhất cho mỗi chuyên đề hoặc mục con
+// đŸ§© HĂ m táº¡o ID duy nháº¥t cho má»—i chuyĂªn Ä‘á» hoáº·c má»¥c con
 function generateId() {
   return 'cd_' + Math.random().toString(36).substr(2, 9);
 }
 
 
 // =====================================================
-// ➕ Thêm chuyên đề cấp 1 (tự đánh số La Mã)
+// â• ThĂªm chuyĂªn Ä‘á» cáº¥p 1 (tá»± Ä‘Ă¡nh sá»‘ La MĂ£)
 // =====================================================
 function themChuyenDe() {
-  const name = prompt("Nhập tên chuyên đề mới:");
+  const name = prompt("Nháº­p tĂªn chuyĂªn Ä‘á» má»›i:");
   if (!name) return;
 
-  // Tránh trùng tên cấp 1 (so sánh phần tên sau tiền tố La Mã)
+  // TrĂ¡nh trĂ¹ng tĂªn cáº¥p 1 (so sĂ¡nh pháº§n tĂªn sau tiá»n tá»‘ La MĂ£)
   const lowerName = name.trim().toLowerCase();
 
   const trungTen = Object.keys(CHUYEN_DE_DATA).some(key => {
-    // Chỉ loại bỏ phần tiền tố La Mã (I., II., III...) hoặc số thứ tự có dấu chấm
+    // Chá»‰ loáº¡i bá» pháº§n tiá»n tá»‘ La MĂ£ (I., II., III...) hoáº·c sá»‘ thá»© tá»± cĂ³ dáº¥u cháº¥m
     const tenGoc = key.replace(/^[IVXLCDM]+\.\s*|^\d+\.\s*/i, "").trim().toLowerCase();
     return tenGoc === lowerName;
   });
 
   if (trungTen) {
-    alert("Tên chuyên đề này đã tồn tại!");
+    alert("TĂªn chuyĂªn Ä‘á» nĂ y Ä‘Ă£ tá»“n táº¡i!");
     return;
   }
 
 
 
-  // 🧮 Đánh số La Mã theo thứ tự hiện có
+  // đŸ§® ÄĂ¡nh sá»‘ La MĂ£ theo thá»© tá»± hiá»‡n cĂ³
   const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-  const index = Object.keys(CHUYEN_DE_DATA).length; // bắt đầu từ 0
+  const index = Object.keys(CHUYEN_DE_DATA).length; // báº¯t Ä‘áº§u tá»« 0
   const prefix = romanNumerals[index] || (index + 1);
   const fullName = `${prefix}. ${name}`;
 
-// ➕ Thêm vào dữ liệu (kèm ID)
+// â• ThĂªm vĂ o dá»¯ liá»‡u (kĂ¨m ID)
 CHUYEN_DE_DATA[fullName] = { id: generateId(), noiDung: "", children: {} };
   localStorage.setItem("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 
 
-  // 🔁 Render lại cây mà giữ trạng thái
+  // đŸ” Render láº¡i cĂ¢y mĂ  giá»¯ tráº¡ng thĂ¡i
   renderChuyenDe(false);
 }
 
 
 
 // =====================================================
-// 📘 CÂY CHUYÊN ĐỀ ĐA CẤP (tối đa 5 cấp, có ▸/▾, lưu localStorage)
+// đŸ“˜ CĂ‚Y CHUYĂN Äá»€ ÄA Cáº¤P (tá»‘i Ä‘a 5 cáº¥p, cĂ³ â–¸/â–¾, lÆ°u localStorage)
 // =====================================================
 
-// ⚙️ Dữ liệu khởi tạo (phiên bản an toàn)
+// â™ï¸ Dá»¯ liá»‡u khá»Ÿi táº¡o (phiĂªn báº£n an toĂ n)
 let chuyenDeRaw = localStorage.getItem("CHUYEN_DE_DATA");
 try {
   if (typeof chuyenDeRaw === "string" && chuyenDeRaw.trim().startsWith("{")) {
     window.CHUYEN_DE_DATA = JSON.parse(chuyenDeRaw);
   } else if (typeof chuyenDeRaw === "object") {
-    // Đã là object thật → gán thẳng
+    // ÄĂ£ lĂ  object tháº­t â†’ gĂ¡n tháº³ng
     window.CHUYEN_DE_DATA = chuyenDeRaw;
   } else {
-    // Nếu chưa có trong localStorage → tạo mặc định
+    // Náº¿u chÆ°a cĂ³ trong localStorage â†’ táº¡o máº·c Ä‘á»‹nh
     window.CHUYEN_DE_DATA = {
       "I. An Sao": { noiDung: "", children: {} },
-      "II. Vô Chính Diệu": { noiDung: "", children: {} },
-      "III. Luận Vận": { noiDung: "", children: {} },
-      "IV. Tình Duyên": { noiDung: "", children: {} }
+      "II. VĂ´ ChĂ­nh Diá»‡u": { noiDung: "", children: {} },
+      "III. Luáº­n Váº­n": { noiDung: "", children: {} },
+      "IV. TĂ¬nh DuyĂªn": { noiDung: "", children: {} }
     };
   }
 } catch (err) {
-  console.warn("⚠️ Lỗi parse CHUYEN_DE_DATA:", err);
+  console.warn("â ï¸ Lá»—i parse CHUYEN_DE_DATA:", err);
   window.CHUYEN_DE_DATA = {
     "I. An Sao": { noiDung: "", children: {} },
-    "II. Vô Chính Diệu": { noiDung: "", children: {} },
-    "III. Luận Vận": { noiDung: "", children: {} },
-    "IV. Tình Duyên": { noiDung: "", children: {} }
+    "II. VĂ´ ChĂ­nh Diá»‡u": { noiDung: "", children: {} },
+    "III. Luáº­n Váº­n": { noiDung: "", children: {} },
+    "IV. TĂ¬nh DuyĂªn": { noiDung: "", children: {} }
   };
 }
 
-// 🧩 Phục hồi dữ liệu nếu bản cũ bị phẳng
+// đŸ§© Phá»¥c há»“i dá»¯ liá»‡u náº¿u báº£n cÅ© bá»‹ pháº³ng
 for (const key in CHUYEN_DE_DATA) {
   const item = CHUYEN_DE_DATA[key];
   if (!item || typeof item !== "object" || !("children" in item)) {
@@ -8401,7 +8406,7 @@ for (const key in CHUYEN_DE_DATA) {
   }
 }
 
-// 🔹 Lưu toàn bộ cây
+// đŸ”¹ LÆ°u toĂ n bá»™ cĂ¢y
 function luuChuyenDe() {
   localStorage.setItem("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
@@ -8409,34 +8414,34 @@ saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 }
 
 // =====================================================
-// ✏️ ĐỔI TÊN MỤC CHUYÊN ĐỀ (giữ nguyên id & dữ liệu)
+// âœï¸ Äá»”I TĂN Má»¤C CHUYĂN Äá»€ (giá»¯ nguyĂªn id & dá»¯ liá»‡u)
 // =====================================================
 function doiTenMucChuyenDe(ten, data) {
   if (!ten || !data) return;
 
-  // 🔍 Tìm node hiện tại theo tên
+  // đŸ” TĂ¬m node hiá»‡n táº¡i theo tĂªn
   const node = findNodeByName(data, ten);
-  if (!node) return alert("Không tìm thấy chuyên đề: " + ten);
+  if (!node) return alert("KhĂ´ng tĂ¬m tháº¥y chuyĂªn Ä‘á»: " + ten);
 
-  // ✏️ Hỏi tên mới
-  const tenGoc = ten.replace(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|•\s*)/i, "").trim();
-  const newNameOnly = prompt("Đổi tên mục:", tenGoc);
+  // âœï¸ Há»i tĂªn má»›i
+  const tenGoc = ten.replace(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|â€¢\s*)/i, "").trim();
+  const newNameOnly = prompt("Äá»•i tĂªn má»¥c:", tenGoc);
   if (!newNameOnly || newNameOnly === tenGoc) return;
 
-  // 🏷️ Giữ nguyên prefix (I., 1., a., • …)
-  const prefix = ten.match(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|•\s*)/i)?.[0] || "";
+  // đŸ·ï¸ Giá»¯ nguyĂªn prefix (I., 1., a., â€¢ â€¦)
+  const prefix = ten.match(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|â€¢\s*)/i)?.[0] || "";
   const newNameFull = (prefix + newNameOnly).trim();
 
-  // 🔄 Cập nhật tên trong dữ liệu
+  // đŸ”„ Cáº­p nháº­t tĂªn trong dá»¯ liá»‡u
   renameKeyInTree(data, ten, newNameFull);
 
-  // 💾 Lưu lại
+  // đŸ’¾ LÆ°u láº¡i
   luuChuyenDe();
   renderChuyenDe(false);
   setTimeout(() => saveNewOrder(), 100);
 }
 
-// 🔍 Tìm node theo tên (duyệt toàn cây)
+// đŸ” TĂ¬m node theo tĂªn (duyá»‡t toĂ n cĂ¢y)
 function findNodeByName(data, name) {
   for (const key in data) {
     if (key === name) return data[key];
@@ -8446,10 +8451,10 @@ function findNodeByName(data, name) {
   return null;
 }
 
-// 🔄 Đổi key nhưng giữ nguyên id & children
+// đŸ”„ Äá»•i key nhÆ°ng giá»¯ nguyĂªn id & children
 function renameKeyInTree(data, oldKey, newKey) {
   if (data[oldKey]) {
-    data[newKey] = data[oldKey]; // giữ nguyên id, noiDung, children
+    data[newKey] = data[oldKey]; // giá»¯ nguyĂªn id, noiDung, children
     delete data[oldKey];
     return true;
   }
@@ -8462,19 +8467,19 @@ function renameKeyInTree(data, oldKey, newKey) {
 
 function doiTenMucChuyenDeTheoId(id) {
   const nodeInfo = findNodeByIdWithParent(CHUYEN_DE_DATA, id);
-  if (!nodeInfo) return alert("Không tìm thấy mục có id: " + id);
+  if (!nodeInfo) return alert("KhĂ´ng tĂ¬m tháº¥y má»¥c cĂ³ id: " + id);
 
   const { key, parentData, node } = nodeInfo;
   const ten = key;
 
-  const tenGoc = ten.replace(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|•\s*)/i, "").trim();
-  const newNameOnly = prompt("Đổi tên mục:", tenGoc);
+  const tenGoc = ten.replace(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|â€¢\s*)/i, "").trim();
+  const newNameOnly = prompt("Äá»•i tĂªn má»¥c:", tenGoc);
   if (!newNameOnly || newNameOnly === tenGoc) return;
 
-  const prefix = ten.match(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|•\s*)/i)?.[0] || "";
+  const prefix = ten.match(/^(?:[IVXLCDM]+\.\s*|\d+(?:\.\d+)*\.\s*|[a-z]\.\s+|â€¢\s*)/i)?.[0] || "";
   const newNameFull = (prefix + newNameOnly).trim();
 
-  // Cập nhật key trong parentData (không mất id)
+  // Cáº­p nháº­t key trong parentData (khĂ´ng máº¥t id)
   delete parentData[key];
   parentData[newNameFull] = node;
 
@@ -8490,7 +8495,7 @@ function doiTenMucChuyenDeTheoId(id) {
 
 
 
-// ➕ Thêm mục con tự đánh số theo cấp
+// â• ThĂªm má»¥c con tá»± Ä‘Ă¡nh sá»‘ theo cáº¥p
 function themMucCon(tenCha) {
   function findNodeByName(data, name) {
     for (const key in data) {
@@ -8502,18 +8507,18 @@ function themMucCon(tenCha) {
   }
 
   const parent = findNodeByName(CHUYEN_DE_DATA, tenCha);
-  if (!parent) return alert("Không tìm thấy chuyên đề cha: " + tenCha);
+  if (!parent) return alert("KhĂ´ng tĂ¬m tháº¥y chuyĂªn Ä‘á» cha: " + tenCha);
 
-  const name = prompt("Nhập tên mục con mới:");
+  const name = prompt("Nháº­p tĂªn má»¥c con má»›i:");
   if (!name) return;
 
-  // 🔹 Đảm bảo children là mảng
+  // đŸ”¹ Äáº£m báº£o children lĂ  máº£ng
   if (!Array.isArray(parent.children)) parent.children = [];
 
-  // 🔹 Đếm thứ tự con hiện có
+  // đŸ”¹ Äáº¿m thá»© tá»± con hiá»‡n cĂ³
   const count = parent.children.length + 1;
 
-  // 🔹 Xác định prefix theo cấp
+  // đŸ”¹ XĂ¡c Ä‘á»‹nh prefix theo cáº¥p
   let prefix = "";
   if (/^[IVXLCDM]+\./i.test(tenCha)) {
     prefix = `${count}. `;
@@ -8522,37 +8527,37 @@ function themMucCon(tenCha) {
     prefix = `${base}.${count}. `;
   } else if (/^[a-z]\./i.test(tenCha)) {
     prefix = String.fromCharCode(96 + count) + ". ";
-  } else if (/^•/.test(tenCha)) {
-    prefix = "• ";
+  } else if (/^â€¢/.test(tenCha)) {
+    prefix = "â€¢ ";
   }
 
   const fullName = `${prefix}${name.trim()}`;
 
-  // ⚠️ Tránh trùng tên
+  // â ï¸ TrĂ¡nh trĂ¹ng tĂªn
   if (parent.children.some(c => c.key === fullName)) {
-    alert("Tên mục con này đã tồn tại!");
+    alert("TĂªn má»¥c con nĂ y Ä‘Ă£ tá»“n táº¡i!");
     return;
   }
 
-  // ➕ Thêm node mới
+  // â• ThĂªm node má»›i
   const newId = generateId();
   const newNode = { id: newId, key: fullName, noiDung: "", children: [] };
   parent.children.push(newNode);
 
-  console.log("🧩 Mục con mới:", newNode);
+  console.log("đŸ§© Má»¥c con má»›i:", newNode);
 
-  // 💾 Lưu
+  // đŸ’¾ LÆ°u
   localStorage.setItem("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
   saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 
-  // ✅ Render lại toàn bộ cây
+  // âœ… Render láº¡i toĂ n bá»™ cĂ¢y
   const container = document.getElementById("listChuyenDe");
   if (container) container.innerHTML = "";
   renderChuyenDe(false);
 
   setTimeout(() => {
     if (typeof saveNewOrder === "function") {
-      console.log("🔁 Đang đánh lại số thứ tự...");
+      console.log("đŸ” Äang Ä‘Ă¡nh láº¡i sá»‘ thá»© tá»±...");
       saveNewOrder();
       const container2 = document.getElementById("listChuyenDe");
       if (container2) {
@@ -8560,7 +8565,7 @@ function themMucCon(tenCha) {
         renderChuyenDe(false);
       }
       saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
-      console.log(`✅ Đã thêm "${fullName}" vào "${tenCha}" và cập nhật số.`);
+      console.log(`âœ… ÄĂ£ thĂªm "${fullName}" vĂ o "${tenCha}" vĂ  cáº­p nháº­t sá»‘.`);
     }
   }, 100);
 }
@@ -8573,14 +8578,14 @@ function themMucCon(tenCha) {
 
 
 // =====================================================
-// 📘 Render cây chuyên đề đa cấp (5 cấp) – đánh số theo hệ A–I–1–a
+// đŸ“˜ Render cĂ¢y chuyĂªn Ä‘á» Ä‘a cáº¥p (5 cáº¥p) â€“ Ä‘Ă¡nh sá»‘ theo há»‡ Aâ€“Iâ€“1â€“a
 // =====================================================
 function renderChuyenDeRecursive(data, cap = 1) {
   const ul = document.createElement("ul");
   ul.className = "cd-level";
   ul.setAttribute("data-level", cap);
 
-  // 🔢 Bảng ký hiệu cho từng cấp
+  // đŸ”¢ Báº£ng kĂ½ hiá»‡u cho tá»«ng cáº¥p
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const smallLetters = "abcdefghijklmnopqrstuvwxyz".split("");
 
@@ -8588,13 +8593,13 @@ function renderChuyenDeRecursive(data, cap = 1) {
     const li = document.createElement("li");
     li.className = "cd-item";
 
-    // ✅ Luôn đảm bảo node có id (nếu chưa có thì cấp mới)
+    // âœ… LuĂ´n Ä‘áº£m báº£o node cĂ³ id (náº¿u chÆ°a cĂ³ thĂ¬ cáº¥p má»›i)
     if (!obj.id) obj.id = generateId();
     li.dataset.id = obj.id;
 
     const hasChildren = obj.children && Object.keys(obj.children).length > 0;
 
-    // 🧮 Tạo prefix theo cấp
+    // đŸ§® Táº¡o prefix theo cáº¥p
     let prefix = "";
     if (cap === 1) prefix = letters[index] ? `${letters[index]}. ` : `${index + 1}. `;
 else if (cap === 2) prefix = `${toRoman(index + 1)}. `;
@@ -8602,15 +8607,15 @@ else if (cap === 2) prefix = `${toRoman(index + 1)}. `;
     else if (cap === 4) prefix = smallLetters[index] ? `${smallLetters[index]}. ` : `${index + 1}. `;
     else prefix = "";
 
-    // 🔹 Tên hiển thị
+    // đŸ”¹ TĂªn hiá»ƒn thá»‹
     const displayName = prefix + ten.replace(/^[A-Z]+\.\s*|^[IVXLCDM]+\.\s*|^\d+\.\s*|^[a-z]+\.\s*/i, "").trim();
 
-    // 🔹 Tạo phần tử tên
+    // đŸ”¹ Táº¡o pháº§n tá»­ tĂªn
     const nameSpan = document.createElement("span");
     nameSpan.textContent = displayName;
     nameSpan.className = "cd-name";
 
-    // 👉 Cấp 2–5: click mở popup
+    // đŸ‘‰ Cáº¥p 2â€“5: click má»Ÿ popup
     if (cap >= 2) {
       nameSpan.onclick = (e) => {
         e.stopPropagation();
@@ -8619,26 +8624,26 @@ else if (cap === 2) prefix = `${toRoman(index + 1)}. `;
       };
     }
 
-    // 🔹 Nhóm nút hành động
+    // đŸ”¹ NhĂ³m nĂºt hĂ nh Ä‘á»™ng
     const actions = document.createElement("div");
     actions.className = "cd-actions";
 
-    // ➕ Thêm mục con
+    // â• ThĂªm má»¥c con
     const addBtn = document.createElement("button");
-    addBtn.innerHTML = "➕";
-    addBtn.title = "Thêm mục con";
+    addBtn.innerHTML = "â•";
+    addBtn.title = "ThĂªm má»¥c con";
     addBtn.onclick = (e) => {
       e.stopPropagation();
       const id = obj.id || li.dataset.id;
       themMucConTheoId(id);
     };
-    if (cap >= 5) addBtn.style.display = "none"; // không thêm con ở cấp 5
+    if (cap >= 5) addBtn.style.display = "none"; // khĂ´ng thĂªm con á»Ÿ cáº¥p 5
     actions.appendChild(addBtn);
 
-    // ✏️ Đổi tên
+    // âœï¸ Äá»•i tĂªn
     const editBtn = document.createElement("button");
-    editBtn.innerHTML = "✏️";
-    editBtn.title = "Đổi tên";
+    editBtn.innerHTML = "âœï¸";
+    editBtn.title = "Äá»•i tĂªn";
     editBtn.onclick = (e) => {
       e.stopPropagation();
       const id = obj.id || li.dataset.id;
@@ -8646,20 +8651,20 @@ else if (cap === 2) prefix = `${toRoman(index + 1)}. `;
     };
     actions.appendChild(editBtn);
 
-    // 🗑️ Xóa
+    // đŸ—‘ï¸ XĂ³a
     const delBtn = document.createElement("button");
-    delBtn.innerHTML = "🗑️";
-    delBtn.title = "Xóa";
+    delBtn.innerHTML = "đŸ—‘ï¸";
+    delBtn.title = "XĂ³a";
     delBtn.onclick = (e) => {
       e.stopPropagation();
       const id = obj.id || li.dataset.id;
-      if (confirm("Xóa mục này?")) {
+      if (confirm("XĂ³a má»¥c nĂ y?")) {
         xoaMucTheoId(id);
       }
     };
     actions.appendChild(delBtn);
 
-    // 🔹 Hàng chính
+    // đŸ”¹ HĂ ng chĂ­nh
     const row = document.createElement("div");
     row.className = "cd-row";
     const left = document.createElement("div");
@@ -8669,7 +8674,7 @@ else if (cap === 2) prefix = `${toRoman(index + 1)}. `;
     row.appendChild(actions);
     li.appendChild(row);
 
-    // 🔹 Cấp con (gọi đệ quy)
+    // đŸ”¹ Cáº¥p con (gá»i Ä‘á»‡ quy)
     if (hasChildren) {
       const childUl = renderChuyenDeRecursive(obj.children, cap + 1);
       childUl.style.display = "none";
@@ -8698,7 +8703,7 @@ else if (cap === 2) prefix = `${toRoman(index + 1)}. `;
 
 
 // =====================================================
-// ✏️ Nút bật/tắt chế độ "Sửa"
+// âœï¸ NĂºt báº­t/táº¯t cháº¿ Ä‘á»™ "Sá»­a"
 // =====================================================
 let editMode = false;
 
@@ -8711,42 +8716,42 @@ function toggleEditMode() {
 
   if (editMode) {
     btn.classList.add("active");
-    btn.textContent = "✅ Hoàn tất";
+    btn.textContent = "âœ… HoĂ n táº¥t";
   } else {
     btn.classList.remove("active");
-    btn.textContent = "✏️ Sửa";
+    btn.textContent = "âœï¸ Sá»­a";
   }
 }
 
 
 // =====================================================
-// 🖱️ DRAG & DROP mọi cấp (1 → 5) — ổn định, không lẫn cấp
+// đŸ–±ï¸ DRAG & DROP má»i cáº¥p (1 â†’ 5) â€” á»•n Ä‘á»‹nh, khĂ´ng láº«n cáº¥p
 // =====================================================
 function enableDragDrop() {
   const root = document.getElementById("listChuyenDe");
   if (!root) return;
 
-  // lấy toàn bộ li trong mọi cấp
+  // láº¥y toĂ n bá»™ li trong má»i cáº¥p
   const allLis = root.querySelectorAll("li");
 
   allLis.forEach(li => {
     li.draggable = true;
 
-    // khi bắt đầu kéo
+    // khi báº¯t Ä‘áº§u kĂ©o
     li.addEventListener("dragstart", e => {
-      e.stopPropagation(); // ✅ ngăn chặn cha bắt sự kiện
+      e.stopPropagation(); // âœ… ngÄƒn cháº·n cha báº¯t sá»± kiá»‡n
       e.dataTransfer.effectAllowed = "move";
       e.dataTransfer.setData("text/plain", getItemPath(li));
       li.classList.add("dragging");
     });
 
-    // khi thả ra
+    // khi tháº£ ra
     li.addEventListener("dragend", e => {
       e.stopPropagation();
       li.classList.remove("dragging");
     });
 
-    // khi kéo qua một phần tử khác
+    // khi kĂ©o qua má»™t pháº§n tá»­ khĂ¡c
     li.addEventListener("dragover", e => {
       e.preventDefault();
       e.stopPropagation();
@@ -8754,10 +8759,10 @@ function enableDragDrop() {
       const dragging = document.querySelector(".dragging");
       if (!dragging) return;
 
-      // 🚫 không cho kéo cha vào trong con của chính nó
+      // đŸ« khĂ´ng cho kĂ©o cha vĂ o trong con cá»§a chĂ­nh nĂ³
       if (dragging.contains(li)) return;
 
-      // chỉ cho phép hoán đổi trong cùng cấp (cùng parent)
+      // chá»‰ cho phĂ©p hoĂ¡n Ä‘á»•i trong cĂ¹ng cáº¥p (cĂ¹ng parent)
       if (dragging.parentElement === li.parentElement) {
         const rect = li.getBoundingClientRect();
         const midpoint = rect.top + rect.height / 2;
@@ -8770,7 +8775,7 @@ function enableDragDrop() {
       }
     });
 
-    // khi thả chuột ra
+    // khi tháº£ chuá»™t ra
     li.addEventListener("drop", e => {
       e.preventDefault();
       e.stopPropagation();
@@ -8779,7 +8784,7 @@ function enableDragDrop() {
   });
 }
 
-// 📍Lấy đường dẫn đầy đủ (VD: "I. Tình duyên / 1. C1 / 1.2. Bala")
+// đŸ“Láº¥y Ä‘Æ°á»ng dáº«n Ä‘áº§y Ä‘á»§ (VD: "I. TĂ¬nh duyĂªn / 1. C1 / 1.2. Bala")
 function getItemPath(li) {
   const names = [];
   let current = li;
@@ -8796,7 +8801,7 @@ function getItemPath(li) {
 
 
 
-// 🔍 Tìm dữ liệu cũ theo ID duy nhất
+// đŸ” TĂ¬m dá»¯ liá»‡u cÅ© theo ID duy nháº¥t
 function getDataById(data, id) {
   for (const key in data) {
     const node = data[key];
@@ -8808,9 +8813,9 @@ function getDataById(data, id) {
 }
 
 // =====================================================
-// 💾 Lưu lại thứ tự mới sau khi kéo–thả (cập nhật lại số thứ tự La Mã)
+// đŸ’¾ LÆ°u láº¡i thá»© tá»± má»›i sau khi kĂ©oâ€“tháº£ (cáº­p nháº­t láº¡i sá»‘ thá»© tá»± La MĂ£)
 // =====================================================
-// 🔍 Trợ lý tìm dữ liệu cũ theo tên (vì key đổi)
+// đŸ” Trá»£ lĂ½ tĂ¬m dá»¯ liá»‡u cÅ© theo tĂªn (vĂ¬ key Ä‘á»•i)
 function getDataByName(data, name) {
   for (const key in data) {
     if (key === name) return data[key];
@@ -8820,7 +8825,7 @@ function getDataByName(data, name) {
   return null;
 }
 
-// ✅ Hàm chuyển số sang chữ số La Mã (không giới hạn 10)
+// âœ… HĂ m chuyá»ƒn sá»‘ sang chá»¯ sá»‘ La MĂ£ (khĂ´ng giá»›i háº¡n 10)
 function toRoman(num) {
   const romans = [
     ["M",1000], ["CM",900], ["D",500], ["CD",400],
@@ -8838,7 +8843,7 @@ function toRoman(num) {
 }
 
 // =====================================================
-// 💾 Lưu thứ tự mới (I, 1, 1.1, a, •) – fix sạch dấu ".."
+// đŸ’¾ LÆ°u thá»© tá»± má»›i (I, 1, 1.1, a, â€¢) â€“ fix sáº¡ch dáº¥u ".."
 // =====================================================
 function saveNewOrder() {
   const list = document.getElementById("listChuyenDe");
@@ -8871,7 +8876,7 @@ function renumber(ul, parentPrefix = "", level = 1) {
 
     const oldData = getDataById(CHUYEN_DE_DATA, id) || { id, noiDung: "", children: {} };
 
-    // 🧮 Tạo prefix mới
+    // đŸ§® Táº¡o prefix má»›i
     let prefixDisplay = "";
     if (level === 1) prefixDisplay = String.fromCharCode(64 + idx + 1);
 else if (level === 2) prefixDisplay = toRoman(idx + 1);
@@ -8880,7 +8885,7 @@ else if (level === 2) prefixDisplay = toRoman(idx + 1);
     else prefixDisplay = "";
 
     const nameWithoutPrefix = nameEl.textContent
-      .replace(/^(?:[A-Z]\.\s*|[IVXLCDM]+\.\s*|\d+\.\s*|[a-z]\.\s+|•\s*)/i, "")
+      .replace(/^(?:[A-Z]\.\s*|[IVXLCDM]+\.\s*|\d+\.\s*|[a-z]\.\s+|â€¢\s*)/i, "")
       .trim();
     const newName = prefixDisplay ? `${prefixDisplay}. ${nameWithoutPrefix}` : nameWithoutPrefix;
 
@@ -8920,17 +8925,17 @@ saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 
 
 // =====================================================
-// 🎨 CSS
+// đŸ¨ CSS
 // =====================================================
 const styleCD = document.createElement("style");
 styleCD.innerHTML = `
 #listChuyenDe { padding-left: 0; }
 
 /* ============================= */
-/* ⚙️ BỐ CỤC CHUNG CHUYÊN ĐỀ CÂY */
+/* â™ï¸ Bá» Cá»¤C CHUNG CHUYĂN Äá»€ CĂ‚Y */
 /* ============================= */
 
-/* Mỗi mục trong cây */
+/* Má»—i má»¥c trong cĂ¢y */
 .cd-item {
   display: flex;
   flex-direction: column;
@@ -8940,17 +8945,17 @@ styleCD.innerHTML = `
   line-height: 1.2;
 }
 
-/* Hàng chính: tên + các nút */
+/* HĂ ng chĂ­nh: tĂªn + cĂ¡c nĂºt */
 .cd-item > .cd-row {
   display: flex;
-  justify-content: space-between;   /* 👈 tách trái – phải */
+  justify-content: space-between;   /* đŸ‘ˆ tĂ¡ch trĂ¡i â€“ pháº£i */
   align-items: center;
   margin: 0;
   padding-left: 0;
 }
 
 
-/* Phần trái (tên + mũi tên) */
+/* Pháº§n trĂ¡i (tĂªn + mÅ©i tĂªn) */
 .cd-left {
   display: flex;
   align-items: center;
@@ -8958,7 +8963,7 @@ styleCD.innerHTML = `
   flex-wrap: nowrap;
 }
 
-/* Tên chuyên đề */
+/* TĂªn chuyĂªn Ä‘á» */
 .cd-name {
   cursor: pointer;
   font-weight: 600;
@@ -8967,7 +8972,7 @@ styleCD.innerHTML = `
   line-height: 1.2;
 }
 
-/* Mũi tên ▸/▾ */
+/* MÅ©i tĂªn â–¸/â–¾ */
 .cd-arrow {
   font-weight: bold;
   color: #7b2cbf;
@@ -8978,18 +8983,18 @@ styleCD.innerHTML = `
 }
 .cd-arrow:hover { color: #3a0ca3; }
 
-/* Nhóm nút hành động (gọn lại) */
+/* NhĂ³m nĂºt hĂ nh Ä‘á»™ng (gá»n láº¡i) */
 .cd-actions {
   display: flex;
   gap: 2px;
   align-items: center;
 }
-/* 🔹 Kích thước icon nhỏ gọn */
+/* đŸ”¹ KĂ­ch thÆ°á»›c icon nhá» gá»n */
 .cd-actions button {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 6px; /* 👈 nhỏ hơn 1/2 */
+  font-size: 6px; /* đŸ‘ˆ nhá» hÆ¡n 1/2 */
   opacity: 0.6;
   transition: transform 0.2s, opacity 0.2s;
   padding: 0 1px;
@@ -9000,30 +9005,30 @@ styleCD.innerHTML = `
 }
 
 
-/* 🔹 Màu chữ phân biệt rõ và đậm theo cấp */
+/* đŸ”¹ MĂ u chá»¯ phĂ¢n biá»‡t rĂµ vĂ  Ä‘áº­m theo cáº¥p */
 .cd-level[data-level="1"] > .cd-item > .cd-row .cd-name {
-  color: #b22222; /* Đỏ đậm */
+  color: #b22222; /* Äá» Ä‘áº­m */
   font-weight: 700;
 }
 
 .cd-level[data-level="2"] > .cd-item > .cd-row .cd-name {
-  color: #d2691e; /* Cam đậm / nâu cam */
+  color: #d2691e; /* Cam Ä‘áº­m / nĂ¢u cam */
   font-weight: 700;
 }
 
 .cd-level[data-level="3"] > .cd-item > .cd-row .cd-name {
-  color: #003366; /* Xanh dương đậm – navy blue */
+  color: #003366; /* Xanh dÆ°Æ¡ng Ä‘áº­m â€“ navy blue */
   font-weight: 700;
 }
 
 .cd-level[data-level="4"] > .cd-item > .cd-row .cd-name {
-  color: #006400; /* Xanh lá đậm */
+  color: #006400; /* Xanh lĂ¡ Ä‘áº­m */
   font-weight: 600;
   font-style: italic;
 }
 
 .cd-level[data-level="5"] > .cd-item > .cd-row .cd-name {
-  color: #000000; /* Đen */
+  color: #000000; /* Äen */
   font-style: italic;
 }
 
@@ -9031,25 +9036,25 @@ styleCD.innerHTML = `
 
 
 /* ============================= */
-/* ⚙️ CẤP CÂY & THỤT DÒNG HỢP LÝ */
+/* â™ï¸ Cáº¤P CĂ‚Y & THá»¤T DĂ’NG Há»¢P LĂ */
 /* ============================= */
 
-/* Cấp gốc (I, II, III...) */
+/* Cáº¥p gá»‘c (I, II, III...) */
 .cd-level {
   list-style: none;
   margin: 0;
-  padding-left: 0; /* 👈 không thụt toàn bộ cây */
+  padding-left: 0; /* đŸ‘ˆ khĂ´ng thá»¥t toĂ n bá»™ cĂ¢y */
   border-left: none;
 }
 
-/* Cấp con mới có đường thụt và đường kẻ */
+/* Cáº¥p con má»›i cĂ³ Ä‘Æ°á»ng thá»¥t vĂ  Ä‘Æ°á»ng káº» */
 .cd-item > ul.cd-level {
-  padding-left: 2px;   /* 👈 giảm thụt để cân */
+  padding-left: 2px;   /* đŸ‘ˆ giáº£m thá»¥t Ä‘á»ƒ cĂ¢n */
 
-  border-left: 2px dotted #ddd; /* 👈 chỉ vẽ line khi có cấp con */
+  border-left: 2px dotted #ddd; /* đŸ‘ˆ chá»‰ váº½ line khi cĂ³ cáº¥p con */
 }
 
-/* Khung “chưa có mục con” */
+/* Khung â€œchÆ°a cĂ³ má»¥c conâ€ */
 .cd-empty-sub {
   margin: 2px 0 4px 15px;
   font-style: italic;
@@ -9068,7 +9073,7 @@ styleCD.innerHTML = `
 }
 `;
 
-// ⚙️ Ghi đè mức thụt dòng khi cây đã load
+// â™ï¸ Ghi Ä‘Ă¨ má»©c thá»¥t dĂ²ng khi cĂ¢y Ä‘Ă£ load
 const fixIndent = document.createElement("style");
 fixIndent.textContent = `
 .cd-item > ul.cd-level {
@@ -9091,7 +9096,7 @@ document.head.appendChild(styleCD);
 
 
 // ===========================================
-// 💾 Ghi nhớ trạng thái mở/đóng trước khi render
+// đŸ’¾ Ghi nhá»› tráº¡ng thĂ¡i má»Ÿ/Ä‘Ă³ng trÆ°á»›c khi render
 // ===========================================
 function getExpandedPaths() {
   const expanded = [];
@@ -9104,7 +9109,7 @@ function getExpandedPaths() {
   return expanded;
 }
 
-// ✅ Khôi phục trạng thái sau khi render
+// âœ… KhĂ´i phá»¥c tráº¡ng thĂ¡i sau khi render
 function restoreExpandedPaths(paths) {
   paths.forEach(path => {
     const li = Array.from(document.querySelectorAll("#listChuyenDe li"))
@@ -9117,19 +9122,19 @@ function restoreExpandedPaths(paths) {
 }
 
 // =====================================================
-// 🚀 Gấp toàn bộ cây (reset tất cả cấp con)
+// đŸ€ Gáº¥p toĂ n bá»™ cĂ¢y (reset táº¥t cáº£ cáº¥p con)
 // =====================================================
 function collapseAll() {
-  // Ẩn toàn bộ danh sách con ở mọi cấp
+  // áº¨n toĂ n bá»™ danh sĂ¡ch con á»Ÿ má»i cáº¥p
   document.querySelectorAll("#listChuyenDe ul.cd-level").forEach(ul => {
     ul.style.display = "none";
   });
 
-  // Hiển thị lại đúng cấp 1 (La Mã)
+  // Hiá»ƒn thá»‹ láº¡i Ä‘Ăºng cáº¥p 1 (La MĂ£)
   const rootUl = document.querySelector("#listChuyenDe > ul.cd-level");
   if (rootUl) rootUl.style.display = "block";
 
-  // Chỉ hiển thị các mục cấp 1 (I., II., III.)
+  // Chá»‰ hiá»ƒn thá»‹ cĂ¡c má»¥c cáº¥p 1 (I., II., III.)
   rootUl.querySelectorAll(":scope > li > ul.cd-level").forEach(subUl => {
     subUl.style.display = "none";
   });
@@ -9137,153 +9142,153 @@ function collapseAll() {
 
 
 // =====================================================
-// 🚀 Render cây chuyên đề (giữ trạng thái + gấp cấp con khi load)
+// đŸ€ Render cĂ¢y chuyĂªn Ä‘á» (giá»¯ tráº¡ng thĂ¡i + gáº¥p cáº¥p con khi load)
 // =====================================================
 function renderChuyenDe(autoCollapse = false) {
   const list = document.getElementById("listChuyenDe");
   if (!list) return;
 
-  // 💾 Lưu trạng thái hiện tại
+  // đŸ’¾ LÆ°u tráº¡ng thĂ¡i hiá»‡n táº¡i
   const expanded = getExpandedPaths();
 
   list.innerHTML = "";
   list.appendChild(renderChuyenDeRecursive(CHUYEN_DE_DATA, 1));
 
-  // Áp khóa ngay sau render
+  // Ăp khĂ³a ngay sau render
   if (typeof toggleChuyenDeEditLock === "function") {
     toggleChuyenDeEditLock(window.isPaidUser && window.isPaidUser());
   }
 
-  // 🔁 Phục hồi trạng thái (chỉ nếu không gấp toàn bộ)
+  // đŸ” Phá»¥c há»“i tráº¡ng thĂ¡i (chá»‰ náº¿u khĂ´ng gáº¥p toĂ n bá»™)
   if (!autoCollapse) restoreExpandedPaths(expanded);
 
-  // ✅ Nếu autoCollapse: chỉ giữ cấp 1, gấp toàn bộ cấp 2 trở xuống
+  // âœ… Náº¿u autoCollapse: chá»‰ giá»¯ cáº¥p 1, gáº¥p toĂ n bá»™ cáº¥p 2 trá»Ÿ xuá»‘ng
   if (autoCollapse) {
     collapseAll();
   }
 
-  // 🟣 Kích hoạt kéo thả sau khi render xong
+  // đŸŸ£ KĂ­ch hoáº¡t kĂ©o tháº£ sau khi render xong
   enableDragDrop();
 }
 
 
 // =====================================================
-// 🔄 Khởi động (nạp dữ liệu từ IndexedDB trước khi render)
+// đŸ”„ Khá»Ÿi Ä‘á»™ng (náº¡p dá»¯ liá»‡u tá»« IndexedDB trÆ°á»›c khi render)
 // =====================================================
 window.addEventListener("DOMContentLoaded", () => {
 
-  // 🧠 Nạp SAO_DATA trước
+  // đŸ§  Náº¡p SAO_DATA trÆ°á»›c
   loadFromIndexedDB("SAO_DATA", data => {
     window.SAO_DATA = data ? JSON.parse(data) : JSON.parse(localStorage.getItem("SAO_DATA") || "{}");
-    console.log("✅ Nạp SAO_DATA từ IndexedDB (hoặc localStorage nếu trống)");
+    console.log("âœ… Náº¡p SAO_DATA tá»« IndexedDB (hoáº·c localStorage náº¿u trá»‘ng)");
 
-    // 🧠 Nạp Chuyên Đề Data
+    // đŸ§  Náº¡p ChuyĂªn Äá» Data
     loadFromIndexedDB("CHUYEN_DE_DATA", d => {
       window.CHUYEN_DE_DATA = d ? JSON.parse(d) : JSON.parse(localStorage.getItem("CHUYEN_DE_DATA") || "{}");
     });
 
-    // 🧠 Nạp Cấu trúc cây chuyên đề
+    // đŸ§  Náº¡p Cáº¥u trĂºc cĂ¢y chuyĂªn Ä‘á»
     loadFromIndexedDB("CHUYEN_DE_CAY", d => {
       window.CHUYEN_DE_CAY = d ? JSON.parse(d) : JSON.parse(localStorage.getItem("CHUYEN_DE_CAY") || "{}");
     });
 
-    // ✅ Sau khi đã có dữ liệu → render giao diện
+    // âœ… Sau khi Ä‘Ă£ cĂ³ dá»¯ liá»‡u â†’ render giao diá»‡n
     renderSidebar?.();
     renderChuyenDe?.(true);
 
-    // 🔹 Nút “Thêm chuyên đề”
+    // đŸ”¹ NĂºt â€œThĂªm chuyĂªn Ä‘á»â€
     const addBtn = document.getElementById("btnAddChuyenDe");
     if (addBtn) addBtn.onclick = () => themChuyenDe();
 
-    // 🔹 Bấm tiêu đề “CHUYÊN ĐỀ” → gấp toàn bộ
+    // đŸ”¹ Báº¥m tiĂªu Ä‘á» â€œCHUYĂN Äá»€â€ â†’ gáº¥p toĂ n bá»™
     const titleEl = Array.from(document.querySelectorAll("h2, h3, .titleChuyenDe, .cd-title"))
-      .find(el => el.textContent.includes("CHUYÊN ĐỀ"));
+      .find(el => el.textContent.includes("CHUYĂN Äá»€"));
     if (titleEl) {
       titleEl.style.cursor = "pointer";
       titleEl.addEventListener("click", () => collapseAll());
     }
 
-  }); // <- hết callback IndexedDB
+  }); // <- háº¿t callback IndexedDB
 });
 
 // =====================================================
-// 🧭 KIỂM TRA NGUỒN DỮ LIỆU & DUNG LƯỢNG SAO_DATA (phiên bản IndexedDB)
+// đŸ§­ KIá»‚M TRA NGUá»’N Dá»® LIá»†U & DUNG LÆ¯á»¢NG SAO_DATA (phiĂªn báº£n IndexedDB)
 // =====================================================
 function kiemTraNguonDuLieu() {
   try {
     loadFromIndexedDB("SAO_DATA", data => {
-      let source = "⚪ Không xác định";
+      let source = "âª KhĂ´ng xĂ¡c Ä‘á»‹nh";
       let sizeMB = 0;
 
       if (data) {
-        // ✅ Có dữ liệu trong IndexedDB
+        // âœ… CĂ³ dá»¯ liá»‡u trong IndexedDB
         window.SAO_DATA = JSON.parse(data);
-        source = "💾 IndexedDB";
+        source = "đŸ’¾ IndexedDB";
         sizeMB = (new Blob([data]).size / (1024 * 1024)).toFixed(2);
       } else {
-        // ❎ Nếu không có, thử lấy từ localStorage (cho tương thích cũ)
+        // â Náº¿u khĂ´ng cĂ³, thá»­ láº¥y tá»« localStorage (cho tÆ°Æ¡ng thĂ­ch cÅ©)
         const saved = localStorage.getItem("SAO_DATA");
         if (saved) {
           window.SAO_DATA = JSON.parse(saved);
-          source = "📦 localStorage (tạm)";
+          source = "đŸ“¦ localStorage (táº¡m)";
           sizeMB = (new Blob([saved]).size / (1024 * 1024)).toFixed(2);
         }
       }
 
-      console.log(`🧩 Nguồn dữ liệu hiện tại: ${source} (${sizeMB} MB)`);
+      console.log(`đŸ§© Nguá»“n dá»¯ liá»‡u hiá»‡n táº¡i: ${source} (${sizeMB} MB)`);
 
-      // ⚠️ Cảnh báo nếu vẫn còn ở localStorage và quá 4.5MB
+      // â ï¸ Cáº£nh bĂ¡o náº¿u váº«n cĂ²n á»Ÿ localStorage vĂ  quĂ¡ 4.5MB
       if (source.includes("localStorage") && sizeMB > 4.5) {
-        console.warn(`⚠️ Dung lượng ${sizeMB} MB có thể vượt giới hạn localStorage — nên xuất ra file backup!`);
+        console.warn(`â ï¸ Dung lÆ°á»£ng ${sizeMB} MB cĂ³ thá»ƒ vÆ°á»£t giá»›i háº¡n localStorage â€” nĂªn xuáº¥t ra file backup!`);
       }
 
-      // 🧭 Nếu có cờ vừa nhập từ file
+      // đŸ§­ Náº¿u cĂ³ cá» vá»«a nháº­p tá»« file
       const savedFileFlag = localStorage.getItem("SAO_DATA_IMPORTED_FROM_FILE");
       if (savedFileFlag) {
-        console.log("📥 Dữ liệu vừa được nhập từ file JSON, đã ghi vào IndexedDB.");
+        console.log("đŸ“¥ Dá»¯ liá»‡u vá»«a Ä‘Æ°á»£c nháº­p tá»« file JSON, Ä‘Ă£ ghi vĂ o IndexedDB.");
         localStorage.removeItem("SAO_DATA_IMPORTED_FROM_FILE");
       }
     });
   } catch (err) {
-    console.error("❌ Lỗi khi kiểm tra nguồn dữ liệu:", err);
+    console.error("âŒ Lá»—i khi kiá»ƒm tra nguá»“n dá»¯ liá»‡u:", err);
   }
 }
 
-// Gọi tự động khi load xong trang
+// Gá»i tá»± Ä‘á»™ng khi load xong trang
 window.addEventListener("DOMContentLoaded", kiemTraNguonDuLieu);
 
 
 // =====================================================
-// 🔁 TỰ KHÔI PHỤC DỮ LIỆU TỪ FILE JSON ĐÃ NẠP LẦN TRƯỚC
+// đŸ” Tá»° KHĂ”I PHá»¤C Dá»® LIá»†U Tá»ª FILE JSON ÄĂƒ Náº P Láº¦N TRÆ¯á»C
 // =====================================================
 (function autoReloadLastJSON() {
   const lastFile = localStorage.getItem("LAST_JSON_FILE_CONTENT");
   if (!lastFile) {
-    console.log("ℹ️ Không có file JSON nào được lưu từ lần trước.");
+    console.log("â„¹ï¸ KhĂ´ng cĂ³ file JSON nĂ o Ä‘Æ°á»£c lÆ°u tá»« láº§n trÆ°á»›c.");
     return;
   }
 
   try {
     const obj = JSON.parse(lastFile);
-    console.log("📂 Tự động khôi phục dữ liệu từ file JSON lần trước:", obj);
+    console.log("đŸ“‚ Tá»± Ä‘á»™ng khĂ´i phá»¥c dá»¯ liá»‡u tá»« file JSON láº§n trÆ°á»›c:", obj);
 
-    // ✅ Lấy phần SAO_DATA (hoặc toàn bộ nếu là object gốc)
+    // âœ… Láº¥y pháº§n SAO_DATA (hoáº·c toĂ n bá»™ náº¿u lĂ  object gá»‘c)
     const data = obj.SAO_DATA || obj;
     window.SAO_DATA = data;
 
-    // 💾 Lưu vào IndexedDB thay vì localStorage (an toàn, không giới hạn)
+    // đŸ’¾ LÆ°u vĂ o IndexedDB thay vĂ¬ localStorage (an toĂ n, khĂ´ng giá»›i háº¡n)
     saveToIndexedDB("SAO_DATA", JSON.stringify(data));
 
-    console.log("✅ Auto reload SAO_DATA thành công (đã ghi vào IndexedDB).");
+    console.log("âœ… Auto reload SAO_DATA thĂ nh cĂ´ng (Ä‘Ă£ ghi vĂ o IndexedDB).");
   } catch (e) {
-    console.warn("⚠️ Lỗi khi đọc lại JSON đã lưu:", e);
+    console.warn("â ï¸ Lá»—i khi Ä‘á»c láº¡i JSON Ä‘Ă£ lÆ°u:", e);
   }
 })();
 
 
 
 // =======================================================
-// 💾 HÀM LƯU / NẠP DỮ LIỆU BẰNG INDEXEDDB (DUNG LƯỢNG LỚN)
+// đŸ’¾ HĂ€M LÆ¯U / Náº P Dá»® LIá»†U Báº°NG INDEXEDDB (DUNG LÆ¯á»¢NG Lá»N)
 // =======================================================
 function saveToIndexedDB(key, value) {
   const req = indexedDB.open("TuViDB", 1);
@@ -9297,7 +9302,7 @@ function saveToIndexedDB(key, value) {
     const tx = db.transaction("jsonStore", "readwrite");
     tx.objectStore("jsonStore").put(value, key);
   };
-  req.onerror = e => console.warn("⚠️ Lỗi IndexedDB (save):", e);
+  req.onerror = e => console.warn("â ï¸ Lá»—i IndexedDB (save):", e);
 }
 
 function loadFromIndexedDB(key, callback) {
@@ -9315,50 +9320,50 @@ function loadFromIndexedDB(key, callback) {
     getReq.onsuccess = () => callback(getReq.result);
     getReq.onerror = () => callback(null);
   };
-  req.onerror = e => console.warn("⚠️ Lỗi IndexedDB (load):", e);
+  req.onerror = e => console.warn("â ï¸ Lá»—i IndexedDB (load):", e);
 }
 
 
 
 // =====================================================
-// 🌟 NẠP DỮ LIỆU SAO (ưu tiên IndexedDB, fallback localStorage)
+// đŸŒŸ Náº P Dá»® LIá»†U SAO (Æ°u tiĂªn IndexedDB, fallback localStorage)
 // =====================================================
 window.addEventListener("DOMContentLoaded", function () {
-  // 🧠 Thử nạp SAO_DATA từ IndexedDB trước
+  // đŸ§  Thá»­ náº¡p SAO_DATA tá»« IndexedDB trÆ°á»›c
   loadFromIndexedDB("SAO_DATA", data => {
     try {
       if (data) {
         window.SAO_DATA = JSON.parse(data);
-        console.log("✅ Đã nạp SAO_DATA từ IndexedDB.");
+        console.log("âœ… ÄĂ£ náº¡p SAO_DATA tá»« IndexedDB.");
       } else {
-        // Nếu chưa có thì fallback sang localStorage
+        // Náº¿u chÆ°a cĂ³ thĂ¬ fallback sang localStorage
         const savedLocal = localStorage.getItem("SAO_DATA");
         if (typeof savedLocal === "string" && savedLocal.trim().startsWith("{")) {
           window.SAO_DATA = JSON.parse(savedLocal);
-          console.log("📦 Nạp SAO_DATA từ localStorage (tạm).");
+          console.log("đŸ“¦ Náº¡p SAO_DATA tá»« localStorage (táº¡m).");
         } else {
           window.SAO_DATA = {};
-          console.log("⚪ Chưa có SAO_DATA hợp lệ, khởi tạo rỗng.");
+          console.log("âª ChÆ°a cĂ³ SAO_DATA há»£p lá»‡, khá»Ÿi táº¡o rá»—ng.");
         }
       }
     } catch (err) {
-      console.warn("⚠️ Lỗi parse SAO_DATA:", err);
+      console.warn("â ï¸ Lá»—i parse SAO_DATA:", err);
       window.SAO_DATA = {};
     }
 
-    // 🔹 Nếu chưa có dữ liệu thì hiển thị gợi ý
+    // đŸ”¹ Náº¿u chÆ°a cĂ³ dá»¯ liá»‡u thĂ¬ hiá»ƒn thá»‹ gá»£i Ă½
     if (!window.SAO_DATA || Object.keys(window.SAO_DATA).length === 0) {
-      alert("📂 Hãy chọn file JSON hoặc backup để nạp dữ liệu sao!");
+      alert("đŸ“‚ HĂ£y chá»n file JSON hoáº·c backup Ä‘á»ƒ náº¡p dá»¯ liá»‡u sao!");
     }
 
-    // ✅ Khi đã nạp xong → render giao diện
+    // âœ… Khi Ä‘Ă£ náº¡p xong â†’ render giao diá»‡n
     renderSidebar?.();
     renderChuyenDe?.(true);
   });
 });
 
 // =====================================================
-// 🌟 TẠO KHUNG DỮ LIỆU CHO TOÀN BỘ SAO (nếu thiếu)
+// đŸŒŸ Táº O KHUNG Dá»® LIá»†U CHO TOĂ€N Bá»˜ SAO (náº¿u thiáº¿u)
 // =====================================================
 function ensureAllStars() {
   if (!window.SAO_DATA) window.SAO_DATA = {};
@@ -9375,20 +9380,20 @@ function ensureAllStars() {
           dacTinh: ""
         }
       };
-      console.log(`🆕 Đã khởi tạo dữ liệu trống cho sao: ${name}`);
+      console.log(`đŸ†• ÄĂ£ khá»Ÿi táº¡o dá»¯ liá»‡u trá»‘ng cho sao: ${name}`);
     }
   });
 
-  // 💾 Chỉ lưu vào IndexedDB (bỏ localStorage để tránh lỗi QuotaExceededError)
+  // đŸ’¾ Chá»‰ lÆ°u vĂ o IndexedDB (bá» localStorage Ä‘á»ƒ trĂ¡nh lá»—i QuotaExceededError)
   const json = JSON.stringify(SAO_DATA);
   saveToIndexedDB("SAO_DATA", json);
 
-  console.log("✅ ensureAllStars() – Đã đồng bộ SAO_DATA vào IndexedDB.");
+  console.log("âœ… ensureAllStars() â€“ ÄĂ£ Ä‘á»“ng bá»™ SAO_DATA vĂ o IndexedDB.");
 }
 
 
 // =====================================================
-// 🌟 QUẢN LÝ CHẾ ĐỘ POPUP (xem / chỉnh sửa)
+// đŸŒŸ QUáº¢N LĂ CHáº¾ Äá»˜ POPUP (xem / chá»‰nh sá»­a)
 // =====================================================
 window.setPopupMode = function (mode) {
   const activePopup = document.querySelector(".popup-overlay[style*='display: flex'], .popup-overlay[style*='display: block']");
@@ -9413,13 +9418,13 @@ window.setPopupMode = function (mode) {
 
 
 // =====================================================
-// 🌟 HÀM MỞ POPUP SAO (chế độ xem)
+// đŸŒŸ HĂ€M Má» POPUP SAO (cháº¿ Ä‘á»™ xem)
 // =====================================================
 window.moPopupSao = function (maSao) {
-  // 🚧 Chặn người chưa premium mở popup sao
+  // đŸ§ Cháº·n ngÆ°á»i chÆ°a premium má»Ÿ popup sao
   if (!(window.isPaidUser && window.isPaidUser())) {
     if (typeof window.updatePremiumLock === "function") window.updatePremiumLock(false);
-    console.warn("[PREMIUM] Block moPopupSao vì user chưa premium");
+    console.warn("[PREMIUM] Block moPopupSao vĂ¬ user chÆ°a premium");
     return;
   }
 
@@ -9432,7 +9437,7 @@ window.moPopupSao = function (maSao) {
 
   renderBangCungChuc(maSao);
 
-  const shortName = (data.ten || maSao).split("–")[0].trim();
+  const shortName = (data.ten || maSao).split("â€“")[0].trim();
   data.ten = data.ten || shortName.toUpperCase();
 
   const html = `
@@ -9451,16 +9456,16 @@ window.moPopupSao = function (maSao) {
   renderTab2(maSao);
   renderTab3(maSao);
 
-  // 🟣 HIỆN POPUP
+  // đŸŸ£ HIá»†N POPUP
   document.getElementById("saoPopup").style.display = "flex";
 
-  // ⭐⭐⭐ RESET SCROLL MỖI LẦN MỞ
+  // â­â­â­ RESET SCROLL Má»–I Láº¦N Má»
   const popupBox = document.querySelector("#saoPopup .popup-content");
   if (popupBox) popupBox.scrollTop = 0;
 
   setPopupMode("view");
 
-  // ----- Giữ lại kích thước popup nếu có -----
+  // ----- Giá»¯ láº¡i kĂ­ch thÆ°á»›c popup náº¿u cĂ³ -----
   if (popupBox) {
     popupBox.style.resize = "none";
     popupBox.style.cursor = "default";
@@ -9478,31 +9483,31 @@ window.moPopupSao = function (maSao) {
 };
 
 // =====================================================
-// ✏️ CHỈNH SỬA NỘI DUNG SAO
+// âœï¸ CHá»ˆNH Sá»¬A Ná»˜I DUNG SAO
 // =====================================================
 const btnEdit = document.getElementById("btnEdit");
 if (btnEdit) {
   btnEdit.onclick = () => {
     const sao = window.currentSao;
-    if (!sao) return alert("⚠️ Chưa chọn sao hợp lệ!");
+    if (!sao) return alert("â ï¸ ChÆ°a chá»n sao há»£p lá»‡!");
     if (!window.SAO_DATA[sao]) SAO_DATA[sao] = { short: {} };
 
     const data = SAO_DATA[sao].short;
     const box = document.getElementById("popupThongTin");
-    if (!box) return alert("⚠️ Không tìm thấy khung popup!");
+    if (!box) return alert("â ï¸ KhĂ´ng tĂ¬m tháº¥y khung popup!");
 
     document.getElementById("luuPopup").style.display = "inline-block";
     btnEdit.style.display = "none";
 
     box.innerHTML = `
       <div id="toolbarPopup" style="margin-bottom:10px; text-align:center;">
-        <button onclick="document.execCommand('justifyLeft')">⬅️ Trái</button>
-        <button onclick="document.execCommand('justifyCenter')">↔️ Giữa</button>
-        <button onclick="document.execCommand('justifyRight')">➡️ Phải</button>
-        <button onclick="document.execCommand('bold')">🅱️ Đậm</button>
-        <button onclick="document.execCommand('italic')">𝑰 Nghiêng</button>
-        <button onclick="insertSampleTable()">📋 Bảng</button>
-        <input type="color" id="colorPicker" title="Đổi màu chữ">
+        <button onclick="document.execCommand('justifyLeft')">â¬…ï¸ TrĂ¡i</button>
+        <button onclick="document.execCommand('justifyCenter')">â†”ï¸ Giá»¯a</button>
+        <button onclick="document.execCommand('justifyRight')">â¡ï¸ Pháº£i</button>
+        <button onclick="document.execCommand('bold')">đŸ…±ï¸ Äáº­m</button>
+        <button onclick="document.execCommand('italic')">đ‘° NghiĂªng</button>
+        <button onclick="insertSampleTable()">đŸ“‹ Báº£ng</button>
+        <input type="color" id="colorPicker" title="Äá»•i mĂ u chá»¯">
       </div>
 
       <div class="editable" data-field="dong1" contenteditable="true" style="text-align:center; color:#555;">${data.dong1 || ""}</div>
@@ -9522,9 +9527,9 @@ if (btnEdit) {
       popupBox.style.cursor = "nwse-resize";
     }
 
-    // 👇 CHÈN THÊM KHỐI NÀY (PHẦN MỚI)
+    // đŸ‘‡ CHĂˆN THĂM KHá»I NĂ€Y (PHáº¦N Má»I)
     // ================================
-    // TAB 2 – cho phép gõ ở cột 'Ý nghĩa'
+    // TAB 2 â€“ cho phĂ©p gĂµ á»Ÿ cá»™t 'Ă nghÄ©a'
     document.querySelectorAll("#bangCungChuc td[data-cung]").forEach(td => {
   td.contentEditable = true;
   td.classList.add("edit-input");
@@ -9535,7 +9540,7 @@ document.querySelectorAll("#bangTuHoa td[data-hoa]").forEach(td => {
 });
 
 
-   // TAB 3 — Lưu Tứ Hóa (Cát / Hung)
+   // TAB 3 â€” LÆ°u Tá»© HĂ³a (CĂ¡t / Hung)
 const hoaData = {};
 document.querySelectorAll("#bangTuHoa td[data-hoa]").forEach(td => {
   const hoa = td.dataset.hoa;
@@ -9553,7 +9558,7 @@ SAO_DATA[sao].tuHoa = hoaData;
 
 
 // =====================================================
-// 💾 LƯU NỘI DUNG SAO (chỉ dùng IndexedDB để tránh giới hạn 5MB)
+// đŸ’¾ LÆ¯U Ná»˜I DUNG SAO (chá»‰ dĂ¹ng IndexedDB Ä‘á»ƒ trĂ¡nh giá»›i háº¡n 5MB)
 // =====================================================
 const btnLuu = document.getElementById("luuPopup");
 if (btnLuu) {
@@ -9562,7 +9567,7 @@ if (btnLuu) {
     if (!sao || !SAO_DATA[sao]) return;
 
     // =========================
-    // TAB 1 — Lưu Thông Tin Sao
+    // TAB 1 â€” LÆ°u ThĂ´ng Tin Sao
     // =========================
     const data = SAO_DATA[sao].short;
     document.querySelectorAll("#popupThongTin .editable").forEach(div => {
@@ -9573,7 +9578,7 @@ if (btnLuu) {
     });
 
     // =========================
-    // TAB 2 — Lưu Cung Chức (Cát / Hung)
+    // TAB 2 â€” LÆ°u Cung Chá»©c (CĂ¡t / Hung)
     // =========================
     const cungData = {};
     document.querySelectorAll("#bangCungChuc td[data-cung]").forEach(td => {
@@ -9585,7 +9590,7 @@ if (btnLuu) {
     SAO_DATA[sao].cungChuc = cungData;
 
     // =========================
-    // TAB 3 — Lưu Tứ Hóa
+    // TAB 3 â€” LÆ°u Tá»© HĂ³a
     // =========================
     const tuHoaBox = document.getElementById("noiDungTuHoa");
     if (tuHoaBox) {
@@ -9593,18 +9598,18 @@ if (btnLuu) {
     }
 
     // =========================
-    // LƯU VÀO INDEXEDDB
+    // LÆ¯U VĂ€O INDEXEDDB
     // =========================
     try {
       const json = JSON.stringify(SAO_DATA);
       saveToIndexedDB("SAO_DATA", json);
-      console.log("💾 Đã lưu SAO_DATA vào IndexedDB thành công!");
+      console.log("đŸ’¾ ÄĂ£ lÆ°u SAO_DATA vĂ o IndexedDB thĂ nh cĂ´ng!");
     } catch (err) {
-      console.warn("⚠️ Lỗi khi lưu IndexedDB:", err);
+      console.warn("â ï¸ Lá»—i khi lÆ°u IndexedDB:", err);
     }
 
     // =========================
-    // LƯU KÍCH THƯỚC POPUP
+    // LÆ¯U KĂCH THÆ¯á»C POPUP
     // =========================
     const popupBox = document.querySelector("#saoPopup .popup-content");
     if (popupBox) {
@@ -9615,12 +9620,12 @@ if (btnLuu) {
     }
 
     // =========================
-    // THOÁT CHẾ ĐỘ EDIT
+    // THOĂT CHáº¾ Äá»˜ EDIT
     // =========================
     document.getElementById("luuPopup").style.display = "none";
     document.getElementById("btnEdit").style.display = "inline-block";
 
-    // Reload lại popup để xem dữ liệu mới
+    // Reload láº¡i popup Ä‘á»ƒ xem dá»¯ liá»‡u má»›i
     moPopupSao(sao);
   };
 }
@@ -9628,7 +9633,7 @@ if (btnLuu) {
 
 
 // =====================================================
-// ❌ HỦY / ĐÓNG / CHI TIẾT
+// âŒ Há»¦Y / ÄĂ“NG / CHI TIáº¾T
 // =====================================================
 const btnCancel = document.getElementById("btnCancel");
 if (btnCancel) btnCancel.onclick = () => moPopupSao(window.currentSao);
@@ -9658,36 +9663,36 @@ if (saoPopup) {
 }
 
 // =====================================================
-// 📘 LOGIC POPUP CHUYÊN ĐỀ – DÙNG INDEXEDDB (phiên bản đầy đủ)
+// đŸ“˜ LOGIC POPUP CHUYĂN Äá»€ â€“ DĂ™NG INDEXEDDB (phiĂªn báº£n Ä‘áº§y Ä‘á»§)
 // =====================================================
 
-// 🧭 Khởi tạo rỗng, sẽ nạp từ IndexedDB sau
+// đŸ§­ Khá»Ÿi táº¡o rá»—ng, sáº½ náº¡p tá»« IndexedDB sau
 window.CHUYEN_DE_DATA = {};
 
-// 🔹 Nạp dữ liệu CHUYÊN ĐỀ từ IndexedDB (nếu có)
+// đŸ”¹ Náº¡p dá»¯ liá»‡u CHUYĂN Äá»€ tá»« IndexedDB (náº¿u cĂ³)
 loadFromIndexedDB("CHUYEN_DE_DATA", data => {
   if (data) {
     try {
       window.CHUYEN_DE_DATA = JSON.parse(data);
-      console.log("✅ Nạp CHUYÊN_DE_DATA từ IndexedDB thành công.");
+      console.log("âœ… Náº¡p CHUYĂN_DE_DATA tá»« IndexedDB thĂ nh cĂ´ng.");
     } catch (e) {
-      console.warn("⚠️ Lỗi parse CHUYÊN_DE_DATA:", e);
+      console.warn("â ï¸ Lá»—i parse CHUYĂN_DE_DATA:", e);
       window.CHUYEN_DE_DATA = {};
     }
   } else {
-    console.log("ℹ️ Chưa có CHUYÊN_DE_DATA trong IndexedDB, tạo mới rỗng.");
+    console.log("â„¹ï¸ ChÆ°a cĂ³ CHUYĂN_DE_DATA trong IndexedDB, táº¡o má»›i rá»—ng.");
     window.CHUYEN_DE_DATA = {};
   }
 });
 
 
 // =====================================================
-// 📘 HÀM MỞ POPUP CHUYÊN ĐỀ THEO ID
+// đŸ“˜ HĂ€M Má» POPUP CHUYĂN Äá»€ THEO ID
 // =====================================================
 window.moPopupChuyenDeTheoId = function (id, tenHienThi = "") {
   const found = findNodeByIdWithParent(CHUYEN_DE_DATA, id);
   if (!found) {
-    alert("Không tìm thấy chuyên đề có ID này!");
+    alert("KhĂ´ng tĂ¬m tháº¥y chuyĂªn Ä‘á» cĂ³ ID nĂ y!");
     return;
   }
 
@@ -9695,11 +9700,11 @@ window.moPopupChuyenDeTheoId = function (id, tenHienThi = "") {
   window.currentChuyenDeId = id;
   window.currentChuyenDeName = tenHienThi;
 
-  document.getElementById("tenChuyenDe").innerText = tenHienThi || "(Không có tên)";
+  document.getElementById("tenChuyenDe").innerText = tenHienThi || "(KhĂ´ng cĂ³ tĂªn)";
   document.getElementById("noiDungChuyenDe").innerHTML =
-    node.noiDung || "<i style='color:#777;'>Chưa có nội dung.</i>";
+    node.noiDung || "<i style='color:#777;'>ChÆ°a cĂ³ ná»™i dung.</i>";
 
-  // Giao diện xem
+  // Giao diá»‡n xem
   document.getElementById("toolbarChuyenDe").style.display = "none";
   document.getElementById("btnEditCD").style.display = "";
   document.getElementById("btnChiTietCD").style.display = "";
@@ -9713,7 +9718,7 @@ document.getElementById("popupChuyenDe").style.display = "block";
 
 
 // =====================================================
-// ✏️ CHỈNH SỬA CHUYÊN ĐỀ
+// âœï¸ CHá»ˆNH Sá»¬A CHUYĂN Äá»€
 // =====================================================
 document.getElementById("btnEditCD").onclick = () => {
   const box = document.getElementById("noiDungChuyenDe");
@@ -9732,7 +9737,7 @@ document.getElementById("btnEditCD").onclick = () => {
 
 
 // =====================================================
-// 💾 LƯU CHUYÊN ĐỀ
+// đŸ’¾ LÆ¯U CHUYĂN Äá»€
 // =====================================================
 document.getElementById("btnSaveCD").onclick = () => {
   const id = window.currentChuyenDeId;
@@ -9741,26 +9746,26 @@ document.getElementById("btnSaveCD").onclick = () => {
   const html = document.getElementById("noiDungChuyenDe").innerHTML.trim();
 
   const found = findNodeByIdWithParent(CHUYEN_DE_DATA, id);
-  if (!found) return alert("Không tìm thấy node để lưu!");
+  if (!found) return alert("KhĂ´ng tĂ¬m tháº¥y node Ä‘á»ƒ lÆ°u!");
   const { node } = found;
 
-  // ✅ Cập nhật nội dung cho đúng node
+  // âœ… Cáº­p nháº­t ná»™i dung cho Ä‘Ăºng node
   node.noiDung = html;
 
-  // 💾 Lưu toàn bộ cây
+  // đŸ’¾ LÆ°u toĂ n bá»™ cĂ¢y
   saveToIndexedDB("CHUYEN_DE_DATA", JSON.stringify(CHUYEN_DE_DATA));
 
-  // 🔁 Reload popup hiển thị lại
+  // đŸ” Reload popup hiá»ƒn thá»‹ láº¡i
   moPopupChuyenDeTheoId(id, window.currentChuyenDeName);
   document.getElementById("popupChuyenDe").classList.remove("edit-mode");
 
-  console.log(`💾 Đã lưu chuyên đề ID '${id}' (${window.currentChuyenDeName})`);
+  console.log(`đŸ’¾ ÄĂ£ lÆ°u chuyĂªn Ä‘á» ID '${id}' (${window.currentChuyenDeName})`);
 };
 
 
 
 // =====================================================
-// ❌ HỦY CHỈNH SỬA
+// âŒ Há»¦Y CHá»ˆNH Sá»¬A
 // =====================================================
 document.getElementById("btnCancelCD").onclick = () => {
   moPopupChuyenDeTheoId(window.currentChuyenDeId, window.currentChuyenDeName);
@@ -9769,36 +9774,36 @@ document.getElementById("btnCancelCD").onclick = () => {
 
 
 // =====================================================
-// 📄 XEM CHI TIẾT (chưa xử lý sâu, chỉ demo)
+// đŸ“„ XEM CHI TIáº¾T (chÆ°a xá»­ lĂ½ sĂ¢u, chá»‰ demo)
 // =====================================================
 document.getElementById("btnChiTietCD").onclick = () => {
   const ten = window.currentChuyenDe;
-  alert("Xem chi tiết chuyên đề: " + ten);
+  alert("Xem chi tiáº¿t chuyĂªn Ä‘á»: " + ten);
 };
 
 
 // =====================================================
-// 🚫 ĐÓNG POPUP CHUYÊN ĐỀ (có cảnh báo nếu chưa lưu)
+// đŸ« ÄĂ“NG POPUP CHUYĂN Äá»€ (cĂ³ cáº£nh bĂ¡o náº¿u chÆ°a lÆ°u)
 // =====================================================
 let chuyenDeEdited = false;
 
-// 🔹 Đánh dấu đã chỉnh sửa
+// đŸ”¹ ÄĂ¡nh dáº¥u Ä‘Ă£ chá»‰nh sá»­a
 document.getElementById("noiDungChuyenDe").addEventListener("input", () => {
   if (document.getElementById("noiDungChuyenDe").isContentEditable) {
     chuyenDeEdited = true;
   }
 });
 
-// 🔹 Khi lưu → reset cờ
+// đŸ”¹ Khi lÆ°u â†’ reset cá»
 document.getElementById("btnSaveCD").addEventListener("click", () => {
   chuyenDeEdited = false;
 });
 
-// 🔹 Khi bấm nút X
+// đŸ”¹ Khi báº¥m nĂºt X
 document.getElementById("closeChuyenDe").onclick = (e) => {
   e.stopPropagation();
   if (chuyenDeEdited) {
-    const ok = confirm("Bạn có thay đổi chưa lưu. Thoát mà không lưu?");
+    const ok = confirm("Báº¡n cĂ³ thay Ä‘á»•i chÆ°a lÆ°u. ThoĂ¡t mĂ  khĂ´ng lÆ°u?");
     if (!ok) return;
   }
   chuyenDeEdited = false;
@@ -9806,19 +9811,19 @@ document.getElementById("closeChuyenDe").onclick = (e) => {
 };
 
 
-// 🎯 Đóng popup Chuyên Đề bằng phím ESC
+// đŸ¯ ÄĂ³ng popup ChuyĂªn Äá» báº±ng phĂ­m ESC
 document.addEventListener("keydown", function(e) {
   if (e.key === "Escape") {
 
     const popup = document.getElementById("popupChuyenDe");
     if (!popup) return;
 
-    // Nếu popup đang mở → đóng
+    // Náº¿u popup Ä‘ang má»Ÿ â†’ Ä‘Ă³ng
     if (popup.style.display === "flex" || popup.style.display === "") {
 
-      // Nếu đang chỉnh sửa và có thay đổi → cảnh báo
+      // Náº¿u Ä‘ang chá»‰nh sá»­a vĂ  cĂ³ thay Ä‘á»•i â†’ cáº£nh bĂ¡o
       if (chuyenDeEdited) {
-        const ok = confirm("Bạn có thay đổi chưa lưu. Thoát mà không lưu?");
+        const ok = confirm("Báº¡n cĂ³ thay Ä‘á»•i chÆ°a lÆ°u. ThoĂ¡t mĂ  khĂ´ng lÆ°u?");
         if (!ok) return;
       }
 
@@ -9830,7 +9835,7 @@ document.addEventListener("keydown", function(e) {
 
 
 // =====================================================
-// 🚫 KHÔNG CHO CLICK RA NGOÀI POPUP ĐỂ ĐÓNG
+// đŸ« KHĂ”NG CHO CLICK RA NGOĂ€I POPUP Äá»‚ ÄĂ“NG
 // =====================================================
 const popupOverlay = document.getElementById("popupChuyenDe");
 const popupContent = popupOverlay.querySelector(".popup-content");
@@ -9843,7 +9848,7 @@ popupOverlay.addEventListener("click", (e) => {
   }
 });
 
-// 🎨 Hiệu ứng rung cảnh báo
+// đŸ¨ Hiá»‡u á»©ng rung cáº£nh bĂ¡o
 const styleShake = document.createElement("style");
 styleShake.innerHTML = `
 @keyframes shakePopup {
@@ -9857,34 +9862,34 @@ styleShake.innerHTML = `
 document.head.appendChild(styleShake);
 
 // =====================================================
-// 🎯 ĐÓNG TẤT CẢ POPUP KHI BẤM ESC
+// đŸ¯ ÄĂ“NG Táº¤T Cáº¢ POPUP KHI Báº¤M ESC
 // =====================================================
 document.addEventListener("keydown", function (e) {
   if (e.key !== "Escape") return;
 
-  // 1️⃣ Popup CHUYÊN ĐỀ
+  // 1ï¸âƒ£ Popup CHUYĂN Äá»€
   const popupCD = document.getElementById("popupChuyenDe");
   if (popupCD && popupCD.style.display === "flex") {
 
-    // Nếu có chỉnh sửa chưa lưu → hỏi
+    // Náº¿u cĂ³ chá»‰nh sá»­a chÆ°a lÆ°u â†’ há»i
     if (window.chuyenDeEdited) {
-      const ok = confirm("Bạn có thay đổi chưa lưu. Thoát mà không lưu?");
+      const ok = confirm("Báº¡n cĂ³ thay Ä‘á»•i chÆ°a lÆ°u. ThoĂ¡t mĂ  khĂ´ng lÆ°u?");
       if (!ok) return;
     }
 
     window.chuyenDeEdited = false;
     popupCD.style.display = "none";
-    return; // ESC chỉ đóng 1 popup 1 lần
+    return; // ESC chá»‰ Ä‘Ă³ng 1 popup 1 láº§n
   }
 
-  // 2️⃣ Popup SAO (#saoPopup)
+  // 2ï¸âƒ£ Popup SAO (#saoPopup)
   const popupSao = document.getElementById("saoPopup");
   if (popupSao && popupSao.style.display === "flex") {
     popupSao.style.display = "none";
     return;
   }
 
-  // 3️⃣ Popup CÁCH CỤC (#popupCachCuc)
+  // 3ï¸âƒ£ Popup CĂCH Cá»¤C (#popupCachCuc)
   const popupCC = document.getElementById("popupCachCuc");
   if (popupCC && popupCC.style.display === "flex") {
     popupCC.style.display = "none";
@@ -9893,10 +9898,10 @@ document.addEventListener("keydown", function (e) {
 });
 
 // =====================================================
-// 🔍 CLICK SAO / TUẦN / TRIỆT → TRA CỨU & HIGHLIGHT 5s (mở đúng cấp cha)
+// đŸ” CLICK SAO / TUáº¦N / TRIá»†T â†’ TRA Cá»¨U & HIGHLIGHT 5s (má»Ÿ Ä‘Ăºng cáº¥p cha)
 // =====================================================
 function cleanText(t) {
-  return __norm(t).replace(/\s+/g, ""); // ❗ giữ đúng logic: cleanText bỏ HẾT khoảng trắng
+  return __norm(t).replace(/\s+/g, ""); // â— giá»¯ Ä‘Ăºng logic: cleanText bá» Háº¾T khoáº£ng tráº¯ng
 }
 
 
@@ -9913,8 +9918,8 @@ const target = e.target.closest(
   ".layer-1 div, .layer-3 div, .cat-tinh div, .hung-tinh div, .tuan-triet span, .layer-6 .cat-tinh div, .layer-6 .hung-tinh div"
 );
 
-console.log("🎯 Click event target:", e.target);
-console.log("🎯 Matched closest:", target);
+console.log("đŸ¯ Click event target:", e.target);
+console.log("đŸ¯ Matched closest:", target);
 
 
   if (!target) return;
@@ -9922,12 +9927,12 @@ console.log("🎯 Matched closest:", target);
 
 
 
-  if (target.closest(".layer-2")) return; // ⛔ Không tra cung
+  if (target.closest(".layer-2")) return; // â›” KhĂ´ng tra cung
 
   let rawName = target.textContent.trim();
 
 /* ============================
-   📌 XÁC ĐỊNH CUNG CHO SAO
+   đŸ“Œ XĂC Äá»NH CUNG CHO SAO
    ============================ */
 (() => {
   try {
@@ -9940,29 +9945,29 @@ console.log("🎯 Matched closest:", target);
     const id = div.id.replace("cell", "");
 
 const ID_TO_CUNG = {
-  1: "Tỵ",
-  2: "Ngọ",
-  3: "Mùi",
-  4: "Thân",
+  1: "Tá»µ",
+  2: "Ngá»",
+  3: "MĂ¹i",
+  4: "ThĂ¢n",
 
-  5: "Thìn",
-  6: "Dậu",
-  7: "Mão",
-  8: "Tuất",
+  5: "ThĂ¬n",
+  6: "Dáº­u",
+  7: "MĂ£o",
+  8: "Tuáº¥t",
 
-  9: "Dần",
-  10: "Sửu",
-  11: "Tý",
-  12: "Hợi"
+  9: "Dáº§n",
+  10: "Sá»­u",
+  11: "TĂ½",
+  12: "Há»£i"
 };
 
 
     window.currentCung = ID_TO_CUNG[id] || null;
 
-    console.log("📌 Sao đang đứng tại:", window.currentCung);
+    console.log("đŸ“Œ Sao Ä‘ang Ä‘á»©ng táº¡i:", window.currentCung);
 
   } catch(e) {
-    console.warn("Lỗi xác định cung:", e);
+    console.warn("Lá»—i xĂ¡c Ä‘á»‹nh cung:", e);
   }
 })();
 
@@ -9971,43 +9976,43 @@ const ID_TO_CUNG = {
 
 
 
-console.log("🟡 rawName =", rawName);
+console.log("đŸŸ¡ rawName =", rawName);
 
-// Tuần / Triệt có dạng "Tuần" hoặc "Triệt – Tuần"
-if (rawName.includes("Tuần")) rawName = "Tuần";
-if (rawName.includes("Triệt")) rawName = "Triệt";
+// Tuáº§n / Triá»‡t cĂ³ dáº¡ng "Tuáº§n" hoáº·c "Triá»‡t â€“ Tuáº§n"
+if (rawName.includes("Tuáº§n")) rawName = "Tuáº§n";
+if (rawName.includes("Triá»‡t")) rawName = "Triá»‡t";
 
-  if (rawName.includes("–")) rawName = rawName.split("–")[1].trim();
-// ✅ Bỏ cả tiền tố N., Nh., L., ĐV., TL.
-const saoTen = rawName.replace(/^(Nh\.|N\.|L\.|ĐV\.|TL\.)\s*/i, "").trim();
+  if (rawName.includes("â€“")) rawName = rawName.split("â€“")[1].trim();
+// âœ… Bá» cáº£ tiá»n tá»‘ N., Nh., L., ÄV., TL.
+const saoTen = rawName.replace(/^(Nh\.|N\.|L\.|ÄV\.|TL\.)\s*/i, "").trim();
 let cleanSao = cleanText(saoTen);
 
-// Tuần / Triệt → Tuần Không / Triệt Không
+// Tuáº§n / Triá»‡t â†’ Tuáº§n KhĂ´ng / Triá»‡t KhĂ´ng
 if (cleanSao.includes("tuan"))  cleanSao = "tuankhong";
 if (cleanSao.includes("triet")) cleanSao = "trietkhong";
-// 🟪 Nếu là Tuần/Triệt → lấy 2 cung bị đóng
+// đŸŸª Náº¿u lĂ  Tuáº§n/Triá»‡t â†’ láº¥y 2 cung bá»‹ Ä‘Ă³ng
 if (cleanSao === "tuankhong" || cleanSao === "trietkhong") {
-  const cap = target.closest(".tuan-triet")?.dataset.cap || ""; // VD: "Tý-Sửu"
+  const cap = target.closest(".tuan-triet")?.dataset.cap || ""; // VD: "TĂ½-Sá»­u"
   const [c1, c2] = cap.split("-");
-  window.currentCung = null; // không 1 cung cố định
-  window.blockedCung = [c1, c2]; // lưu mảng 2 cung
+  window.currentCung = null; // khĂ´ng 1 cung cá»‘ Ä‘á»‹nh
+  window.blockedCung = [c1, c2]; // lÆ°u máº£ng 2 cung
 } else {
-  window.blockedCung = null; // reset khi click sao khác
+  window.blockedCung = null; // reset khi click sao khĂ¡c
 }
 
-console.log("✅ after mapping =", cleanSao);
+console.log("âœ… after mapping =", cleanSao);
 
 
   clearTimeout(highlightTimer);
 
-  // 🧹 Xóa sáng cũ
+  // đŸ§¹ XĂ³a sĂ¡ng cÅ©
   sidebar.querySelectorAll("li.highlight-sao").forEach(li => li.classList.remove("highlight-sao"));
 
-  // 🔍 Tìm phần tử sao trong từ điển
+  // đŸ” TĂ¬m pháº§n tá»­ sao trong tá»« Ä‘iá»ƒn
  let found = null;
 sidebar.querySelectorAll("[data-sao]").forEach(li => {
 
-  // ❗ Bỏ qua nhóm "Cung"
+  // â— Bá» qua nhĂ³m "Cung"
   const groupTitleEl = li.closest(".group")?.querySelector(".group-title");
   if (groupTitleEl && groupTitleEl.textContent.includes("Cung")) return;
 
@@ -10016,11 +10021,11 @@ sidebar.querySelectorAll("[data-sao]").forEach(li => {
 });
 
 if (!found) {
-  console.warn("⛔ NOT FOUND in sidebar:", cleanSao);
+  console.warn("â›” NOT FOUND in sidebar:", cleanSao);
   return;
 }
 
-  // 🔹 Thu gọn toàn bộ danh sách khác, trừ phần 📘 CHUYÊN ĐỀ
+  // đŸ”¹ Thu gá»n toĂ n bá»™ danh sĂ¡ch khĂ¡c, trá»« pháº§n đŸ“˜ CHUYĂN Äá»€
 sidebar.querySelectorAll("ul").forEach(ul => {
   if (!ul.closest("#chuyenDeBox")) {
     ul.style.display = "none";
@@ -10028,30 +10033,30 @@ sidebar.querySelectorAll("ul").forEach(ul => {
 });
 
 
-  // 🟢 Mở tất cả cấp cha chứa sao đó
+  // đŸŸ¢ Má»Ÿ táº¥t cáº£ cáº¥p cha chá»©a sao Ä‘Ă³
   let parent = found.parentElement;
   while (parent && parent.id !== "sidebarTraCuu") {
     if (parent.tagName === "UL") parent.style.display = "block";
     parent = parent.parentElement;
   }
 
- // 🌟 Highlight & cuộn tới sao
+ // đŸŒŸ Highlight & cuá»™n tá»›i sao
 found.classList.add("highlight-sao");
 found.scrollIntoView({ behavior: "smooth", block: "center" });
 
 highlightTimer = setTimeout(() => found.classList.remove("highlight-sao"), 5000);
 
 // ===============================
-// 🔄 CHỈ UPDATE POPUP NẾU ĐANG MỞ
+// đŸ”„ CHá»ˆ UPDATE POPUP Náº¾U ÄANG Má»
 // ===============================
 
 const popup = document.getElementById("saoPopup");
 
 if (popup && popup.style.display !== "none") {
-  // Popup đang mở → cập nhật
+  // Popup Ä‘ang má»Ÿ â†’ cáº­p nháº­t
   showStarInfo(saoTen, window.currentCung || null);
 
-  // Tự chuyển sang Tab 2 lại sau click
+  // Tá»± chuyá»ƒn sang Tab 2 láº¡i sau click
   setTimeout(() => {
     document.querySelector(`.tab-link[data-tab="tab2"]`)?.click();
   }, 50);
@@ -10061,7 +10066,7 @@ if (popup && popup.style.display !== "none") {
 });
 
 // =====================================================
-// 🟣 CLICK CUNG CHỨC (MỆNH, HUYNH ĐỆ, PHÚC ĐỨC, <THÂN>) → TRA CỨU & MỞ ĐÚNG CẤP CHA
+// đŸŸ£ CLICK CUNG CHá»¨C (Má»†NH, HUYNH Äá»†, PHĂC Äá»¨C, <THĂ‚N>) â†’ TRA Cá»¨U & Má» ÄĂNG Cáº¤P CHA
 // =====================================================
 document.querySelector(".container")?.addEventListener("click", (ev) => {
   const target = ev.target;
@@ -10070,30 +10075,30 @@ document.querySelector(".container")?.addEventListener("click", (ev) => {
 
   const text = target.textContent.trim();
 
-  // 🔒 Chỉ bắt khi là chữ IN HOA hoàn toàn hoặc chứa <THÂN>
-  const isUpper = /^[A-ZÀ-Ỵ\s<>\.]+$/.test(text);
-  const isThan = text.includes("THÂN");
-  if (!isUpper && !isThan) return; // ⛔ Không phải cung chức
+  // đŸ”’ Chá»‰ báº¯t khi lĂ  chá»¯ IN HOA hoĂ n toĂ n hoáº·c chá»©a <THĂ‚N>
+  const isUpper = /^[A-ZĂ€-á»´\s<>\.]+$/.test(text);
+  const isThan = text.includes("THĂ‚N");
+  if (!isUpper && !isThan) return; // â›” KhĂ´ng pháº£i cung chá»©c
 
-  // Danh sách 13 cung chức (IN HOA)
+  // Danh sĂ¡ch 13 cung chá»©c (IN HOA)
   const CUNG_CHUC = [
-    "MỆNH","HUYNH ĐỆ","PHU THÊ","TỬ TỨC","TÀI BẠCH","TẬT ÁCH",
-    "THIÊN DI","NÔ BỘC","QUAN LỘC","ĐIỀN TRẠCH","PHÚC ĐỨC","PHỤ MẪU","THÂN"
+    "Má»†NH","HUYNH Äá»†","PHU THĂ","Tá»¬ Tá»¨C","TĂ€I Báº CH","Táº¬T ĂCH",
+    "THIĂN DI","NĂ” Bá»˜C","QUAN Lá»˜C","ÄIá»€N TRáº CH","PHĂC Äá»¨C","PHá»¤ MáºªU","THĂ‚N"
   ];
 
-  // 🧩 Xử lý riêng trường hợp “THÂN” (để không dính MỆNH<THÂN>)
+  // đŸ§© Xá»­ lĂ½ riĂªng trÆ°á»ng há»£p â€œTHĂ‚Nâ€ (Ä‘á»ƒ khĂ´ng dĂ­nh Má»†NH<THĂ‚N>)
   let foundCung = null;
-  if (text === "<THÂN>" || text.includes("(THÂN)")) {
-    foundCung = "THÂN";
+  if (text === "<THĂ‚N>" || text.includes("(THĂ‚N)")) {
+    foundCung = "THĂ‚N";
   } else {
     foundCung = CUNG_CHUC.find(c => text.includes(c));
   }
   if (!foundCung) return;
 
-  // 🟢 Tắt sáng trong lá số
+  // đŸŸ¢ Táº¯t sĂ¡ng trong lĂ¡ sá»‘
   document.querySelectorAll(".sao-highlight").forEach(e => e.classList.remove("sao-highlight"));
 
-  // 🟢 Tìm và highlight dòng tương ứng trong từ điển
+  // đŸŸ¢ TĂ¬m vĂ  highlight dĂ²ng tÆ°Æ¡ng á»©ng trong tá»« Ä‘iá»ƒn
   const sidebar = document.getElementById("sidebarTraCuu");
   if (!sidebar) return;
 
@@ -10101,11 +10106,11 @@ document.querySelector(".container")?.addEventListener("click", (ev) => {
 
  let found = null;
 sidebar.querySelectorAll("li").forEach(li => {
-  // 🚫 Bỏ qua nếu mục nằm trong TỪ ĐIỂN SAO hoặc CHUYÊN ĐỀ
+  // đŸ« Bá» qua náº¿u má»¥c náº±m trong Tá»ª ÄIá»‚N SAO hoáº·c CHUYĂN Äá»€
   if (li.closest("#tuDienSaoBox") || li.closest("#chuyenDeBox")) return;
 
   const txt = li.textContent.trim().toUpperCase();
-  if (txt.includes(foundCung) || (foundCung === "THÂN" && txt.includes("AN THÂN"))) {
+  if (txt.includes(foundCung) || (foundCung === "THĂ‚N" && txt.includes("AN THĂ‚N"))) {
     found = li;
   }
 });
@@ -10113,7 +10118,7 @@ sidebar.querySelectorAll("li").forEach(li => {
 
   if (!found) return;
 
-  // 🔹 Thu gọn toàn bộ danh sách khác, trừ phần 📘 CHUYÊN ĐỀ
+  // đŸ”¹ Thu gá»n toĂ n bá»™ danh sĂ¡ch khĂ¡c, trá»« pháº§n đŸ“˜ CHUYĂN Äá»€
 sidebar.querySelectorAll("ul").forEach(ul => {
   if (!ul.closest("#chuyenDeBox")) {
     ul.style.display = "none";
@@ -10121,24 +10126,24 @@ sidebar.querySelectorAll("ul").forEach(ul => {
 });
 
 
-  // 🟢 Mở tất cả cấp cha chứa cung đó
+  // đŸŸ¢ Má»Ÿ táº¥t cáº£ cáº¥p cha chá»©a cung Ä‘Ă³
   let parent = found.parentElement;
   while (parent && parent.id !== "sidebarTraCuu") {
     if (parent.tagName === "UL") parent.style.display = "block";
     parent = parent.parentElement;
   }
 
-  // 🌟 Highlight & scroll
+  // đŸŒŸ Highlight & scroll
   found.classList.add("highlight-sao");
   found.scrollIntoView({ behavior: "smooth", block: "center" });
   setTimeout(() => found.classList.remove("highlight-sao"), 5000);
 
-  console.log("📘 Click cung chức:", foundCung);
+  console.log("đŸ“˜ Click cung chá»©c:", foundCung);
 });
 
 
 // =====================================================
-// 🌿 CLICK VÒNG TRÀNG SINH → TRA CỨU & HIGHLIGHT 5s (mở đúng cấp cha + tự thu gọn)
+// đŸŒ¿ CLICK VĂ’NG TRĂ€NG SINH â†’ TRA Cá»¨U & HIGHLIGHT 5s (má»Ÿ Ä‘Ăºng cáº¥p cha + tá»± thu gá»n)
 // =====================================================
 document.addEventListener("click", (e) => {
   const sidebar = document.getElementById("sidebarTraCuu");
@@ -10153,21 +10158,21 @@ document.addEventListener("click", (e) => {
   const rawName = textEl.textContent.trim();
   if (!rawName) return;
 
-  // 🌿 Làm sạch & bỏ dấu
+  // đŸŒ¿ LĂ m sáº¡ch & bá» dáº¥u
   const cleanSao = removeDiacritics(cleanText(rawName.toLowerCase()));
   clearTimeout(highlightTimer);
 
-  // 🧹 Xóa highlight cũ
+  // đŸ§¹ XĂ³a highlight cÅ©
   sidebar.querySelectorAll("li.highlight-sao").forEach(li => li.classList.remove("highlight-sao"));
 
- // 🔍 Tìm trong nhóm có chữ "Tràng Sinh" hoặc "Tiểu Tinh"
+ // đŸ” TĂ¬m trong nhĂ³m cĂ³ chá»¯ "TrĂ ng Sinh" hoáº·c "Tiá»ƒu Tinh"
 let found = null;
 sidebar.querySelectorAll(".group").forEach(group => {
-  // 🚫 Bỏ qua nếu nhóm nằm trong phần Từ Điển Sao hoặc Chuyên Đề
+  // đŸ« Bá» qua náº¿u nhĂ³m náº±m trong pháº§n Tá»« Äiá»ƒn Sao hoáº·c ChuyĂªn Äá»
   if (group.closest("#tuDienSaoBox") || group.closest("#chuyenDeBox")) return;
 
   const title = (group.querySelector(".group-title")?.textContent || "").toLowerCase();
-  if (!title.includes("tràng sinh") && !title.includes("tiểu tinh")) return;
+  if (!title.includes("trĂ ng sinh") && !title.includes("tiá»ƒu tinh")) return;
 
 
     group.querySelectorAll("[data-sao]").forEach(li => {
@@ -10177,11 +10182,11 @@ sidebar.querySelectorAll(".group").forEach(group => {
   });
 
   if (!found) {
-    console.log("⛔ Không tìm thấy sao:", rawName);
+    console.log("â›” KhĂ´ng tĂ¬m tháº¥y sao:", rawName);
     return;
   }
 
-  // 🔹 Thu gọn toàn bộ danh sách khác, trừ phần 📘 CHUYÊN ĐỀ
+  // đŸ”¹ Thu gá»n toĂ n bá»™ danh sĂ¡ch khĂ¡c, trá»« pháº§n đŸ“˜ CHUYĂN Äá»€
 sidebar.querySelectorAll("ul").forEach(ul => {
   if (!ul.closest("#chuyenDeBox")) {
     ul.style.display = "none";
@@ -10189,40 +10194,40 @@ sidebar.querySelectorAll("ul").forEach(ul => {
 });
 
 
-  // 🟢 Mở tất cả cấp cha chứa sao đó
+  // đŸŸ¢ Má»Ÿ táº¥t cáº£ cáº¥p cha chá»©a sao Ä‘Ă³
   let parent = found.parentElement;
   while (parent && parent.id !== "sidebarTraCuu") {
     if (parent.tagName === "UL") parent.style.display = "block";
     parent = parent.parentElement;
   }
 
-  // 🌟 Highlight & scroll
+  // đŸŒŸ Highlight & scroll
   found.classList.add("highlight-sao");
   found.scrollIntoView({ behavior: "smooth", block: "center" });
 
   highlightTimer = setTimeout(() => found.classList.remove("highlight-sao"), 5000);
 
-  console.log("🌿 Click vòng Tràng Sinh:", rawName);
+  console.log("đŸŒ¿ Click vĂ²ng TrĂ ng Sinh:", rawName);
 });
 
 
 // =====================================================
-// 🔧 HÀM HỖ TRỢ: Bỏ dấu tiếng Việt để so sánh
+// đŸ”§ HĂ€M Há»– TRá»¢: Bá» dáº¥u tiáº¿ng Viá»‡t Ä‘á»ƒ so sĂ¡nh
 // =====================================================
 function removeDiacritics(str) {
   if (!str) return "";
   return str
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "") // bỏ dấu
-    .replace(/đ/g, "d")             // đ → d
-    .replace(/Đ/g, "D");            // Đ → D
+    .replace(/[\u0300-\u036f]/g, "") // bá» dáº¥u
+    .replace(/Ä‘/g, "d")             // Ä‘ â†’ d
+    .replace(/Ä/g, "D");            // Ä â†’ D
 }
 
 
 
 
 
-// 🌟 Cho phép dán bảng HTML vào popup mà không mất định dạng
+// đŸŒŸ Cho phĂ©p dĂ¡n báº£ng HTML vĂ o popup mĂ  khĂ´ng máº¥t Ä‘á»‹nh dáº¡ng
 document.addEventListener("paste", function (e) {
   const editable = e.target.closest(".editable, .editable-view");
   if (editable && e.clipboardData) {
@@ -10232,7 +10237,7 @@ document.addEventListener("paste", function (e) {
     editable.insertAdjacentHTML("beforeend", html || text);
   }
 });
-// 🌙 Đóng popup khi bấm X
+// đŸŒ™ ÄĂ³ng popup khi báº¥m X
 const popupCloseBtn = document.getElementById("popupClose");
 if (popupCloseBtn) {
   popupCloseBtn.onclick = () => {
@@ -10240,15 +10245,15 @@ if (popupCloseBtn) {
     const isEditing = popup.classList.contains("edit-mode");
 
     if (isEditing) {
-      // Nếu đang chỉnh sửa → hỏi xác nhận lưu
-      const confirmClose = confirm("Bạn có muốn lưu thay đổi trước khi đóng không?");
+      // Náº¿u Ä‘ang chá»‰nh sá»­a â†’ há»i xĂ¡c nháº­n lÆ°u
+      const confirmClose = confirm("Báº¡n cĂ³ muá»‘n lÆ°u thay Ä‘á»•i trÆ°á»›c khi Ä‘Ă³ng khĂ´ng?");
       if (confirmClose) {
 
         const btnSave = document.getElementById("btnSave");
         if (btnSave) {
           btnSave.click();
         } else {
-          console.warn("⚠️ Không tìm thấy nút Lưu (btnSave)");
+          console.warn("â ï¸ KhĂ´ng tĂ¬m tháº¥y nĂºt LÆ°u (btnSave)");
           popup.classList.remove("edit-mode");
           popup.style.display = "none";
         }
@@ -10263,42 +10268,42 @@ if (popupCloseBtn) {
   };
 }
 
-// 🌙 Chỉ áp dụng click ra ngoài cho popup SAO
+// đŸŒ™ Chá»‰ Ă¡p dá»¥ng click ra ngoĂ i cho popup SAO
 const saoPopupOverlaySafe = document.getElementById("saoPopup");
 if (saoPopupOverlaySafe) {
   saoPopupOverlaySafe.addEventListener("click", e => {
-    // Chỉ xử lý khi click đúng vào nền mờ (không phải bên trong nội dung)
+    // Chá»‰ xá»­ lĂ½ khi click Ä‘Ăºng vĂ o ná»n má» (khĂ´ng pháº£i bĂªn trong ná»™i dung)
     if (e.target === saoPopupOverlaySafe) {
       const saoPopup = document.getElementById("saoPopup");
       const isEditing = saoPopup.classList.contains("edit-mode");
       const saoBox = document.querySelector("#saoPopup .popup-content");
 
       if (isEditing) {
-        // 🌟 Nếu đang chỉnh sửa → rung nhẹ, không tắt
+        // đŸŒŸ Náº¿u Ä‘ang chá»‰nh sá»­a â†’ rung nháº¹, khĂ´ng táº¯t
         saoBox.classList.add("shake");
         setTimeout(() => saoBox.classList.remove("shake"), 300);
       } else {
-        // ✅ Nếu chỉ đang xem → đóng bình thường
+        // âœ… Náº¿u chá»‰ Ä‘ang xem â†’ Ä‘Ă³ng bĂ¬nh thÆ°á»ng
         saoPopup.style.display = "none";
       }
     }
   });
 }
 
-// 🌟 Áp dụng cho tất cả popup (sao, chuyên đề, từ điển, v.v.)
+// đŸŒŸ Ăp dá»¥ng cho táº¥t cáº£ popup (sao, chuyĂªn Ä‘á», tá»« Ä‘iá»ƒn, v.v.)
 document.querySelectorAll(".popup-overlay").forEach(popupOverlay => {
   popupOverlay.addEventListener("click", e => {
-    // Chỉ khi click đúng vào nền mờ, không phải bên trong popup
+    // Chá»‰ khi click Ä‘Ăºng vĂ o ná»n má», khĂ´ng pháº£i bĂªn trong popup
     if (e.target === popupOverlay) {
       const popupBox = popupOverlay.querySelector(".popup-content");
       const isEditing = popupOverlay.classList.contains("edit-mode");
 
       if (isEditing) {
-        // 🌸 Rung nhẹ cảnh báo không thể đóng khi đang chỉnh sửa
+        // đŸŒ¸ Rung nháº¹ cáº£nh bĂ¡o khĂ´ng thá»ƒ Ä‘Ă³ng khi Ä‘ang chá»‰nh sá»­a
         popupBox.classList.add("shake");
         setTimeout(() => popupBox.classList.remove("shake"), 300);
       } else {
-        // ✅ Nếu đang xem bình thường thì đóng popup
+        // âœ… Náº¿u Ä‘ang xem bĂ¬nh thÆ°á»ng thĂ¬ Ä‘Ă³ng popup
         popupOverlay.style.display = "none";
       }
     }
@@ -10312,43 +10317,43 @@ window.capNhatBangCatHung = function(cung, doiCung, hop1, hop2, cungTruoc, cungS
   if (!toggleBox || !toggleBox.checked) {
   if (wrap) wrap.style.display = "none";
   const cc = document.getElementById("cachCucWrapper");
-  if (cc) cc.style.display = "none"; // ✅ ẩn luôn bảng cách cục
+  if (cc) cc.style.display = "none"; // âœ… áº©n luĂ´n báº£ng cĂ¡ch cá»¥c
   return;
 } else {
   const cc = document.getElementById("cachCucWrapper");
-  if (cc) cc.style.display = "block"; // ✅ hiện lại khi tick
+  if (cc) cc.style.display = "block"; // âœ… hiá»‡n láº¡i khi tick
 }
 
 
   const cellMap = {
-    "Dần":9,"Mão":7,"Thìn":5,"Tỵ":1,"Ngọ":2,"Mùi":3,
-    "Thân":4,"Dậu":6,"Tuất":8,"Hợi":12,"Tý":11,"Sửu":10
+    "Dáº§n":9,"MĂ£o":7,"ThĂ¬n":5,"Tá»µ":1,"Ngá»":2,"MĂ¹i":3,
+    "ThĂ¢n":4,"Dáº­u":6,"Tuáº¥t":8,"Há»£i":12,"TĂ½":11,"Sá»­u":10
   };
 
   const cells = {
-    "Chính": document.getElementById("cell" + cellMap[cung]),
-    "Đối": document.getElementById("cell" + cellMap[doiCung]),
-    "Hợp1": document.getElementById("cell" + cellMap[hop1]),
-    "Hợp2": document.getElementById("cell" + cellMap[hop2]),
-    "GiápTrước": document.getElementById("cell" + cellMap[cungTruoc]),
-    "GiápSau": document.getElementById("cell" + cellMap[cungSau])
+    "ChĂ­nh": document.getElementById("cell" + cellMap[cung]),
+    "Äá»‘i": document.getElementById("cell" + cellMap[doiCung]),
+    "Há»£p1": document.getElementById("cell" + cellMap[hop1]),
+    "Há»£p2": document.getElementById("cell" + cellMap[hop2]),
+    "GiĂ¡pTrÆ°á»›c": document.getElementById("cell" + cellMap[cungTruoc]),
+    "GiĂ¡pSau": document.getElementById("cell" + cellMap[cungSau])
   };
 
-  const diemViTri = { "Chính":100, "Đối":70, "Hợp":50, "Giáp":10 };
-  const layerChinh = cells.Chính?.querySelector(".layer-3");
+  const diemViTri = { "ChĂ­nh":100, "Äá»‘i":70, "Há»£p":50, "GiĂ¡p":10 };
+  const layerChinh = cells.ChĂ­nh?.querySelector(".layer-3");
   const laVoChinhDieu = !layerChinh || layerChinh.querySelectorAll("div").length === 0;
   if (laVoChinhDieu) {
-    diemViTri["Chính"] = 143;
-    diemViTri["Đối"] = 100;
+    diemViTri["ChĂ­nh"] = 143;
+    diemViTri["Äá»‘i"] = 100;
   }
 
-  const CAT_TINH = ["Thiên Khôi","Thiên Việt","Tả Phù","Hữu Bật","Văn Xương","Văn Khúc"];
-  const HUNG_TINH = ["Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp"];
-  const TU_HOA_CAT = ["Hóa Lộc","Hóa Quyền","Hóa Khoa"];
-  const TU_HOA_HUNG = ["Hóa Kỵ"];
+  const CAT_TINH = ["ThiĂªn KhĂ´i","ThiĂªn Viá»‡t","Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc"];
+  const HUNG_TINH = ["KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p"];
+  const TU_HOA_CAT = ["HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa"];
+  const TU_HOA_HUNG = ["HĂ³a Ká»µ"];
   const DOI_SAO = [
-    ["Kình Dương","Đà La"],["Hỏa Tinh","Linh Tinh"],["Địa Không","Địa Kiếp"],
-    ["Văn Xương","Văn Khúc"],["Thiên Khôi","Thiên Việt"],["Tả Phù","Hữu Bật"]
+    ["KĂ¬nh DÆ°Æ¡ng","ÄĂ  La"],["Há»a Tinh","Linh Tinh"],["Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p"],
+    ["VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc"],["ThiĂªn KhĂ´i","ThiĂªn Viá»‡t"],["Táº£ PhĂ¹","Há»¯u Báº­t"]
   ];
 
   function laySao(cell) {
@@ -10357,8 +10362,8 @@ window.capNhatBangCatHung = function(cung, doiCung, hop1, hop2, cungTruoc, cungS
     if (!layer) return [];
     return Array.from(layer.querySelectorAll(".cat-tinh div, .hung-tinh div"))
       .map(el => el.textContent.trim())
-      // 🚫 Bảng định cát hung chỉ xét sao gốc, bỏ toàn bộ sao hạn (ĐV/L/N/Nh/TL)
-      .filter(txt => !/^(ĐV\.|L\.|N\.|Nh\.|TL\.)\s*/i.test(txt))
+      // đŸ« Báº£ng Ä‘á»‹nh cĂ¡t hung chá»‰ xĂ©t sao gá»‘c, bá» toĂ n bá»™ sao háº¡n (ÄV/L/N/Nh/TL)
+      .filter(txt => !/^(ÄV\.|L\.|N\.|Nh\.|TL\.)\s*/i.test(txt))
       .filter(Boolean);
   }
 
@@ -10371,22 +10376,22 @@ window.capNhatBangCatHung = function(cung, doiCung, hop1, hop2, cungTruoc, cungS
 
   function timViTriSao(ds, sao) {
     for (const [v, list] of Object.entries(ds)) {
-      if (list.includes(sao)) return v.startsWith("Giáp") ? "Giáp" : v.replace(/[0-9]/g,"");
+      if (list.includes(sao)) return v.startsWith("GiĂ¡p") ? "GiĂ¡p" : v.replace(/[0-9]/g,"");
     }
     return null;
   }
 
-  const viTriTinh = ["Chính","Đối","Hợp1","Hợp2"];
+  const viTriTinh = ["ChĂ­nh","Äá»‘i","Há»£p1","Há»£p2"];
 
   DOI_SAO.forEach(([s1,s2])=>{
     const v1 = timViTriSao(ds,s1);
     const v2 = timViTriSao(ds,s2);
     if (!v1 || !v2) return;
-    if (v1 === "Giáp" || v2 === "Giáp") return;
+    if (v1 === "GiĂ¡p" || v2 === "GiĂ¡p") return;
     if (used.has(s1) || used.has(s2)) return;
     const tong = (diemViTri[v1] + diemViTri[v2]) * 2;
-    const tag = (v1===v2) ? `(${v1})` : `(${v1} – ${v2})`;
-    const text = `${s1} – ${s2} ${tag} – ${tong}đ`;
+    const tag = (v1===v2) ? `(${v1})` : `(${v1} â€“ ${v2})`;
+    const text = `${s1} â€“ ${s2} ${tag} â€“ ${tong}Ä‘`;
 
     if (CAT_TINH.includes(s1)||CAT_TINH.includes(s2)){ catList.push(text); tongCat+=tong; }
     else if (HUNG_TINH.includes(s1)||HUNG_TINH.includes(s2)){ hungList.push(text); tongHung+=tong; }
@@ -10399,41 +10404,41 @@ window.capNhatBangCatHung = function(cung, doiCung, hop1, hop2, cungTruoc, cungS
       if (used.has(sao)) return;
       const diem = diemViTri[nhan];
       if (CAT_TINH.includes(sao)||TU_HOA_CAT.includes(sao)){
-        catList.push(`${sao} (${nhan}) – ${diem}đ`);
+        catList.push(`${sao} (${nhan}) â€“ ${diem}Ä‘`);
         tongCat+=diem;
       } else if (HUNG_TINH.includes(sao)||TU_HOA_HUNG.includes(sao)){
-        hungList.push(`${sao} (${nhan}) – ${diem}đ`);
+        hungList.push(`${sao} (${nhan}) â€“ ${diem}Ä‘`);
         tongHung+=diem;
       }
     });
   });
 
-  // 🌟 XÉT GIÁP CUNG SAU CÙNG
+  // đŸŒŸ XĂ‰T GIĂP CUNG SAU CĂ™NG
   const DOI_SAO_GIAP = [
-    ["Kình Dương","Đà La"],
-    ["Hỏa Tinh","Linh Tinh"],
-    ["Địa Không","Địa Kiếp"],
-    ["Thiên Khôi","Thiên Việt"],
-    ["Văn Xương","Văn Khúc"],
-    ["Tả Phù","Hữu Bật"]
+    ["KĂ¬nh DÆ°Æ¡ng","ÄĂ  La"],
+    ["Há»a Tinh","Linh Tinh"],
+    ["Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p"],
+    ["ThiĂªn KhĂ´i","ThiĂªn Viá»‡t"],
+    ["VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc"],
+    ["Táº£ PhĂ¹","Há»¯u Báº­t"]
   ];
 
   DOI_SAO_GIAP.forEach(([s1, s2]) => {
-    const truoc = ds.GiápTrước.includes(s1) || ds.GiápTrước.includes(s2);
-    const sau   = ds.GiápSau.includes(s1)  || ds.GiápSau.includes(s2);
-    if (!(truoc && sau)) return; // ❌ không đủ đôi giáp
+    const truoc = ds.GiĂ¡pTrÆ°á»›c.includes(s1) || ds.GiĂ¡pTrÆ°á»›c.includes(s2);
+    const sau   = ds.GiĂ¡pSau.includes(s1)  || ds.GiĂ¡pSau.includes(s2);
+    if (!(truoc && sau)) return; // âŒ khĂ´ng Ä‘á»§ Ä‘Ă´i giĂ¡p
 
-    const giua = ds.Chính || [];
-    const coHung = giua.some(x => ["Hóa Kỵ","Địa Không","Địa Kiếp","Hỏa Tinh","Linh Tinh","Kình Dương","Đà La"].includes(x));
-    const coCat  = giua.some(x => ["Thiên Khôi","Thiên Việt","Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Hóa Lộc","Hóa Quyền","Hóa Khoa"].includes(x));
+    const giua = ds.ChĂ­nh || [];
+    const coHung = giua.some(x => ["HĂ³a Ká»µ","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p","Há»a Tinh","Linh Tinh","KĂ¬nh DÆ°Æ¡ng","ÄĂ  La"].includes(x));
+    const coCat  = giua.some(x => ["ThiĂªn KhĂ´i","ThiĂªn Viá»‡t","Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa"].includes(x));
 
     if (HUNG_TINH.includes(s1) || HUNG_TINH.includes(s2)) {
       const diem = coHung ? 200 : 20;
-      hungList.push(`${s1} – ${s2} (Giáp Cung) – ${diem}đ`);
+      hungList.push(`${s1} â€“ ${s2} (GiĂ¡p Cung) â€“ ${diem}Ä‘`);
       tongHung += diem;
     } else if (CAT_TINH.includes(s1) || CAT_TINH.includes(s2)) {
       const diem = coCat ? 200 : 20;
-      catList.push(`${s1} – ${s2} (Giáp Cung) – ${diem}đ`);
+      catList.push(`${s1} â€“ ${s2} (GiĂ¡p Cung) â€“ ${diem}Ä‘`);
       tongCat += diem;
     }
   });
@@ -10441,38 +10446,38 @@ window.capNhatBangCatHung = function(cung, doiCung, hop1, hop2, cungTruoc, cungS
 
 
   // ============================================================
-  // 🎯 Bổ sung phần hiển thị tiêu đề + sao phụ + kết luận theo %
+  // đŸ¯ Bá»• sung pháº§n hiá»ƒn thá»‹ tiĂªu Ä‘á» + sao phá»¥ + káº¿t luáº­n theo %
   // ============================================================
 
-  // 🪶 Chính tinh tại cung
-  const saoChinh = cells.Chính?.querySelector(".layer-3");
+  // đŸª¶ ChĂ­nh tinh táº¡i cung
+  const saoChinh = cells.ChĂ­nh?.querySelector(".layer-3");
   const names = saoChinh
     ? Array.from(saoChinh.querySelectorAll("div")).map(e => e.textContent.trim()).filter(Boolean).join(" / ")
     : "";
-  const tenChinhTinh = names || "Vô Chính Diệu";
+  const tenChinhTinh = names || "VĂ´ ChĂ­nh Diá»‡u";
 
-// 🪶 Kiểm tra Thiên Mã và Lộc Tồn — hiển thị vị trí cụ thể, gộp hai Hợp cung
+// đŸª¶ Kiá»ƒm tra ThiĂªn MĂ£ vĂ  Lá»™c Tá»“n â€” hiá»ƒn thá»‹ vá»‹ trĂ­ cá»¥ thá»ƒ, gá»™p hai Há»£p cung
 const viTriTenMap = {
-  "Chính": "Chính cung",
-  "Đối": "Đối cung",
-  "Hợp1": "Hợp cung",
-  "Hợp2": "Hợp cung"
+  "ChĂ­nh": "ChĂ­nh cung",
+  "Äá»‘i": "Äá»‘i cung",
+  "Há»£p1": "Há»£p cung",
+  "Há»£p2": "Há»£p cung"
 };
 
 const saoPhu = [];
 
 for (const [viTri, dsSao] of Object.entries(ds)) {
   if (!Array.isArray(dsSao)) continue;
-  if (!viTriTenMap[viTri]) continue; // ✅ chỉ xử lý 4 cung hợp lệ
-  if (dsSao.includes("Thiên Mã")) saoPhu.push(`Thiên Mã (${viTriTenMap[viTri]})`);
-  if (dsSao.includes("Lộc Tồn")) saoPhu.push(`Lộc Tồn (${viTriTenMap[viTri]})`);
+  if (!viTriTenMap[viTri]) continue; // âœ… chá»‰ xá»­ lĂ½ 4 cung há»£p lá»‡
+  if (dsSao.includes("ThiĂªn MĂ£")) saoPhu.push(`ThiĂªn MĂ£ (${viTriTenMap[viTri]})`);
+  if (dsSao.includes("Lá»™c Tá»“n")) saoPhu.push(`Lá»™c Tá»“n (${viTriTenMap[viTri]})`);
 }
 
 
-// Loại trùng “Hợp cung” nếu xuất hiện cả Hợp1 và Hợp2
+// Loáº¡i trĂ¹ng â€œHá»£p cungâ€ náº¿u xuáº¥t hiá»‡n cáº£ Há»£p1 vĂ  Há»£p2
 const hopLocs = [];
 const saoPhuGop = saoPhu.filter(item => {
-  if (item.includes("(Hợp cung)")) {
+  if (item.includes("(Há»£p cung)")) {
     const key = item.split(" ")[0];
     if (hopLocs.includes(key)) return false;
     hopLocs.push(key);
@@ -10483,80 +10488,80 @@ const saoPhuGop = saoPhu.filter(item => {
 let dongSaoPhu = "";
 if (saoPhuGop.length > 0) {
   dongSaoPhu = `<div style="font-size:12px; margin:3px 0 2px; color:#444; font-style:italic;">
-    Đi kèm các sao: ${saoPhuGop.join(", ")}
+    Äi kĂ¨m cĂ¡c sao: ${saoPhuGop.join(", ")}
   </div>`;
 }
 
 
-  // 🧮 Tính % cát
+  // đŸ§® TĂ­nh % cĂ¡t
   const tong = tongCat + tongHung;
   const tyLeCat = tong > 0 ? (tongCat / tong) * 100 : 0;
   const tyLeHung = tong > 0 ? (tongHung / tong) * 100 : 0;
 
   let ketluan = "";
   if (tyLeCat < 20) ketluan = "Hung";
-  else if (tyLeCat < 40) ketluan = "Bán Cát Bán Hung – Thiên Hung";
-  else if (tyLeCat < 60) ketluan = "Cát Hung Lẫn Lộn";
-  else if (tyLeCat < 80) ketluan = "Bán Cát Bán Hung – Thiên Cát";
-  else ketluan = "Cát";
+  else if (tyLeCat < 40) ketluan = "BĂ¡n CĂ¡t BĂ¡n Hung â€“ ThiĂªn Hung";
+  else if (tyLeCat < 60) ketluan = "CĂ¡t Hung Láº«n Lá»™n";
+  else if (tyLeCat < 80) ketluan = "BĂ¡n CĂ¡t BĂ¡n Hung â€“ ThiĂªn CĂ¡t";
+  else ketluan = "CĂ¡t";
 
   // ============================================================
-  // 🌟 Xuất bảng
+  // đŸŒŸ Xuáº¥t báº£ng
   // ============================================================
   wrap.querySelector("#catHungNoiDung").innerHTML = `
     <div style="text-align:center;font-weight:bold;">
-      ${tenChinhTinh.toUpperCase()} TẠI ${cung.toUpperCase()}
+      ${tenChinhTinh.toUpperCase()} Táº I ${cung.toUpperCase()}
     </div>
     <table style="margin-top:4px;">
-      <tr><th>CÁT TINH</th><th>HUNG TINH</th></tr>
+      <tr><th>CĂT TINH</th><th>HUNG TINH</th></tr>
       <tr>
         <td>${catList.join("<br>") || "&nbsp;"}</td>
         <td>${hungList.join("<br>") || "&nbsp;"}</td>
       </tr>
       <tr>
-        <td><b>Tổng điểm: ${tongCat} (${tyLeCat.toFixed(0)}%)</b></td>
-        <td><b>Tổng điểm: ${tongHung} (${tyLeHung.toFixed(0)}%)</b></td>
+        <td><b>Tá»•ng Ä‘iá»ƒm: ${tongCat} (${tyLeCat.toFixed(0)}%)</b></td>
+        <td><b>Tá»•ng Ä‘iá»ƒm: ${tongHung} (${tyLeHung.toFixed(0)}%)</b></td>
       </tr>
     </table>
     ${dongSaoPhu}
     <div style="text-align:center;font-weight:bold;margin-top:4px;background-color:#f3e6b1;">
-      🔹 KẾT LUẬN: ${ketluan.toUpperCase()} 🔹
+      đŸ”¹ Káº¾T LUáº¬N: ${ketluan.toUpperCase()} đŸ”¹
     </div>
   `;
 
 
 
 // ======================================================
-// 🗺️ BẢN ĐỒ CUNG CHUẨN TOÀN CỤC (layout NGHỊCH)
+// đŸ—ºï¸ Báº¢N Äá»’ CUNG CHUáº¨N TOĂ€N Cá»¤C (layout NGHá»CH)
 // ======================================================
 window.mapCung = {
-  "Dần": 9, "Mão": 7, "Thìn": 5, "Tỵ": 1, "Ngọ": 2, "Mùi": 3,
-  "Thân": 4, "Dậu": 6, "Tuất": 8, "Hợi": 12, "Tý": 11, "Sửu": 10
+  "Dáº§n": 9, "MĂ£o": 7, "ThĂ¬n": 5, "Tá»µ": 1, "Ngá»": 2, "MĂ¹i": 3,
+  "ThĂ¢n": 4, "Dáº­u": 6, "Tuáº¥t": 8, "Há»£i": 12, "TĂ½": 11, "Sá»­u": 10
 };
 
-// Cho phép gọi ngắn gọn "mapCung" mà không cần window.
+// Cho phĂ©p gá»i ngáº¯n gá»n "mapCung" mĂ  khĂ´ng cáº§n window.
 const mapCung = window.mapCung;
 
 // ============================================================
-// 🧩 CẬP NHẬT DỮ LIỆU THẬT CHO MODULE CÁCH CỤC
+// đŸ§© Cáº¬P NHáº¬T Dá»® LIá»†U THáº¬T CHO MODULE CĂCH Cá»¤C
 // ============================================================
 try {
-  // 1️⃣ Cập nhật lại dữ liệu toàn bộ lá số thật (gồm trung tinh)
+  // 1ï¸âƒ£ Cáº­p nháº­t láº¡i dá»¯ liá»‡u toĂ n bá»™ lĂ¡ sá»‘ tháº­t (gá»“m trung tinh)
   window.DU_LIEU_LA_SO_THAT = layDuLieuTuLayers();
 
-  // 2️⃣ Xác định id của cung hiện tại
+  // 2ï¸âƒ£ XĂ¡c Ä‘á»‹nh id cá»§a cung hiá»‡n táº¡i
   const idChinh = cellMap[cung];
 
-  // 3️⃣ Gán loại cách (CÁT/HUNG) vào dữ liệu thật
+  // 3ï¸âƒ£ GĂ¡n loáº¡i cĂ¡ch (CĂT/HUNG) vĂ o dá»¯ liá»‡u tháº­t
   if (window.DU_LIEU_LA_SO_THAT[idChinh]) {
     window.DU_LIEU_LA_SO_THAT[idChinh].cachLoai = ketluan.toUpperCase();
   }
 
-  // 4️⃣ Gọi kiểm tra Cách Cục nếu có dữ liệu
+  // 4ï¸âƒ£ Gá»i kiá»ƒm tra CĂ¡ch Cá»¥c náº¿u cĂ³ dá»¯ liá»‡u
   if (typeof window.kiemTraCachCuc === "function" && typeof window.capNhatBangCachCuc === "function") {
     const { kq } = kiemTraCachCuc(idChinh, window.DU_LIEU_LA_SO_THAT);
 
-    // Cập nhật hiển thị panel phải (bảng Cách Cục)
+    // Cáº­p nháº­t hiá»ƒn thá»‹ panel pháº£i (báº£ng CĂ¡ch Cá»¥c)
     const ccWrap = document.getElementById("cachCucWrapper");
     const ccNoiDung = document.getElementById("cachCucNoiDung");
 
@@ -10564,41 +10569,41 @@ try {
       ccWrap.style.display = "block";
       ccNoiDung.innerHTML = kq.length
         ? `<b>${cung}</b>:<br>${kq
-            .map(x => `<div class="dong-phan-tich" data-ten="${x}" onclick="window.highlightCachCucTuPhanTich && window.highlightCachCucTuPhanTich(this)">✅ ${x}</div>`)
+            .map(x => `<div class="dong-phan-tich" data-ten="${x}" onclick="window.highlightCachCucTuPhanTich && window.highlightCachCucTuPhanTich(this)">âœ… ${x}</div>`)
             .join("")}`
-        : `<b>${cung}</b>: <i>Không có cách cục phù hợp.</i>`;
+        : `<b>${cung}</b>: <i>KhĂ´ng cĂ³ cĂ¡ch cá»¥c phĂ¹ há»£p.</i>`;
 
-      // Gắn listener trực tiếp để chắc chắn bắt click
+      // Gáº¯n listener trá»±c tiáº¿p Ä‘á»ƒ cháº¯c cháº¯n báº¯t click
       attachDirectClickForCachCuc(ccNoiDung);
     }
   }
 } catch (err) {
-  console.warn("⚠️ Lỗi cập nhật Cách Cục:", err);
+  console.warn("â ï¸ Lá»—i cáº­p nháº­t CĂ¡ch Cá»¥c:", err);
 }
 
 // ============================================================
-// ✅ Hiển thị bảng Cát Hung sau khi xử lý xong
+// âœ… Hiá»ƒn thá»‹ báº£ng CĂ¡t Hung sau khi xá»­ lĂ½ xong
 // ============================================================
 wrap.style.display = "block";
 };
 
 // ===============================
-// 🎯 Click dòng PHÂN TÍCH CÁCH CỤC -> focus & highlight ở danh sách bên trái
+// đŸ¯ Click dĂ²ng PHĂ‚N TĂCH CĂCH Cá»¤C -> focus & highlight á»Ÿ danh sĂ¡ch bĂªn trĂ¡i
 // ===============================
 function highlightCachCucTuPhanTich(el) {
-  // Chặn xem chi tiết khi chưa premium
+  // Cháº·n xem chi tiáº¿t khi chÆ°a premium
   if (!(window.isPaidUser && window.isPaidUser())) {
-    console.warn("[CC] Chưa premium, bỏ qua highlight");
+    console.warn("[CC] ChÆ°a premium, bá» qua highlight");
     return;
   }
 
   const ten = el.dataset.ten?.trim().toLowerCase();
   if (!ten) return;
 
-  // Đảm bảo danh sách bên trái đã render
+  // Äáº£m báº£o danh sĂ¡ch bĂªn trĂ¡i Ä‘Ă£ render
   if (typeof renderCachCucList === "function") renderCachCucList(false);
 
-  // Tìm danh sách các Cách Cục bên trái
+  // TĂ¬m danh sĂ¡ch cĂ¡c CĂ¡ch Cá»¥c bĂªn trĂ¡i
   const list = document.querySelectorAll("#listCachCuc .cc-left b");
   let foundItem = null;
 
@@ -10608,18 +10613,18 @@ function highlightCachCucTuPhanTich(el) {
   });
 
   if (!foundItem) {
-    console.warn("❗Không tìm thấy Cách Cục tương ứng:", ten);
+    console.warn("â—KhĂ´ng tĂ¬m tháº¥y CĂ¡ch Cá»¥c tÆ°Æ¡ng á»©ng:", ten);
     return;
   }
 
-  // Cuộn đến dòng đó trong danh sách bên trái
+  // Cuá»™n Ä‘áº¿n dĂ²ng Ä‘Ă³ trong danh sĂ¡ch bĂªn trĂ¡i
   foundItem.scrollIntoView({ behavior: "smooth", block: "center" });
 
-  // Highlight dòng đó 5 giây
+  // Highlight dĂ²ng Ä‘Ă³ 5 giĂ¢y
   foundItem.classList.add("highlight-cachcuc");
   setTimeout(() => foundItem.classList.remove("highlight-cachcuc"), 5000);
 }
-// Cho phép gọi inline
+// Cho phĂ©p gá»i inline
 window.highlightCachCucTuPhanTich = highlightCachCucTuPhanTich;
 
 function bindHighlightDelegates() {
@@ -10630,7 +10635,7 @@ function bindHighlightDelegates() {
   ].filter(Boolean);
 
   targets.forEach(t => {
-    // Tránh gắn trùng: xoá trước nếu đã có
+    // TrĂ¡nh gáº¯n trĂ¹ng: xoĂ¡ trÆ°á»›c náº¿u Ä‘Ă£ cĂ³
     t.removeEventListener("click", handleDongPhanTichClick, true);
     t.removeEventListener("click", handleDongPhanTichClick, false);
     t.addEventListener("click", handleDongPhanTichClick, true);
@@ -10638,52 +10643,52 @@ function bindHighlightDelegates() {
   });
 
   if (targets.length) {
-    console.log("[CC] Đã gắn delegate highlight trên", targets.map(el => "#" + (el.id || el.className)).join(", "));
+    console.log("[CC] ÄĂ£ gáº¯n delegate highlight trĂªn", targets.map(el => "#" + (el.id || el.className)).join(", "));
   }
 }
 
-// Gắn click trực tiếp cho các dòng vừa render
+// Gáº¯n click trá»±c tiáº¿p cho cĂ¡c dĂ²ng vá»«a render
 function attachDirectClickForCachCuc(container) {
   if (!container) return;
   container.querySelectorAll(".dong-phan-tich").forEach(el => {
     el.onclick = (ev) => {
-      console.log("[CC] Click trực tiếp dòng phân tích:", el.dataset.ten);
+      console.log("[CC] Click trá»±c tiáº¿p dĂ²ng phĂ¢n tĂ­ch:", el.dataset.ten);
       highlightCachCucTuPhanTich(ev.currentTarget);
     };
   });
 }
 
-// Bắt click trên dòng phân tích (nhiều lớp để chắc chắn không bị chặn)
+// Báº¯t click trĂªn dĂ²ng phĂ¢n tĂ­ch (nhiá»u lá»›p Ä‘á»ƒ cháº¯c cháº¯n khĂ´ng bá»‹ cháº·n)
 const handleDongPhanTichClick = (e) => {
   const dong = e.target.closest(".dong-phan-tich");
   if (!dong) {
-    // Debug thêm: log click trong vùng catHung
+    // Debug thĂªm: log click trong vĂ¹ng catHung
     if (e.currentTarget && (e.currentTarget.id === "catHungWrapper" || e.currentTarget.id === "cachCucNoiDung")) {
-      console.log("[CC] Click nhưng không thấy .dong-phan-tich, target=", e.target.className || e.target.tagName, "text=", (e.target.textContent || "").trim());
+      console.log("[CC] Click nhÆ°ng khĂ´ng tháº¥y .dong-phan-tich, target=", e.target.className || e.target.tagName, "text=", (e.target.textContent || "").trim());
     }
     return false;
   }
-  console.log("[CC] Highlight từ bảng phân tích:", dong.dataset.ten);
+  console.log("[CC] Highlight tá»« báº£ng phĂ¢n tĂ­ch:", dong.dataset.ten);
   highlightCachCucTuPhanTich(dong);
   return true;
 };
 // Capture & bubble
 document.addEventListener("click", handleDongPhanTichClick, true);
 document.addEventListener("click", handleDongPhanTichClick, false);
-// Fallback cho một số trình duyệt / khi click bị stopPropagation sớm
+// Fallback cho má»™t sá»‘ trĂ¬nh duyá»‡t / khi click bá»‹ stopPropagation sá»›m
 document.addEventListener("pointerdown", (e) => {
   if (handleDongPhanTichClick(e)) {
     e.preventDefault();
   }
 }, true);
 
-// Gắn trực tiếp vào khung phân tích nếu có
+// Gáº¯n trá»±c tiáº¿p vĂ o khung phĂ¢n tĂ­ch náº¿u cĂ³
 document.addEventListener("DOMContentLoaded", () => {
   bindHighlightDelegates();
-  // Gắn click trực tiếp cho các dòng (phòng khi render trước đó)
+  // Gáº¯n click trá»±c tiáº¿p cho cĂ¡c dĂ²ng (phĂ²ng khi render trÆ°á»›c Ä‘Ă³)
   attachDirectClickForCachCuc(document.getElementById("cachCucNoiDung"));
 
-  // CSS nhỏ cho dòng bị khóa
+  // CSS nhá» cho dĂ²ng bá»‹ khĂ³a
   const styleId = "cachcuc-lock-style";
   if (!document.getElementById(styleId)) {
     const st = document.createElement("style");
@@ -10701,20 +10706,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.head.appendChild(st);
   }
 
-  // Khóa tra ngược theo trạng thái hiện tại
+  // KhĂ³a tra ngÆ°á»£c theo tráº¡ng thĂ¡i hiá»‡n táº¡i
   toggleTraNguocLock(window.isPaidUser && window.isPaidUser());
-  // Khóa sửa/xóa cách cục theo trạng thái hiện tại
+  // KhĂ³a sá»­a/xĂ³a cĂ¡ch cá»¥c theo tráº¡ng thĂ¡i hiá»‡n táº¡i
   toggleCachCucEditLock(window.isPaidUser && window.isPaidUser());
-  // Khóa thao tác chuyên đề theo trạng thái hiện tại
+  // KhĂ³a thao tĂ¡c chuyĂªn Ä‘á» theo tráº¡ng thĂ¡i hiá»‡n táº¡i
   toggleChuyenDeEditLock(window.isPaidUser && window.isPaidUser());
 
-  // Cố định panel auth theo cạnh phải của vùng lá số (không di chuyển khi cuộn)
+  // Cá»‘ Ä‘á»‹nh panel auth theo cáº¡nh pháº£i cá»§a vĂ¹ng lĂ¡ sá»‘ (khĂ´ng di chuyá»ƒn khi cuá»™n)
   const positionAuthPanel = () => {
     const panel = document.getElementById("authPanel");
     const container = document.querySelector(".container");
     if (!panel || !container) return;
 
-    // container tương đối, panel tuyệt đối bám vào phải
+    // container tÆ°Æ¡ng Ä‘á»‘i, panel tuyá»‡t Ä‘á»‘i bĂ¡m vĂ o pháº£i
     container.style.position = "relative";
     panel.style.position = "absolute";
     panel.style.right = "0";
@@ -10724,7 +10729,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", positionAuthPanel);
 });
 
-// 🌟 Giúp #catHungWrapper bám theo khung Lá Số, nằm bên phải
+// đŸŒŸ GiĂºp #catHungWrapper bĂ¡m theo khung LĂ¡ Sá»‘, náº±m bĂªn pháº£i
 document.addEventListener("DOMContentLoaded", () => {
   const laso = document.getElementById("lasoContainer");
   const catHung = document.getElementById("catHungWrapper");
@@ -10734,13 +10739,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const rect = laso.getBoundingClientRect();
     catHung.style.position = "fixed";
 
-    // ✅ Canh bên phải khung Lá Số
-    catHung.style.top = rect.top - 0 + "px";   // 🔼 nâng bảng lên ngang tiêu đề
+    // âœ… Canh bĂªn pháº£i khung LĂ¡ Sá»‘
+    catHung.style.top = rect.top - 0 + "px";   // đŸ”¼ nĂ¢ng báº£ng lĂªn ngang tiĂªu Ä‘á»
 catHung.style.left = rect.right + 10 + "px";
 
   }
 
-  // Cập nhật khi cuộn, resize hoặc khi bật bảng
+  // Cáº­p nháº­t khi cuá»™n, resize hoáº·c khi báº­t báº£ng
   window.addEventListener("scroll", capNhatViTriBang);
   window.addEventListener("resize", capNhatViTriBang);
   const observer = new MutationObserver(capNhatViTriBang);
@@ -10755,7 +10760,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkbox = document.getElementById("toggleCatHung");
   if (!laso || !wrap || !checkbox) return;
 
-  // 🌟 Cập nhật vị trí bảng bám theo lá số
+  // đŸŒŸ Cáº­p nháº­t vá»‹ trĂ­ báº£ng bĂ¡m theo lĂ¡ sá»‘
   function capNhatViTriBang() {
     const rect = laso.getBoundingClientRect();
     wrap.style.position = "fixed";
@@ -10766,7 +10771,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", capNhatViTriBang);
   capNhatViTriBang();
 
-  // 🌟 Ẩn bảng khi bỏ tick
+  // đŸŒŸ áº¨n báº£ng khi bá» tick
   checkbox.addEventListener("change", () => {
     if (!checkbox.checked) {
       wrap.style.display = "none";
@@ -10774,24 +10779,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 🌟 Ghi đè trực tiếp vào hàm chính để kiểm tra tick
+  // đŸŒŸ Ghi Ä‘Ă¨ trá»±c tiáº¿p vĂ o hĂ m chĂ­nh Ä‘á»ƒ kiá»ƒm tra tick
   const goc = window.capNhatBangCatHung;
   window.capNhatBangCatHung = function (...args) {
     if (!checkbox.checked) {
-      wrap.style.display = "none"; // ẩn nếu chưa tick
+      wrap.style.display = "none"; // áº©n náº¿u chÆ°a tick
       return;
     }
     if (typeof goc === "function") {
       goc.apply(this, args);
-      wrap.style.display = "block"; // hiện nếu tick + click cung
+      wrap.style.display = "block"; // hiá»‡n náº¿u tick + click cung
     }
   };
   if (typeof renderCachCucList === "function") renderCachCucList();
-console.log("✅ renderCachCucList() đã chạy");
+console.log("âœ… renderCachCucList() Ä‘Ă£ cháº¡y");
 
 });
 
-// 🌟 Ẩn toàn bộ sao Tiểu Tinh ngay khi tải trang
+// đŸŒŸ áº¨n toĂ n bá»™ sao Tiá»ƒu Tinh ngay khi táº£i trang
 document.addEventListener("DOMContentLoaded", () => {
   const allTieuTinh = document.querySelectorAll(".tieutinh");
   allTieuTinh.forEach(el => {
@@ -10799,21 +10804,21 @@ document.addEventListener("DOMContentLoaded", () => {
     el.style.display = "none";
   });
 
-  // Đồng thời bỏ trạng thái "active" của tất cả nút nếu có
+  // Äá»“ng thá»i bá» tráº¡ng thĂ¡i "active" cá»§a táº¥t cáº£ nĂºt náº¿u cĂ³
   const allButtons = document.querySelectorAll(".nut-tieutinh");
   allButtons.forEach(btn => btn.classList.remove("active"));
 });
 
-// 🌟 Tự động ẩn Tiểu Tinh sau khi an lá số xong (nếu nút chưa bật)
+// đŸŒŸ Tá»± Ä‘á»™ng áº©n Tiá»ƒu Tinh sau khi an lĂ¡ sá»‘ xong (náº¿u nĂºt chÆ°a báº­t)
 document.addEventListener("DOMContentLoaded", () => {
-  // Theo dõi DOM để phát hiện khi lá số mới được an ra
+  // Theo dĂµi DOM Ä‘á»ƒ phĂ¡t hiá»‡n khi lĂ¡ sá»‘ má»›i Ä‘Æ°á»£c an ra
   const observer = new MutationObserver(() => {
-    // Kiểm tra nếu các nút tiểu tinh tồn tại
+    // Kiá»ƒm tra náº¿u cĂ¡c nĂºt tiá»ƒu tinh tá»“n táº¡i
     const btns = document.querySelectorAll(".nut-tieutinh");
     if (btns.length > 0) {
       const hasActive = [...btns].some(b => b.classList.contains("active"));
       if (!hasActive) {
-        // Nếu chưa bật nhóm nào → ẩn toàn bộ sao Tiểu Tinh
+        // Náº¿u chÆ°a báº­t nhĂ³m nĂ o â†’ áº©n toĂ n bá»™ sao Tiá»ƒu Tinh
         document.querySelectorAll(".tieutinh").forEach(el => {
           el.classList.add("hidden");
           el.style.display = "none";
@@ -10822,69 +10827,69 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Theo dõi thay đổi trong toàn bộ body (vì lá số được render lại động)
+  // Theo dĂµi thay Ä‘á»•i trong toĂ n bá»™ body (vĂ¬ lĂ¡ sá»‘ Ä‘Æ°á»£c render láº¡i Ä‘á»™ng)
   observer.observe(document.body, { childList: true, subtree: true });
 });
 function debugSaoTrongCung(cungID) {
   const cell = document.getElementById("cell" + cungID);
-  if (!cell) return console.log("❌ Không tìm thấy cell", cungID);
+  if (!cell) return console.log("âŒ KhĂ´ng tĂ¬m tháº¥y cell", cungID);
   const layer = cell.querySelector(".layer-6");
-  if (!layer) return console.log("❌ Không có layer-6 trong cell", cungID);
+  if (!layer) return console.log("âŒ KhĂ´ng cĂ³ layer-6 trong cell", cungID);
 
-  console.log("🔍 Nội dung thật của cell" + cungID + ":");
+  console.log("đŸ” Ná»™i dung tháº­t cá»§a cell" + cungID + ":");
   layer.querySelectorAll(".hung-tinh div, .cat-tinh div").forEach((el,i)=>{
     console.log(i+1, JSON.stringify(el.textContent));
   });
 }
 
 // =====================================================
-// 🚫 NGĂN CLICK VÀO PHẦN TRỐNG TRONG LAYER-6
+// đŸ« NGÄ‚N CLICK VĂ€O PHáº¦N TRá»NG TRONG LAYER-6
 // =====================================================
 document.querySelectorAll(".layer-6").forEach(layer => {
   layer.addEventListener("click", e => {
-    // Nếu click vào chính layer (vùng trống) chứ không phải phần tử con (sao)
+    // Náº¿u click vĂ o chĂ­nh layer (vĂ¹ng trá»‘ng) chá»© khĂ´ng pháº£i pháº§n tá»­ con (sao)
     if (e.target === layer) {
-      e.stopPropagation();   // chặn lan sự kiện lên cung
-      e.preventDefault();    // không kích hoạt tra cứu
+      e.stopPropagation();   // cháº·n lan sá»± kiá»‡n lĂªn cung
+      e.preventDefault();    // khĂ´ng kĂ­ch hoáº¡t tra cá»©u
       return false;
     }
   });
 });
-// 📘 Khi tra cứu sao → tự mở đúng phần chứa sao đó, chỉ thu gọn phần TỪ ĐIỂN SAO
+// đŸ“˜ Khi tra cá»©u sao â†’ tá»± má»Ÿ Ä‘Ăºng pháº§n chá»©a sao Ä‘Ă³, chá»‰ thu gá»n pháº§n Tá»ª ÄIá»‚N SAO
 window.moPhanTuDienTheoSao = function(tenSao) {
   const clean = __norm(tenSao).replace(/\s+/g, "");
 
-  // 🔹 Xác định vùng từ điển sao (chỉ phần I–VII)
+  // đŸ”¹ XĂ¡c Ä‘á»‹nh vĂ¹ng tá»« Ä‘iá»ƒn sao (chá»‰ pháº§n Iâ€“VII)
   const tuDienBox = document.getElementById("tuDienSao");
   if (tuDienBox) {
-    // ✅ Ẩn các <ul> chỉ bên trong vùng #tuDienSao (không lan xuống #chuyenDeBox)
+    // âœ… áº¨n cĂ¡c <ul> chá»‰ bĂªn trong vĂ¹ng #tuDienSao (khĂ´ng lan xuá»‘ng #chuyenDeBox)
     const PHAN_TU_DIEN_CAN_THU = [
-      "I. Chính Tinh",
+      "I. ChĂ­nh Tinh",
       "II. Trung Tinh",
-      "III. Tứ Hóa",
-      "IV. Lộc – Mã",
-      "V. Tiểu Tinh",
+      "III. Tá»© HĂ³a",
+      "IV. Lá»™c â€“ MĂ£",
+      "V. Tiá»ƒu Tinh",
       "VI. Cung",
-      "VII. Tuần – Triệt"
+      "VII. Tuáº§n â€“ Triá»‡t"
     ];
 
-    // Duyệt các tiêu đề <h3>, <h4> bên trong #tuDienSao
+    // Duyá»‡t cĂ¡c tiĂªu Ä‘á» <h3>, <h4> bĂªn trong #tuDienSao
     const headers = tuDienBox.querySelectorAll("h3, h4");
     headers.forEach(h => {
       const title = h.textContent.trim();
       if (PHAN_TU_DIEN_CAN_THU.some(p => title.startsWith(p))) {
         const next = h.nextElementSibling;
         if (next && next.tagName === "UL") {
-          next.style.display = "none"; // ẩn phần đó
+          next.style.display = "none"; // áº©n pháº§n Ä‘Ă³
         }
       }
     });
   }
 
-  // 🔍 Tìm danh sách chứa sao
+  // đŸ” TĂ¬m danh sĂ¡ch chá»©a sao
  let foundUl = null;
 document.querySelectorAll("#tuDienSao ul").forEach(ul => {
-  const txt = __norm(ul.textContent).replace(/\s+/g, ""); // bỏ hết khoảng trắng
+  const txt = __norm(ul.textContent).replace(/\s+/g, ""); // bá» háº¿t khoáº£ng tráº¯ng
   if (txt.includes(clean)) foundUl = ul;
 });
 
@@ -10892,7 +10897,7 @@ document.querySelectorAll("#tuDienSao ul").forEach(ul => {
   if (foundUl) {
     foundUl.style.display = "block";
 
-    // 📍 Cuộn tới đúng sao cần tra
+    // đŸ“ Cuá»™n tá»›i Ä‘Ăºng sao cáº§n tra
    const item = Array.from(foundUl.querySelectorAll("li")).find(li =>
   __norm(li.textContent).replace(/\s+/g, "").includes(clean)
 );
@@ -10906,7 +10911,7 @@ document.querySelectorAll("#tuDienSao ul").forEach(ul => {
 };
 
 // =====================================================
-// 📥 NẠP DỮ LIỆU BACKUP VÀO INDEXEDDB
+// đŸ“¥ Náº P Dá»® LIá»†U BACKUP VĂ€O INDEXEDDB
 // =====================================================
 function importBackupFile() {
   const input = document.createElement("input");
@@ -10921,7 +10926,7 @@ function importBackupFile() {
       try {
         const data = JSON.parse(ev.target.result);
         if (!data || typeof data !== "object")
-          throw new Error("File không hợp lệ!");
+          throw new Error("File khĂ´ng há»£p lá»‡!");
 
         const req = indexedDB.open("TuViDB", 1);
         req.onupgradeneeded = e => {
@@ -10939,13 +10944,13 @@ function importBackupFile() {
           );
 
           tx.oncomplete = () => {
-            alert("✅ Đã nạp dữ liệu vào IndexedDB thành công!");
+            alert("âœ… ÄĂ£ náº¡p dá»¯ liá»‡u vĂ o IndexedDB thĂ nh cĂ´ng!");
             location.reload();
           };
         };
       } catch (err) {
-        console.error("⚠️ Lỗi đọc backup:", err);
-        alert("⚠️ File JSON không hợp lệ hoặc bị hỏng!");
+        console.error("â ï¸ Lá»—i Ä‘á»c backup:", err);
+        alert("â ï¸ File JSON khĂ´ng há»£p lá»‡ hoáº·c bá»‹ há»ng!");
       }
     };
     reader.readAsText(file);
@@ -10954,14 +10959,14 @@ function importBackupFile() {
 }
 
 // =====================================================
-// 💾 LƯU BACKUP INDEXEDDB RA FILE
+// đŸ’¾ LÆ¯U BACKUP INDEXEDDB RA FILE
 // =====================================================
 function exportBackupIndexedDB() {
   const req = indexedDB.open("TuViDB", 1);
   req.onsuccess = e => {
     const db = e.target.result;
     if (!db.objectStoreNames.contains("jsonStore")) {
-      alert("⚠️ Chưa có dữ liệu để xuất!");
+      alert("â ï¸ ChÆ°a cĂ³ dá»¯ liá»‡u Ä‘á»ƒ xuáº¥t!");
       return;
     }
 
@@ -10985,15 +10990,15 @@ function exportBackupIndexedDB() {
         a.download = "TuVi_Backup_IndexedDB.json";
         a.click();
         URL.revokeObjectURL(a.href);
-        alert("✅ Đã xuất backup IndexedDB thành công!");
+        alert("âœ… ÄĂ£ xuáº¥t backup IndexedDB thĂ nh cĂ´ng!");
       };
     };
   };
-  req.onerror = e => alert("⚠️ Không thể đọc IndexedDB!");
+  req.onerror = e => alert("â ï¸ KhĂ´ng thá»ƒ Ä‘á»c IndexedDB!");
 }
 
 // =====================================================
-// 🧩 TẠO 2 NÚT GÓC PHẢI TRÊN (📂 & 💾)
+// đŸ§© Táº O 2 NĂT GĂ“C PHáº¢I TRĂN (đŸ“‚ & đŸ’¾)
 // =====================================================
 window.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("jsonButtonGroup")) return;
@@ -11013,16 +11018,16 @@ window.addEventListener("DOMContentLoaded", () => {
   group.onmouseenter = () => (group.style.opacity = "1");
   group.onmouseleave = () => (group.style.opacity = "0.5");
 
-  // 📂 Nút Nạp
+  // đŸ“‚ NĂºt Náº¡p
   const btnLoad = document.createElement("button");
-  btnLoad.textContent = "📂";
-  btnLoad.title = "Nạp backup JSON vào IndexedDB";
+  btnLoad.textContent = "đŸ“‚";
+  btnLoad.title = "Náº¡p backup JSON vĂ o IndexedDB";
   btnLoad.onclick = importBackupFile;
 
-  // 💾 Nút Lưu
+  // đŸ’¾ NĂºt LÆ°u
   const btnSave = document.createElement("button");
-  btnSave.textContent = "💾";
-  btnSave.title = "Lưu toàn bộ IndexedDB ra file backup";
+  btnSave.textContent = "đŸ’¾";
+  btnSave.title = "LÆ°u toĂ n bá»™ IndexedDB ra file backup";
   btnSave.onclick = exportBackupIndexedDB;
 
   [btnLoad, btnSave].forEach(btn => {
@@ -11042,25 +11047,25 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // =======================================================
-// 💾 HÀM LƯU / NẠP DỮ LIỆU BẰNG IndexedDB (dung lượng lớn, an toàn)
+// đŸ’¾ HĂ€M LÆ¯U / Náº P Dá»® LIá»†U Báº°NG IndexedDB (dung lÆ°á»£ng lá»›n, an toĂ n)
 // =======================================================
 function saveToIndexedDB(key, value) {
   const req = indexedDB.open("TuViDB", 1);
 
-  // 🔹 Nếu CSDL chưa có → tạo object store
+  // đŸ”¹ Náº¿u CSDL chÆ°a cĂ³ â†’ táº¡o object store
   req.onupgradeneeded = e => {
     const db = e.target.result;
     if (!db.objectStoreNames.contains("jsonStore")) {
       db.createObjectStore("jsonStore");
-      console.log("🆕 Đã tạo object store 'jsonStore' trong TuViDB");
+      console.log("đŸ†• ÄĂ£ táº¡o object store 'jsonStore' trong TuViDB");
     }
   };
 
   req.onsuccess = e => {
     const db = e.target.result;
-    // ✅ Đảm bảo có store trước khi ghi
+    // âœ… Äáº£m báº£o cĂ³ store trÆ°á»›c khi ghi
     if (!db.objectStoreNames.contains("jsonStore")) {
-      console.warn("⚠️ Chưa có store 'jsonStore', đang tạo lại...");
+      console.warn("â ï¸ ChÆ°a cĂ³ store 'jsonStore', Ä‘ang táº¡o láº¡i...");
       const ver = db.version + 1;
       db.close();
       const reopen = indexedDB.open("TuViDB", ver);
@@ -11071,21 +11076,21 @@ function saveToIndexedDB(key, value) {
         const db2 = ev.target.result;
         const tx2 = db2.transaction("jsonStore", "readwrite");
         tx2.objectStore("jsonStore").put(value, key);
-        console.log(`💾 Lưu lại '${key}' sau khi tạo store.`);
+        console.log(`đŸ’¾ LÆ°u láº¡i '${key}' sau khi táº¡o store.`);
       };
       return;
     }
-    // 🧠 Ghi dữ liệu nếu store đã có
+    // đŸ§  Ghi dá»¯ liá»‡u náº¿u store Ä‘Ă£ cĂ³
     const tx = db.transaction("jsonStore", "readwrite");
     tx.objectStore("jsonStore").put(value, key);
-    console.log(`💾 Đã lưu dữ liệu '${key}' vào IndexedDB.`);
+    console.log(`đŸ’¾ ÄĂ£ lÆ°u dá»¯ liá»‡u '${key}' vĂ o IndexedDB.`);
   };
 
-  req.onerror = e => console.warn("⚠️ Lỗi IndexedDB:", e);
+  req.onerror = e => console.warn("â ï¸ Lá»—i IndexedDB:", e);
 }
 
 // =======================================================
-// 🗄️ SHIM localStorage → chỉ lưu IndexedDB (di chuyển dữ liệu cũ sang)
+// đŸ—„ï¸ SHIM localStorage â†’ chá»‰ lÆ°u IndexedDB (di chuyá»ƒn dá»¯ liá»‡u cÅ© sang)
 // =======================================================
 (function initLocalStorageShim() {
   const LS = window.localStorage;
@@ -11095,24 +11100,24 @@ function saveToIndexedDB(key, value) {
 
   const persist = () => saveToIndexedDB(CACHE_KEY, JSON.stringify(CACHE));
 
-  // Nạp cache từ IndexedDB, nếu trống thì import một lần từ localStorage cũ rồi xóa
+  // Náº¡p cache tá»« IndexedDB, náº¿u trá»‘ng thĂ¬ import má»™t láº§n tá»« localStorage cÅ© rá»“i xĂ³a
   loadFromIndexedDB(CACHE_KEY, data => {
     try { CACHE = data ? JSON.parse(data) : {}; } catch { CACHE = {}; }
 
-    // Import dữ liệu cũ từ localStorage (nếu có), rồi dọn sạch để ngăn ghi mới
+    // Import dá»¯ liá»‡u cÅ© tá»« localStorage (náº¿u cĂ³), rá»“i dá»n sáº¡ch Ä‘á»ƒ ngÄƒn ghi má»›i
     try {
       Object.keys(LS).forEach(k => {
         if (!CACHE.hasOwnProperty(k)) CACHE[k] = LS.getItem(k);
       });
       if (LS.clear) LS.clear();
     } catch (e) {
-      console.warn("⚠️ Không dọn được localStorage gốc:", e);
+      console.warn("â ï¸ KhĂ´ng dá»n Ä‘Æ°á»£c localStorage gá»‘c:", e);
     }
 
-    // Ghi lại cache vào IndexedDB sau import
+    // Ghi láº¡i cache vĂ o IndexedDB sau import
     persist();
 
-    // Ghi đè các method để chỉ thao tác trên CACHE + IndexedDB
+    // Ghi Ä‘Ă¨ cĂ¡c method Ä‘á»ƒ chá»‰ thao tĂ¡c trĂªn CACHE + IndexedDB
     LS.getItem = key => (CACHE.hasOwnProperty(key) ? CACHE[key] : null);
     LS.setItem = (key, val) => { CACHE[key] = String(val); persist(); };
     LS.removeItem = key => { delete CACHE[key]; persist(); };
@@ -11132,19 +11137,19 @@ function saveToIndexedDB(key, value) {
 function loadFromIndexedDB(key, callback) {
   const req = indexedDB.open("TuViDB", 1);
 
-  // 🔹 Đảm bảo tạo store nếu chưa có
+  // đŸ”¹ Äáº£m báº£o táº¡o store náº¿u chÆ°a cĂ³
   req.onupgradeneeded = e => {
     const db = e.target.result;
     if (!db.objectStoreNames.contains("jsonStore")) {
       db.createObjectStore("jsonStore");
-      console.log("🆕 Tạo store 'jsonStore' (lần đầu load)");
+      console.log("đŸ†• Táº¡o store 'jsonStore' (láº§n Ä‘áº§u load)");
     }
   };
 
   req.onsuccess = e => {
     const db = e.target.result;
     if (!db.objectStoreNames.contains("jsonStore")) {
-      console.warn("⚠️ Không tìm thấy store 'jsonStore', trả về rỗng.");
+      console.warn("â ï¸ KhĂ´ng tĂ¬m tháº¥y store 'jsonStore', tráº£ vá» rá»—ng.");
       callback(null);
       return;
     }
@@ -11152,30 +11157,30 @@ function loadFromIndexedDB(key, callback) {
     const store = tx.objectStore("jsonStore");
     const getReq = store.get(key);
     getReq.onsuccess = () => {
-      console.log(`📦 Load '${key}' từ IndexedDB`, getReq.result ? "(✔️ có dữ liệu)" : "(❌ trống)");
+      console.log(`đŸ“¦ Load '${key}' tá»« IndexedDB`, getReq.result ? "(âœ”ï¸ cĂ³ dá»¯ liá»‡u)" : "(âŒ trá»‘ng)");
       callback(getReq.result);
     };
     getReq.onerror = () => {
-      console.warn(`⚠️ Không đọc được '${key}' từ IndexedDB.`);
+      console.warn(`â ï¸ KhĂ´ng Ä‘á»c Ä‘Æ°á»£c '${key}' tá»« IndexedDB.`);
       callback(null);
     };
   };
 
-  req.onerror = e => console.warn("⚠️ Lỗi IndexedDB:", e);
+  req.onerror = e => console.warn("â ï¸ Lá»—i IndexedDB:", e);
 }
 
 // =====================================================
-// 📤 HÀM XUẤT DỮ LIỆU JSON (CHO NÚT 💾) – ĐỌC TỪ INDEXEDDB
+// đŸ“¤ HĂ€M XUáº¤T Dá»® LIá»†U JSON (CHO NĂT đŸ’¾) â€“ Äá»ŒC Tá»ª INDEXEDDB
 // =====================================================
 function exportData() {
   try {
 const exportKeys = ["SAO_DATA", "CHUYEN_DE_DATA", "CHUYEN_DE_CAY", "CACH_CUC_DATA"];
     const result = {};
 
-    // Hàm phụ: đọc tuần tự từng key trong IndexedDB
+    // HĂ m phá»¥: Ä‘á»c tuáº§n tá»± tá»«ng key trong IndexedDB
     const readNext = (index = 0) => {
       if (index >= exportKeys.length) {
-        // ✅ Khi đọc xong hết → tạo file JSON
+        // âœ… Khi Ä‘á»c xong háº¿t â†’ táº¡o file JSON
         const blob = new Blob([JSON.stringify(result, null, 2)], {
           type: "application/json"
         });
@@ -11184,7 +11189,7 @@ const exportKeys = ["SAO_DATA", "CHUYEN_DE_DATA", "CHUYEN_DE_CAY", "CACH_CUC_DAT
         a.download = "TuVi_FullBackup.json";
         a.click();
         URL.revokeObjectURL(a.href);
-        console.log("✅ Đã xuất toàn bộ dữ liệu từ IndexedDB ra file JSON.");
+        console.log("âœ… ÄĂ£ xuáº¥t toĂ n bá»™ dá»¯ liá»‡u tá»« IndexedDB ra file JSON.");
         return;
       }
 
@@ -11202,22 +11207,22 @@ const exportKeys = ["SAO_DATA", "CHUYEN_DE_DATA", "CHUYEN_DE_CAY", "CACH_CUC_DAT
       });
     };
 
-    // Bắt đầu đọc tuần tự từng mục
+    // Báº¯t Ä‘áº§u Ä‘á»c tuáº§n tá»± tá»«ng má»¥c
     readNext();
   } catch (err) {
-    console.error("⚠️ Lỗi exportData:", err);
+    console.error("â ï¸ Lá»—i exportData:", err);
   }
 }
 /* ==========================================================
-   🎨 ÉP MÀU SÁNG CHO TOÀN BỘ SAO SAU KHI AN SAO (bản tối ưu)
+   đŸ¨ Ă‰P MĂ€U SĂNG CHO TOĂ€N Bá»˜ SAO SAU KHI AN SAO (báº£n tá»‘i Æ°u)
    ========================================================== */
 function epMauSaoSang() {
   const mauHanh = {
-    "sao-hỏa":  "#ff4d4d",   // 🔥 Hỏa – đỏ tươi sáng, rõ nét
-    "sao-thổ":  "#e69500",   // 🟠 Thổ – cam đất đậm, không gắt
-    "sao-mộc":  "#007a29",   // 🌿 Mộc – xanh lá đậm rõ chữ
-    "sao-kim":  "#000000",   // ⚫ Kim – đen thuần, không bạc màu
-    "sao-thủy": "#004cff"    // 💧 Thủy – xanh dương đậm sáng
+    "sao-há»a":  "#ff4d4d",   // đŸ”¥ Há»a â€“ Ä‘á» tÆ°Æ¡i sĂ¡ng, rĂµ nĂ©t
+    "sao-thá»•":  "#e69500",   // đŸŸ  Thá»• â€“ cam Ä‘áº¥t Ä‘áº­m, khĂ´ng gáº¯t
+    "sao-má»™c":  "#007a29",   // đŸŒ¿ Má»™c â€“ xanh lĂ¡ Ä‘áº­m rĂµ chá»¯
+    "sao-kim":  "#000000",   // â« Kim â€“ Ä‘en thuáº§n, khĂ´ng báº¡c mĂ u
+    "sao-thá»§y": "#004cff"    // đŸ’§ Thá»§y â€“ xanh dÆ°Æ¡ng Ä‘áº­m sĂ¡ng
   };
 
   Object.entries(mauHanh).forEach(([cls, color]) => {
@@ -11227,7 +11232,7 @@ function epMauSaoSang() {
   });
 }
 
-/* 🪶 Tự kích hoạt sau khi các sao được an xong */
+/* đŸª¶ Tá»± kĂ­ch hoáº¡t sau khi cĂ¡c sao Ä‘Æ°á»£c an xong */
 document.addEventListener("DOMContentLoaded", () => {
   const target = document.getElementById("lasoContainer");
   if (!target) return;
@@ -11240,7 +11245,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // =====================================================
-// 🔍 TÌM NODE THEO ID (trả cả parentData và key)
+// đŸ” TĂŒM NODE THEO ID (tráº£ cáº£ parentData vĂ  key)
 // =====================================================
 function findNodeByIdWithParent(data, id, parent = null) {
   for (const key in data) {
@@ -11256,25 +11261,25 @@ function findNodeByIdWithParent(data, id, parent = null) {
 
 function themMucConTheoId(id) {
   const found = findNodeByIdWithParent(CHUYEN_DE_DATA, id);
-  console.log("📍 Tìm node cha theo id =", id, "→", found);
+  console.log("đŸ“ TĂ¬m node cha theo id =", id, "â†’", found);
 
-  if (!found) return alert("Không tìm thấy chuyên đề cha!");
+  if (!found) return alert("KhĂ´ng tĂ¬m tháº¥y chuyĂªn Ä‘á» cha!");
   const { node } = found;
-  const name = prompt("Nhập tên mục con mới:");
+  const name = prompt("Nháº­p tĂªn má»¥c con má»›i:");
   if (!name) return;
 
   if (!node.children) node.children = {};
   node.children[name] = { id: generateId(), noiDung: "", children: {} };
   luuChuyenDe();
   renderChuyenDe(false);
-  console.log("✅ Đã thêm mục con", name, "vào node", node);
+  console.log("âœ… ÄĂ£ thĂªm má»¥c con", name, "vĂ o node", node);
 }
 
 
-// ❌ Xóa theo id
+// âŒ XĂ³a theo id
 function xoaMucTheoId(id) {
   const found = findNodeByIdWithParent(CHUYEN_DE_DATA, id);
-  if (!found) return alert("Không tìm thấy mục cần xóa");
+  if (!found) return alert("KhĂ´ng tĂ¬m tháº¥y má»¥c cáº§n xĂ³a");
   const { key, parentData } = found;
   delete parentData[key];
   luuChuyenDe();
@@ -11282,19 +11287,19 @@ function xoaMucTheoId(id) {
   if (typeof saveNewOrder === "function") saveNewOrder();
 }
 // =====================================================
-// 📘 HÀM MỞ POPUP CHUYÊN ĐỀ THEO ID (phiên bản theo cấu trúc mới có id)
+// đŸ“˜ HĂ€M Má» POPUP CHUYĂN Äá»€ THEO ID (phiĂªn báº£n theo cáº¥u trĂºc má»›i cĂ³ id)
 // =====================================================
 window.moPopupChuyenDeTheoId = function (id, tenHienThi = "") {
-  // 🚧 Chặn người chưa premium mở popup chuyên đề
+  // đŸ§ Cháº·n ngÆ°á»i chÆ°a premium má»Ÿ popup chuyĂªn Ä‘á»
   if (!(window.isPaidUser && window.isPaidUser())) {
     if (typeof window.updatePremiumLock === "function") window.updatePremiumLock(false);
-    console.warn("[PREMIUM] Block moPopupChuyenDeTheoId vì user chưa premium");
+    console.warn("[PREMIUM] Block moPopupChuyenDeTheoId vĂ¬ user chÆ°a premium");
     return;
   }
 
   const found = findNodeByIdWithParent(CHUYEN_DE_DATA, id);
   if (!found) {
-    alert("Không tìm thấy chuyên đề có ID này!");
+    alert("KhĂ´ng tĂ¬m tháº¥y chuyĂªn Ä‘á» cĂ³ ID nĂ y!");
     return;
   }
 
@@ -11302,11 +11307,11 @@ window.moPopupChuyenDeTheoId = function (id, tenHienThi = "") {
   window.currentChuyenDeId = id;
   window.currentChuyenDeName = tenHienThi;
 
-  document.getElementById("tenChuyenDe").innerText = tenHienThi || "(Không có tên)";
+  document.getElementById("tenChuyenDe").innerText = tenHienThi || "(KhĂ´ng cĂ³ tĂªn)";
   document.getElementById("noiDungChuyenDe").innerHTML =
-    node.noiDung || "<i style='color:#777;'>Chưa có nội dung.</i>";
+    node.noiDung || "<i style='color:#777;'>ChÆ°a cĂ³ ná»™i dung.</i>";
 
-  // Chế độ xem
+  // Cháº¿ Ä‘á»™ xem
   document.getElementById("toolbarChuyenDe").style.display = "none";
   document.getElementById("btnEditCD").style.display = "";
   document.getElementById("btnChiTietCD").style.display = "";
@@ -11318,7 +11323,7 @@ window.moPopupChuyenDeTheoId = function (id, tenHienThi = "") {
 };
 
 /* ======================================================
-   📘 LOGIC CÁCH CỤC
+   đŸ“˜ LOGIC CĂCH Cá»¤C
    ====================================================== */
 let CACH_CUC_DATA = [];
 let resolveCachCucReady;
@@ -11337,22 +11342,22 @@ function markCachCucReady() {
   }
 }
 
-// 🔄 Nạp từ file DATA.json nếu DB trống (CACH_CUC_DATA được lưu dạng string JSON)
+// đŸ”„ Náº¡p tá»« file DATA.json náº¿u DB trá»‘ng (CACH_CUC_DATA Ä‘Æ°á»£c lÆ°u dáº¡ng string JSON)
 async function loadCachCucFromFile() {
   try {
-    console.log("ℹ️ Thử nạp CACH_CUC_DATA từ DATA.json ...");
+    console.log("â„¹ï¸ Thá»­ náº¡p CACH_CUC_DATA tá»« DATA.json ...");
     const resp = await fetch("./DATA.json", { cache: "no-cache" });
     if (!resp.ok) {
-      console.warn("⚠️ Không đọc được DATA.json, status:", resp.status);
+      console.warn("â ï¸ KhĂ´ng Ä‘á»c Ä‘Æ°á»£c DATA.json, status:", resp.status);
       return;
     }
     const text = await resp.text();
-    console.log("ℹ️ DATA.json bytes:", text.length);
+    console.log("â„¹ï¸ DATA.json bytes:", text.length);
     let root;
     try {
       root = JSON.parse(text);
     } catch (e) {
-      console.warn("⚠️ Parse DATA.json lỗi:", e);
+      console.warn("â ï¸ Parse DATA.json lá»—i:", e);
       return;
     }
     let arr = [];
@@ -11363,7 +11368,7 @@ async function loadCachCucFromFile() {
         const raw = root.CACH_CUC_DATA;
         arr = Array.isArray(raw) ? raw : JSON.parse(raw);
       } catch (e) {
-        console.warn("⚠️ Không parse được CACH_CUC_DATA trong file:", e);
+        console.warn("â ï¸ KhĂ´ng parse Ä‘Æ°á»£c CACH_CUC_DATA trong file:", e);
       }
     }
     if (Array.isArray(arr) && arr.length) {
@@ -11371,23 +11376,23 @@ async function loadCachCucFromFile() {
       window.CACH_CUC_DATA = arr;
       syncCachCucStore();
       if (typeof renderCachCucList === "function") renderCachCucList();
-      console.log("✅ Đã nạp CACH_CUC_DATA từ DATA.json:", arr.length);
+      console.log("âœ… ÄĂ£ náº¡p CACH_CUC_DATA tá»« DATA.json:", arr.length);
       markCachCucReady();
       return;
     }
-    console.warn("⚠️ DATA.json không chứa CACH_CUC_DATA hợp lệ hoặc rỗng");
+    console.warn("â ï¸ DATA.json khĂ´ng chá»©a CACH_CUC_DATA há»£p lá»‡ hoáº·c rá»—ng");
   } catch (e) {
-    console.warn("⚠️ Lỗi nạp CACH_CUC_DATA từ file:", e);
+    console.warn("â ï¸ Lá»—i náº¡p CACH_CUC_DATA tá»« file:", e);
   }
 }
 
-// 🔄 Nạp CACH_CUC_DATA từ IndexedDB (fallback localStorage)
+// đŸ”„ Náº¡p CACH_CUC_DATA tá»« IndexedDB (fallback localStorage)
 loadFromIndexedDB("CACH_CUC_DATA", data => {
   try {
     const fromDB = data ? JSON.parse(data) : null;
     CACH_CUC_DATA = Array.isArray(fromDB) ? fromDB : [];
   } catch (e) {
-    console.warn("⚠️ Không parse được CACH_CUC_DATA, dùng localStorage:", e);
+    console.warn("â ï¸ KhĂ´ng parse Ä‘Æ°á»£c CACH_CUC_DATA, dĂ¹ng localStorage:", e);
     CACH_CUC_DATA = [];
   }
   if (!CACH_CUC_DATA.length) {
@@ -11408,42 +11413,42 @@ loadFromIndexedDB("CACH_CUC_DATA", data => {
     markCachCucReady();
     if (typeof renderCachCucList === "function") renderCachCucList();
   } else {
-    // DB trống -> thử nạp từ file DATA.json
-    console.warn("⚠️ CACH_CUC_DATA trống, thử nạp từ DATA.json");
+    // DB trá»‘ng -> thá»­ náº¡p tá»« file DATA.json
+    console.warn("â ï¸ CACH_CUC_DATA trá»‘ng, thá»­ náº¡p tá»« DATA.json");
     loadCachCucFromFile().then(() => {
       if (!CACH_CUC_DATA.length) {
-        console.warn("⚠️ Không nạp được CACH_CUC_DATA từ file.");
+        console.warn("â ï¸ KhĂ´ng náº¡p Ä‘Æ°á»£c CACH_CUC_DATA tá»« file.");
         markCachCucReady();
       }
     });
   }
 });
 
-// Theo dõi khi CACH_CUC_READY resolve để debug
+// Theo dĂµi khi CACH_CUC_READY resolve Ä‘á»ƒ debug
 CACH_CUC_READY.then(() => {
-  console.log("ℹ️ CACH_CUC_READY resolved, length:", (window.CACH_CUC_DATA || []).length);
+  console.log("â„¹ï¸ CACH_CUC_READY resolved, length:", (window.CACH_CUC_DATA || []).length);
 });
 
-// Cho phép gọi thủ công trong console
+// Cho phĂ©p gá»i thá»§ cĂ´ng trong console
 window.debugLoadCachCuc = loadCachCucFromFile;
 
-// ✅ Tiện ích: nạp Cách Cục từ JSON thủ công (dùng trong Console)
+// âœ… Tiá»‡n Ă­ch: náº¡p CĂ¡ch Cá»¥c tá»« JSON thá»§ cĂ´ng (dĂ¹ng trong Console)
 window.restoreCachCucData = function (json) {
   try {
     const data = typeof json === "string" ? JSON.parse(json) : json;
-    if (!Array.isArray(data)) throw new Error("Cần mảng Cách Cục");
+    if (!Array.isArray(data)) throw new Error("Cáº§n máº£ng CĂ¡ch Cá»¥c");
     CACH_CUC_DATA = data;
     window.CACH_CUC_DATA = data;
     syncCachCucStore();
     if (typeof renderCachCucList === "function") renderCachCucList();
-    console.log("✅ Đã nạp CACH_CUC_DATA thủ công:", data.length, "bản ghi");
+    console.log("âœ… ÄĂ£ náº¡p CACH_CUC_DATA thá»§ cĂ´ng:", data.length, "báº£n ghi");
     markCachCucReady();
   } catch (e) {
-    console.error("❌ Không nạp được CACH_CUC_DATA:", e.message || e);
+    console.error("âŒ KhĂ´ng náº¡p Ä‘Æ°á»£c CACH_CUC_DATA:", e.message || e);
   }
 };
 
-// 🔁 Đảm bảo lần load đầu luôn có dữ liệu (fallback nếu IndexedDB/localStorage đều trống)
+// đŸ” Äáº£m báº£o láº§n load Ä‘áº§u luĂ´n cĂ³ dá»¯ liá»‡u (fallback náº¿u IndexedDB/localStorage Ä‘á»u trá»‘ng)
 window.addEventListener("load", () => {
   if (!CACH_CUC_DATA.length) {
     loadCachCucFromFile();
@@ -11457,7 +11462,7 @@ function renderCachCucList(){
   div.innerHTML = '';
 
   if(!CACH_CUC_DATA.length){
-    div.innerHTML = '<i style="color:#777;">Chưa có cách cục nào.</i>';
+    div.innerHTML = '<i style="color:#777;">ChÆ°a cĂ³ cĂ¡ch cá»¥c nĂ o.</i>';
     return;
   }
 
@@ -11472,18 +11477,18 @@ function renderCachCucList(){
     item.innerHTML = `
   <div class="cc-left" data-index="${i}" style="cursor:pointer;">
     <b>${cc.ten}</b>
-    <small style="color:#555;">(${cc.dieuKien.length} điều kiện)</small>
+    <small style="color:#555;">(${cc.dieuKien.length} Ä‘iá»u kiá»‡n)</small>
   </div>
 <div class="cc-actions" style="display:flex;align-items:center;gap:3px;margin-left:4px;">
-    <button class="edit-cc" data-index="${i}" title="Sửa" 
-  style="background:none;border:none;color:#7a1ea1;cursor:pointer;font-size:14px;padding:0 2px;">✏️</button>
+    <button class="edit-cc" data-index="${i}" title="Sá»­a" 
+  style="background:none;border:none;color:#7a1ea1;cursor:pointer;font-size:14px;padding:0 2px;">âœï¸</button>
 
-<button class="delete-cc" data-index="${i}" title="Xóa" 
-  style="background:none;border:none;color:#b50000;cursor:pointer;font-size:14px;padding:0 2px;">🗑️</button>
+<button class="delete-cc" data-index="${i}" title="XĂ³a" 
+  style="background:none;border:none;color:#b50000;cursor:pointer;font-size:14px;padding:0 2px;">đŸ—‘ï¸</button>
 
 `;
 
-    // overlay khóa cho từng item nếu chưa premium
+    // overlay khĂ³a cho tá»«ng item náº¿u chÆ°a premium
     const locked = !(window.isPaidUser && window.isPaidUser());
     if (locked) {
       const ov = document.createElement("div");
@@ -11501,7 +11506,7 @@ function renderCachCucList(){
     div.appendChild(item);
   });
 
-  // Áp lại khóa/overlay sau khi render
+  // Ăp láº¡i khĂ³a/overlay sau khi render
   if (typeof toggleCachCucEditLock === "function") {
     toggleCachCucEditLock(window.isPaidUser && window.isPaidUser());
   }
@@ -11518,19 +11523,19 @@ function taoUIChoDieuKien(bien, giaTri, container) {
   `;
 
   dk.innerHTML = `
-    <label style="font-weight:600;">Biến:</label>
+    <label style="font-weight:600;">Biáº¿n:</label>
     <select class="bien" style="padding:4px 6px;border:1px solid #ccc;border-radius:4px;">
-      <option value="">-- Chọn Biến --</option>
-      <option value="cungVi">Cung Vị</option>
-      <option value="cungChuc">Cung Chức</option>
-      <option value="chinhTinh_ChinhCung">Chính Tinh (Chính Cung)</option>
-      <option value="trungTinh_ChinhCung">Trung Tinh (Chính Cung)</option>
-      <option value="chinhTinh_TamHop">Chính Tinh (Tam Hợp)</option>
-      <option value="trungTinh_TamHop">Trung Tinh (Tam Hợp)</option>
-      <option value="giapCung_ChinhTinh">Giáp Cung (Chính Tinh)</option>
-      <option value="giapCung_TrungTinh">Giáp Cung (Trung Tinh)</option>
-      <option value="giapCung_KetHop">Giáp Cung (Kết Hợp)</option>
-      <option value="thuocCach">Thuộc Cách</option>
+      <option value="">-- Chá»n Biáº¿n --</option>
+      <option value="cungVi">Cung Vá»‹</option>
+      <option value="cungChuc">Cung Chá»©c</option>
+      <option value="chinhTinh_ChinhCung">ChĂ­nh Tinh (ChĂ­nh Cung)</option>
+      <option value="trungTinh_ChinhCung">Trung Tinh (ChĂ­nh Cung)</option>
+      <option value="chinhTinh_TamHop">ChĂ­nh Tinh (Tam Há»£p)</option>
+      <option value="trungTinh_TamHop">Trung Tinh (Tam Há»£p)</option>
+      <option value="giapCung_ChinhTinh">GiĂ¡p Cung (ChĂ­nh Tinh)</option>
+      <option value="giapCung_TrungTinh">GiĂ¡p Cung (Trung Tinh)</option>
+      <option value="giapCung_KetHop">GiĂ¡p Cung (Káº¿t Há»£p)</option>
+      <option value="thuocCach">Thuá»™c CĂ¡ch</option>
     </select>
 
     <div class="giaTriBox"></div>
@@ -11541,18 +11546,18 @@ function taoUIChoDieuKien(bien, giaTri, container) {
 
   selectBien.value = bien;
 
-// TẠO UI dựa trên biến
+// Táº O UI dá»±a trĂªn biáº¿n
 renderGiaTriTheoBien(selectBien, box, giaTri);
 
 
   // ==========================
-  // 🔥 CUNG CHỨC OR
+  // đŸ”¥ CUNG CHá»¨C OR
   // ==========================
   if (bien === "cungChuc") {
     box.innerHTML = "";
     const ds = [
-      "Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch","Tật Ách",
-      "Thiên Di","Nô Bộc","Quan Lộc","Điền Trạch","Phúc Đức","Phụ Mẫu"
+      "Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch","Táº­t Ăch",
+      "ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c","Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u"
     ];
     giaTri.forEach(v => {
       const s = document.createElement("select");
@@ -11566,14 +11571,14 @@ renderGiaTriTheoBien(selectBien, box, giaTri);
   }
 
   // ==========================
-  // 🔥 CHÍNH TINH nhóm AND/OR
+  // đŸ”¥ CHĂNH TINH nhĂ³m AND/OR
   // ==========================
   if (bien === "chinhTinh_ChinhCung" || bien === "chinhTinh_TamHop") {
 
     const ds = [
-      "Vô Chính Diệu","Tử Vi","Thiên Phủ","Vũ Khúc","Liêm Trinh","Tham Lang",
-      "Cự Môn","Phá Quân","Thiên Tướng","Thiên Lương","Thiên Cơ",
-      "Thái Dương","Thái Âm","Thất Sát","Thiên Đồng"
+      "VĂ´ ChĂ­nh Diá»‡u","Tá»­ Vi","ThiĂªn Phá»§","VÅ© KhĂºc","LiĂªm Trinh","Tham Lang",
+      "Cá»± MĂ´n","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡",
+      "ThĂ¡i DÆ°Æ¡ng","ThĂ¡i Ă‚m","Tháº¥t SĂ¡t","ThiĂªn Äá»“ng"
     ];
 
     box.innerHTML = "";
@@ -11588,7 +11593,7 @@ renderGiaTriTheoBien(selectBien, box, giaTri);
       `;
 
       const title = document.createElement("b");
-      title.textContent = "Nhóm Chính Tinh (AND trong nhóm):";
+      title.textContent = "NhĂ³m ChĂ­nh Tinh (AND trong nhĂ³m):";
       g.appendChild(title);
 
       const saoBox = document.createElement("div");
@@ -11613,7 +11618,7 @@ renderGiaTriTheoBien(selectBien, box, giaTri);
   }
 
   // ==========================
-  // 🔥 BIẾN KHÁC – GIỮ NGUYÊN
+  // đŸ”¥ BIáº¾N KHĂC â€“ GIá»® NGUYĂN
   // ==========================
   const selects = dk.querySelectorAll(".giaTri");
   giaTri.forEach((v, index) => { if (selects[index]) selects[index].value = v; });
@@ -11622,12 +11627,12 @@ renderGiaTriTheoBien(selectBien, box, giaTri);
 }
 
 
-// ✏️ Sửa & 🗑️ Xóa Cách Cục
+// âœï¸ Sá»­a & đŸ—‘ï¸ XĂ³a CĂ¡ch Cá»¥c
 document.addEventListener("click",(e)=>{
 
-  // ✏️ Sửa Cách Cục
+  // âœï¸ Sá»­a CĂ¡ch Cá»¥c
   if (e.target.closest(".edit-cc")) {
-    e.stopPropagation();   // ⭐ KHÔNG CHO LAN XUỐNG LISTENER 2
+    e.stopPropagation();   // â­ KHĂ”NG CHO LAN XUá»NG LISTENER 2
 
     const i = e.target.closest(".edit-cc").dataset.index;
     const cc = CACH_CUC_DATA[i];
@@ -11636,15 +11641,15 @@ document.addEventListener("click",(e)=>{
     popup.style.display = "flex";
     popup.dataset.editIndex = i;
 
-    // tên
+    // tĂªn
     const tenInput = popup.querySelector(".cc-ten-input");
     if (tenInput) tenInput.value = cc.ten;
 
-    // xóa UI điều kiện cũ
+    // xĂ³a UI Ä‘iá»u kiá»‡n cÅ©
     const dkContainer = document.getElementById("dieuKienContainer");
     dkContainer.innerHTML = "";
 
-    // tái tạo điều kiện theo phiên bản UI mới
+    // tĂ¡i táº¡o Ä‘iá»u kiá»‡n theo phiĂªn báº£n UI má»›i
     cc.dieuKien.forEach(dk => {
       taoUIChoDieuKien(dk.bien, dk.giaTri, dkContainer);
     });
@@ -11652,12 +11657,12 @@ document.addEventListener("click",(e)=>{
     return;
   }
 
-  // 🗑️ Xóa
+  // đŸ—‘ï¸ XĂ³a
   if(e.target.closest(".delete-cc")){
-    e.stopPropagation();  // ⭐ tránh lan xuống dưới
+    e.stopPropagation();  // â­ trĂ¡nh lan xuá»‘ng dÆ°á»›i
 
     const i = e.target.closest(".delete-cc").dataset.index;
-    if(confirm("Xóa Cách Cục này?")){
+    if(confirm("XĂ³a CĂ¡ch Cá»¥c nĂ y?")){
       CACH_CUC_DATA.splice(i, 1);
       syncCachCucStore();
       renderCachCucList();
@@ -11669,11 +11674,11 @@ document.addEventListener("click",(e)=>{
 
 
 
-// Popup xử lý
+// Popup xá»­ lĂ½
 document.addEventListener("click",(e)=>{
- // ⭐ FIX KHÔNG CHỈNH SỬA ĐƯỢC ⭐
+ // â­ FIX KHĂ”NG CHá»ˆNH Sá»¬A ÄÆ¯á»¢C â­
   const popup = document.getElementById("popupCachCuc");
-// ❌ Chỉ chặn click RA NGOÀI popup, KHÔNG chặn nút bên trong
+// âŒ Chá»‰ cháº·n click RA NGOĂ€I popup, KHĂ”NG cháº·n nĂºt bĂªn trong
 if (
   popup.style.display === "flex" &&
   popup.dataset.editIndex &&
@@ -11686,10 +11691,10 @@ if (
  if(e.target.id==="btnAddCachCuc"){
     const popup = document.getElementById("popupCachCuc");
     popup.style.display = "flex";
-    popup.removeAttribute("data-editIndex"); // XÓA INDEX CŨ !!!
+    popup.removeAttribute("data-editIndex"); // XĂ“A INDEX CÅ¨ !!!
     document.getElementById("dieuKienContainer").innerHTML = "";
     const tenInput = document.querySelector("#popupCachCuc .cc-ten-input");
-    if (tenInput) tenInput.value = ""; // xoá tên cũ nếu có
+    if (tenInput) tenInput.value = ""; // xoĂ¡ tĂªn cÅ© náº¿u cĂ³
 }
   
   if(e.target.id==="btnCloseCachCuc"){
@@ -11706,25 +11711,25 @@ if (e.target.id === "btnAddDieuKien") {
   `;
 
   dk.innerHTML = `
-    <label style="font-weight:600;">Biến:</label>
+    <label style="font-weight:600;">Biáº¿n:</label>
     <select class="bien" style="padding:4px 6px;border:1px solid #ccc;border-radius:4px;">
-      <option value="">-- Chọn Biến --</option>
-      <option value="cungVi">Cung Vị</option>
-      <option value="cungChuc">Cung Chức</option>
-      <option value="chinhTinh_ChinhCung">Chính Tinh (Chính Cung)</option>
-      <option value="trungTinh_ChinhCung">Trung Tinh (Chính Cung)</option>
-      <option value="chinhTinh_TamHop">Chính Tinh (Tam Hợp)</option>
-      <option value="trungTinh_TamHop">Trung Tinh (Tam Hợp)</option>
-      <option value="giapCung_ChinhTinh">Giáp Cung (Chính Tinh)</option>
-      <option value="giapCung_TrungTinh">Giáp Cung (Trung Tinh)</option>
-<option value="giapCung_KetHop">Giáp Cung (Kết Hợp)</option>
+      <option value="">-- Chá»n Biáº¿n --</option>
+      <option value="cungVi">Cung Vá»‹</option>
+      <option value="cungChuc">Cung Chá»©c</option>
+      <option value="chinhTinh_ChinhCung">ChĂ­nh Tinh (ChĂ­nh Cung)</option>
+      <option value="trungTinh_ChinhCung">Trung Tinh (ChĂ­nh Cung)</option>
+      <option value="chinhTinh_TamHop">ChĂ­nh Tinh (Tam Há»£p)</option>
+      <option value="trungTinh_TamHop">Trung Tinh (Tam Há»£p)</option>
+      <option value="giapCung_ChinhTinh">GiĂ¡p Cung (ChĂ­nh Tinh)</option>
+      <option value="giapCung_TrungTinh">GiĂ¡p Cung (Trung Tinh)</option>
+<option value="giapCung_KetHop">GiĂ¡p Cung (Káº¿t Há»£p)</option>
 
-      <option value="thuocCach">Thuộc Cách</option>
+      <option value="thuocCach">Thuá»™c CĂ¡ch</option>
     </select>
 
     <div class="giaTriBox">
-      <label>Giá trị (phân tách bởi dấu phẩy):</label>
-      <input class="giaTri" placeholder="VD: Tử Vi, Thiên Tướng"
+      <label>GiĂ¡ trá»‹ (phĂ¢n tĂ¡ch bá»Ÿi dáº¥u pháº©y):</label>
+      <input class="giaTri" placeholder="VD: Tá»­ Vi, ThiĂªn TÆ°á»›ng"
              style="width:100%;padding:5px 6px;border:1px solid #ccc;border-radius:4px;">
     </div>
   `;
@@ -11735,7 +11740,7 @@ if (e.target.id === "btnAddDieuKien") {
 selectBien.addEventListener("change", () => {
   const val = selectBien.value;
   const box = giaTriBox;
-  box.innerHTML = ""; // reset nội dung
+  box.innerHTML = ""; // reset ná»™i dung
 
   const taoSelect = (arr, multiple = false) => {
     const s = document.createElement("select");
@@ -11761,16 +11766,16 @@ selectBien.addEventListener("change", () => {
 
  
   // ===============================
-// 1️⃣ CUNG VỊ (Hỗ trợ nhiều lựa chọn OR)
+// 1ï¸âƒ£ CUNG Vá» (Há»— trá»£ nhiá»u lá»±a chá»n OR)
 // ===============================
 if (val === "cungVi") {
-  const ds = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const ds = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
   const wrap = document.createElement("div");
   wrap.className = "cungViList";
   wrap.style.cssText = "display:flex;flex-direction:column;gap:6px;";
 
-  // Hàm thêm 1 dropdown chọn cung vị
+  // HĂ m thĂªm 1 dropdown chá»n cung vá»‹
   function addSelect(value = "") {
     const s = document.createElement("select");
     s.className = "giaTri cungVi-item";
@@ -11789,12 +11794,12 @@ if (val === "cungVi") {
     wrap.appendChild(s);
   }
 
-  // Thêm dropdown đầu tiên
+  // ThĂªm dropdown Ä‘áº§u tiĂªn
   addSelect();
 
-  // Nút thêm cung (OR)
+  // NĂºt thĂªm cung (OR)
   const btn = document.createElement("button");
-  btn.textContent = "➕ Thêm Cung (OR)";
+  btn.textContent = "â• ThĂªm Cung (OR)";
   btn.style.cssText = `
     background:#7b2cbf;
     color:#fff;
@@ -11814,7 +11819,7 @@ if (val === "cungVi") {
   box.appendChild(btn);
 
   const note = document.createElement("small");
-  note.textContent = "💡 Có thể chọn nhiều cung — nghĩa là thỏa bất kỳ cung nào (điều kiện OR).";
+  note.textContent = "đŸ’¡ CĂ³ thá»ƒ chá»n nhiá»u cung â€” nghÄ©a lĂ  thá»a báº¥t ká»³ cung nĂ o (Ä‘iá»u kiá»‡n OR).";
   note.style.color = "#666";
   box.appendChild(note);
 
@@ -11824,12 +11829,12 @@ if (val === "cungVi") {
 
 
  // ===============================
-// 2️⃣ CUNG CHỨC (nhiều lựa chọn OR)
+// 2ï¸âƒ£ CUNG CHá»¨C (nhiá»u lá»±a chá»n OR)
 // ===============================
 if (val === "cungChuc") {
   const ds = [
-    "Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch","Tật Ách",
-    "Thiên Di","Nô Bộc","Quan Lộc","Điền Trạch","Phúc Đức","Phụ Mẫu"
+    "Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch","Táº­t Ăch",
+    "ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c","Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u"
   ];
 
   const wrap = document.createElement("div");
@@ -11848,11 +11853,11 @@ if (val === "cungChuc") {
     wrap.appendChild(s);
   }
 
-  // mặc định 1 dòng
+  // máº·c Ä‘á»‹nh 1 dĂ²ng
   addSelect();
 
   const btn = document.createElement("button");
-  btn.textContent = "➕ Thêm Cung Chức (OR)";
+  btn.textContent = "â• ThĂªm Cung Chá»©c (OR)";
   btn.style.cssText = `
     background:#7b2cbf;color:#fff;border:none;border-radius:4px;
     padding:4px 10px;cursor:pointer;width:max-content;
@@ -11863,7 +11868,7 @@ if (val === "cungChuc") {
   box.appendChild(btn);
 
   const note = document.createElement("small");
-  note.textContent = "💡 Bạn có thể thêm nhiều Cung Chức — nghĩa là thỏa bất kỳ cung nào (điều kiện OR).";
+  note.textContent = "đŸ’¡ Báº¡n cĂ³ thá»ƒ thĂªm nhiá»u Cung Chá»©c â€” nghÄ©a lĂ  thá»a báº¥t ká»³ cung nĂ o (Ä‘iá»u kiá»‡n OR).";
   note.style.color = "#666";
   box.appendChild(note);
 
@@ -11872,14 +11877,14 @@ if (val === "cungChuc") {
 
 
 // ===============================
-// 3️⃣ CHÍNH TINH (Chính Cung / Tam Hợp)
+// 3ï¸âƒ£ CHĂNH TINH (ChĂ­nh Cung / Tam Há»£p)
 // ===============================
 if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
 
   const ds = [
-    "Vô Chính Diệu","Tử Vi","Thiên Phủ","Vũ Khúc","Liêm Trinh","Tham Lang",
-    "Cự Môn","Phá Quân","Thiên Tướng","Thiên Lương","Thiên Cơ",
-    "Thái Dương","Thái Âm","Thất Sát","Thiên Đồng"
+    "VĂ´ ChĂ­nh Diá»‡u","Tá»­ Vi","ThiĂªn Phá»§","VÅ© KhĂºc","LiĂªm Trinh","Tham Lang",
+    "Cá»± MĂ´n","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡",
+    "ThĂ¡i DÆ°Æ¡ng","ThĂ¡i Ă‚m","Tháº¥t SĂ¡t","ThiĂªn Äá»“ng"
   ];
 
   const wrap = document.createElement("div");
@@ -11899,13 +11904,13 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
       gap:6px;
     `;
 
-    group.innerHTML = `<b>Nhóm Chính Tinh (AND trong nhóm):</b>`;
+    group.innerHTML = `<b>NhĂ³m ChĂ­nh Tinh (AND trong nhĂ³m):</b>`;
 
     const box = document.createElement("div");
     box.className = "saoBox";
     box.style.cssText = "display:flex;flex-direction:column;gap:4px;";
 
-    // Tạo các select từ values (load khi sửa)
+    // Táº¡o cĂ¡c select tá»« values (load khi sá»­a)
     values.forEach(v=>{
       const s = document.createElement("select");
       s.className = "giaTri chinhTinhItem";
@@ -11919,7 +11924,7 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
       box.appendChild(s);
     });
 
-    // Nếu thêm mới mà chưa có gì, tạo 1 select
+    // Náº¿u thĂªm má»›i mĂ  chÆ°a cĂ³ gĂ¬, táº¡o 1 select
     if (values.length === 0) addSelect();
 
     function addSelect() {
@@ -11938,7 +11943,7 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     group.appendChild(box);
 
     const btn = document.createElement("button");
-    btn.textContent = "➕ Thêm Sao (tối đa 2)";
+    btn.textContent = "â• ThĂªm Sao (tá»‘i Ä‘a 2)";
     btn.style.cssText = `
       background:#7b2cbf;color:#fff;border:none;border-radius:4px;
       padding:4px 10px;cursor:pointer;width:max-content;
@@ -11949,11 +11954,11 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     wrap.appendChild(group);
   }
 
-  // Nhóm đầu tiên
+  // NhĂ³m Ä‘áº§u tiĂªn
   addGroup();
 
   const addGroupBtn = document.createElement("button");
-  addGroupBtn.textContent = "➕ Thêm Nhóm Chính Tinh (OR)";
+  addGroupBtn.textContent = "â• ThĂªm NhĂ³m ChĂ­nh Tinh (OR)";
   addGroupBtn.style.cssText = `
     background:#4c1d95;color:#fff;border:none;border-radius:4px;
     padding:5px 12px;cursor:pointer;width:max-content;
@@ -11964,7 +11969,7 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
   box.appendChild(addGroupBtn);
 
   const note = document.createElement("small");
-  note.textContent = "💡 Một nhóm = AND. Nhiều nhóm = OR giữa các nhóm.";
+  note.textContent = "đŸ’¡ Má»™t nhĂ³m = AND. Nhiá»u nhĂ³m = OR giá»¯a cĂ¡c nhĂ³m.";
   note.style.color = "#666";
   box.appendChild(note);
 
@@ -11973,13 +11978,13 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
 
 
   // ===============================
-  // 4️⃣ TRUNG TINH (CHÍNH CUNG)
+  // 4ï¸âƒ£ TRUNG TINH (CHĂNH CUNG)
   // ===============================
   if (val === "trungTinh_ChinhCung") {
     const ds = [
-      "Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-      "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-      "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"
+      "Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+      "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+      "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"
     ];
 
     const wrap = document.createElement("div");
@@ -11990,7 +11995,7 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     };
 
     const btn = document.createElement("button");
-    btn.textContent = "➕ Thêm Trung Tinh";
+    btn.textContent = "â• ThĂªm Trung Tinh";
     btn.style.cssText = `
       margin-top:5px;
       background:#7b2cbf;
@@ -12009,13 +12014,13 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
   }
 
   // ===============================
-  // 5️⃣ TRUNG TINH (TAM HỢP)
+  // 5ï¸âƒ£ TRUNG TINH (TAM Há»¢P)
   // ===============================
   if (val === "trungTinh_TamHop") {
     const ds = [
-      "Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-      "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-      "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"
+      "Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+      "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+      "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"
     ];
 
     const wrap = document.createElement("div");
@@ -12026,7 +12031,7 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     };
 
     const btn = document.createElement("button");
-    btn.textContent = "➕ Thêm Trung Tinh";
+    btn.textContent = "â• ThĂªm Trung Tinh";
     btn.style.cssText = `
       margin-top:5px;
       background:#7b2cbf;
@@ -12043,24 +12048,24 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     box.appendChild(btn);
 
     const note = document.createElement("small");
-    note.textContent = "💡 Áp dụng cho cả Trung Tinh Chính Cung và Tam Hợp";
+    note.textContent = "đŸ’¡ Ăp dá»¥ng cho cáº£ Trung Tinh ChĂ­nh Cung vĂ  Tam Há»£p";
     note.style.color = "#666";
     box.appendChild(note);
     return;
   }
 
   // ===============================
-  // 6️⃣ GIÁP CUNG (CHÍNH TINH / TRUNG TINH)
+  // 6ï¸âƒ£ GIĂP CUNG (CHĂNH TINH / TRUNG TINH)
   // ===============================
   if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
     const isChinh = val.includes("Chinh");
     const ds = isChinh
-      ? ["Vô Chính Diệu","Tử Vi","Thiên Phủ","Vũ Khúc","Liêm Trinh","Tham Lang",
-         "Cự Môn","Phá Quân","Thiên Tướng","Thiên Lương","Thiên Cơ",
-         "Thái Dương","Thái Âm","Thất Sát","Thiên Đồng"]
-      : ["Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-         "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-         "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"];
+      ? ["VĂ´ ChĂ­nh Diá»‡u","Tá»­ Vi","ThiĂªn Phá»§","VÅ© KhĂºc","LiĂªm Trinh","Tham Lang",
+         "Cá»± MĂ´n","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡",
+         "ThĂ¡i DÆ°Æ¡ng","ThĂ¡i Ă‚m","Tháº¥t SĂ¡t","ThiĂªn Äá»“ng"]
+      : ["Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+         "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+         "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"];
 
     const wrap = document.createElement("div");
     wrap.style.cssText = `
@@ -12072,7 +12077,7 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     const col1 = document.createElement("div");
     const col2 = document.createElement("div");
     const lbl1 = document.createElement("label");
-    lbl1.textContent = "Sao Trước:";
+    lbl1.textContent = "Sao TrÆ°á»›c:";
     const lbl2 = document.createElement("label");
     lbl2.textContent = "Sao Sau:";
     col1.appendChild(lbl1);
@@ -12085,16 +12090,16 @@ if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     return;
   }
 // ===============================
-// 6️⃣ GIÁP CUNG (KẾT HỢP CHÍNH + TRUNG TINH)
+// 6ï¸âƒ£ GIĂP CUNG (Káº¾T Há»¢P CHĂNH + TRUNG TINH)
 // ===============================
 if (val === "giapCung_KetHop") {
   const ds = [
-    "Vô Chính Diệu","Tử Vi","Thiên Phủ","Vũ Khúc","Liêm Trinh","Tham Lang",
-    "Cự Môn","Phá Quân","Thiên Tướng","Thiên Lương","Thiên Cơ",
-    "Thái Dương","Thái Âm","Thất Sát","Thiên Đồng",
-    "Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-    "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-    "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"
+    "VĂ´ ChĂ­nh Diá»‡u","Tá»­ Vi","ThiĂªn Phá»§","VÅ© KhĂºc","LiĂªm Trinh","Tham Lang",
+    "Cá»± MĂ´n","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡",
+    "ThĂ¡i DÆ°Æ¡ng","ThĂ¡i Ă‚m","Tháº¥t SĂ¡t","ThiĂªn Äá»“ng",
+    "Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+    "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+    "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"
   ];
 
   const wrap = document.createElement("div");
@@ -12104,15 +12109,15 @@ if (val === "giapCung_KetHop") {
     gap:12px;
   `;
 
-  // ==== SAO TRƯỚC ====
+  // ==== SAO TRÆ¯á»C ====
   const truocWrap = document.createElement("div");
-  truocWrap.innerHTML = `<label><b>Sao Trước:</b></label>`;
+  truocWrap.innerHTML = `<label><b>Sao TrÆ°á»›c:</b></label>`;
   const truocBox = document.createElement("div");
   truocBox.className = "giap-truoc-box";
   truocWrap.appendChild(truocBox);
 
   const btnTruoc = document.createElement("button");
-  btnTruoc.textContent = "+ Thêm Sao Trước";
+  btnTruoc.textContent = "+ ThĂªm Sao TrÆ°á»›c";
   btnTruoc.type = "button";
   btnTruoc.style.cssText = `
     margin-top:4px;
@@ -12144,7 +12149,7 @@ if (val === "giapCung_KetHop") {
   sauWrap.appendChild(sauBox);
 
   const btnSau = document.createElement("button");
-  btnSau.textContent = "+ Thêm Sao Sau";
+  btnSau.textContent = "+ ThĂªm Sao Sau";
   btnSau.type = "button";
   btnSau.style.cssText = `
     margin-top:4px;
@@ -12175,22 +12180,22 @@ if (val === "giapCung_KetHop") {
 }
 
   // ===============================
-  // 7️⃣ THUỘC CÁCH
+  // 7ï¸âƒ£ THUá»˜C CĂCH
   // ===============================
  if (val === "thuocCach") {
   const ds = [
     "Hung",
-    "Bán Cát Bán Hung – Thiên Hung",
-    "Cát Hung Lẫn Lộn",
-    "Bán Cát Bán Hung – Thiên Cát",
-    "Cát"
+    "BĂ¡n CĂ¡t BĂ¡n Hung â€“ ThiĂªn Hung",
+    "CĂ¡t Hung Láº«n Lá»™n",
+    "BĂ¡n CĂ¡t BĂ¡n Hung â€“ ThiĂªn CĂ¡t",
+    "CĂ¡t"
   ];
 
-  // Vùng chứa các dropdown
+  // VĂ¹ng chá»©a cĂ¡c dropdown
   const listWrap = document.createElement("div");
   listWrap.className = "thuocCachList";
 
-  // Hàm thêm 1 dropdown mới
+  // HĂ m thĂªm 1 dropdown má»›i
   function addSelect(value = "") {
     const sel = taoSelect(ds);
     if (value) sel.value = value;
@@ -12198,12 +12203,12 @@ if (val === "giapCung_KetHop") {
     listWrap.appendChild(sel);
   }
 
-  // Thêm dropdown đầu tiên
+  // ThĂªm dropdown Ä‘áº§u tiĂªn
   addSelect();
 
-  // Nút thêm lựa chọn
+  // NĂºt thĂªm lá»±a chá»n
   const btnAdd = document.createElement("button");
-  btnAdd.textContent = "➕";
+  btnAdd.textContent = "â•";
   btnAdd.style.cssText = `
     background:#7b2cbf;
     color:#fff;
@@ -12225,10 +12230,10 @@ if (val === "giapCung_KetHop") {
 
 
   // ===============================
-  // 8️⃣ MẶC ĐỊNH — nếu chưa có nhóm
+  // 8ï¸âƒ£ Máº¶C Äá»NH â€” náº¿u chÆ°a cĂ³ nhĂ³m
   // ===============================
   const empty = document.createElement("i");
-  empty.textContent = "Chưa có dữ liệu cho biến này.";
+  empty.textContent = "ChÆ°a cĂ³ dá»¯ liá»‡u cho biáº¿n nĂ y.";
   empty.style.color = "#777";
   box.appendChild(empty);
 });
@@ -12246,7 +12251,7 @@ if (val === "giapCung_KetHop") {
 if (e.target.id === "btnSaveCachCuc") {
   const tenInput = document.querySelector("#popupCachCuc .cc-ten-input");
   const ten = tenInput ? tenInput.value.trim() : "";
-  if (!ten) return alert("Nhập tên!");
+  if (!ten) return alert("Nháº­p tĂªn!");
 
   const dieuKien = [];
 
@@ -12256,9 +12261,9 @@ if (e.target.id === "btnSaveCachCuc") {
 
     let giaTri = [];
 
-    // ⚖️ Trường hợp GIÁP CUNG
+    // â–ï¸ TrÆ°á»ng há»£p GIĂP CUNG
     if (bien.startsWith("giapCung_")) {
-      // 🎯 Giáp Chính / Trung tinh: chỉ có 2 select (1 trước, 1 sau)
+      // đŸ¯ GiĂ¡p ChĂ­nh / Trung tinh: chá»‰ cĂ³ 2 select (1 trÆ°á»›c, 1 sau)
       if (bien === "giapCung_ChinhTinh" || bien === "giapCung_TrungTinh") {
         const selects = dk.querySelectorAll("select.giaTri");
         const truocVal = selects[0]?.value?.trim();
@@ -12269,7 +12274,7 @@ if (e.target.id === "btnSaveCachCuc") {
         };
       }
 
-      // 🎯 Giáp Kết Hợp: có thể thêm nhiều sao mỗi bên
+      // đŸ¯ GiĂ¡p Káº¿t Há»£p: cĂ³ thá»ƒ thĂªm nhiá»u sao má»—i bĂªn
       else if (bien === "giapCung_KetHop") {
         const truoc = Array.from(dk.querySelectorAll(".giap-truoc-box select"))
                            .map(s => s.value.trim())
@@ -12281,7 +12286,7 @@ if (e.target.id === "btnSaveCachCuc") {
       }
     }
 
-   // ⚖️ Trường hợp CHÍNH TINH nhiều nhóm (AND trong nhóm, OR giữa nhóm)
+   // â–ï¸ TrÆ°á»ng há»£p CHĂNH TINH nhiá»u nhĂ³m (AND trong nhĂ³m, OR giá»¯a nhĂ³m)
 else if (bien === "chinhTinh_ChinhCung" || bien === "chinhTinh_TamHop") {
 
   const groups = dk.querySelectorAll(".chinhTinhGroup");
@@ -12294,12 +12299,12 @@ else if (bien === "chinhTinh_ChinhCung" || bien === "chinhTinh_TamHop") {
       .filter(Boolean);
 
     if (groupVals.length > 0) {
-      giaTri.push(groupVals);  // giữ nguyên cấu trúc nhóm
+      giaTri.push(groupVals);  // giá»¯ nguyĂªn cáº¥u trĂºc nhĂ³m
     }
   });
 }
 
-// 🧩 Các loại điều kiện khác (giống cũ)
+// đŸ§© CĂ¡c loáº¡i Ä‘iá»u kiá»‡n khĂ¡c (giá»‘ng cÅ©)
 else {
   const allSelects = dk.querySelectorAll(".giaTri");
   giaTri = Array.from(allSelects).flatMap(s => {
@@ -12313,14 +12318,14 @@ else {
 
     dieuKien.push({ bien, giaTri });
   });
-console.log("👉 DỮ LIỆU LƯU:", JSON.stringify(dieuKien, null, 2));
+console.log("đŸ‘‰ Dá»® LIá»†U LÆ¯U:", JSON.stringify(dieuKien, null, 2));
 
-  // 🪶 Lưu vào bộ dữ liệu
-// 🪶 Lưu vào bộ dữ liệu
+  // đŸª¶ LÆ°u vĂ o bá»™ dá»¯ liá»‡u
+// đŸª¶ LÆ°u vĂ o bá»™ dá»¯ liá»‡u
 const popup = document.getElementById("popupCachCuc");
 const editIndexRaw = popup.dataset.editIndex;
 
-// ép số nếu có
+// Ă©p sá»‘ náº¿u cĂ³
 const editIndex = editIndexRaw !== undefined ? Number(editIndexRaw) : NaN;
 
 // --- EDIT ---
@@ -12366,7 +12371,7 @@ renderCachCucList();
 
 
 // ======================================================
-// 🔧 HÀM DÙNG CHUNG — RENDER DROPDOWN GIÁ TRỊ THEO BIẾN
+// đŸ”§ HĂ€M DĂ™NG CHUNG â€” RENDER DROPDOWN GIĂ TRá» THEO BIáº¾N
 // ======================================================
 function renderGiaTriTheoBien(selectBien, box, giaTriCu = []) {
   const val = selectBien.value;
@@ -12396,10 +12401,10 @@ function renderGiaTriTheoBien(selectBien, box, giaTriCu = []) {
   };
 
   // ===============================
-  // 1️⃣ CUNG VỊ
+  // 1ï¸âƒ£ CUNG Vá»
   // ===============================
 if (val === "cungVi") {
-  const ds = ["Tý","Sửu","Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi"];
+  const ds = ["TĂ½","Sá»­u","Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i"];
 
   const wrap = document.createElement("div");
   wrap.className = "cungViList";
@@ -12424,11 +12429,11 @@ if (val === "cungVi") {
     wrap.appendChild(s);
   }
 
-  // thêm 1 dòng mặc định
+  // thĂªm 1 dĂ²ng máº·c Ä‘á»‹nh
   addSelect();
 
   const btn = document.createElement("button");
-  btn.textContent = "➕ Thêm Cung (OR)";
+  btn.textContent = "â• ThĂªm Cung (OR)";
   btn.style.cssText = `
     background:#7b2cbf;color:#fff;border:none;border-radius:4px;
     padding:4px 10px;cursor:pointer;width:max-content;
@@ -12441,7 +12446,7 @@ if (val === "cungVi") {
   box.appendChild(btn);
 
   const note = document.createElement("small");
-  note.textContent = "💡 Có thể chọn nhiều cung — nghĩa là thỏa bất kỳ cung nào (điều kiện OR).";
+  note.textContent = "đŸ’¡ CĂ³ thá»ƒ chá»n nhiá»u cung â€” nghÄ©a lĂ  thá»a báº¥t ká»³ cung nĂ o (Ä‘iá»u kiá»‡n OR).";
   note.style.color = "#666";
   box.appendChild(note);
 
@@ -12451,25 +12456,25 @@ if (val === "cungVi") {
 
 
   // ===============================
-  // 2️⃣ CUNG CHỨC
+  // 2ï¸âƒ£ CUNG CHá»¨C
   // ===============================
   if (val === "cungChuc") {
     const ds = [
-      "Mệnh","Huynh Đệ","Phu Thê","Tử Tức","Tài Bạch","Tật Ách",
-      "Thiên Di","Nô Bộc","Quan Lộc","Điền Trạch","Phúc Đức","Phụ Mẫu"
+      "Má»‡nh","Huynh Äá»‡","Phu ThĂª","Tá»­ Tá»©c","TĂ i Báº¡ch","Táº­t Ăch",
+      "ThiĂªn Di","NĂ´ Bá»™c","Quan Lá»™c","Äiá»n Tráº¡ch","PhĂºc Äá»©c","Phá»¥ Máº«u"
     ];
     box.appendChild(taoSelect(ds));
     return;
   }
 
   // ===============================
-  // 3️⃣ CHÍNH TINH (CHÍNH CUNG / TAM HỢP)
+  // 3ï¸âƒ£ CHĂNH TINH (CHĂNH CUNG / TAM Há»¢P)
   // ===============================
   if (val === "chinhTinh_ChinhCung" || val === "chinhTinh_TamHop") {
     const ds = [
-      "Vô Chính Diệu","Tử Vi","Thiên Phủ","Vũ Khúc","Liêm Trinh","Tham Lang",
-      "Cự Môn","Phá Quân","Thiên Tướng","Thiên Lương","Thiên Cơ",
-      "Thái Dương","Thái Âm","Thất Sát","Thiên Đồng"
+      "VĂ´ ChĂ­nh Diá»‡u","Tá»­ Vi","ThiĂªn Phá»§","VÅ© KhĂºc","LiĂªm Trinh","Tham Lang",
+      "Cá»± MĂ´n","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡",
+      "ThĂ¡i DÆ°Æ¡ng","ThĂ¡i Ă‚m","Tháº¥t SĂ¡t","ThiĂªn Äá»“ng"
     ];
 
     const wrap = document.createElement("div");
@@ -12493,16 +12498,16 @@ if (val === "cungVi") {
       wrap.appendChild(s);
     };
 
-    // Nếu có sẵn dữ liệu cũ (1–2 sao)
+    // Náº¿u cĂ³ sáºµn dá»¯ liá»‡u cÅ© (1â€“2 sao)
     if (giaTriCu.length > 0) {
       giaTriCu.forEach(v => addSelect(v));
     } else {
-      addSelect(); // mặc định 1 dropdown trống
+      addSelect(); // máº·c Ä‘á»‹nh 1 dropdown trá»‘ng
     }
 
-    // Nút thêm sao thứ hai
+    // NĂºt thĂªm sao thá»© hai
     const btn = document.createElement("button");
-    btn.textContent = "➕ Thêm Chính Tinh";
+    btn.textContent = "â• ThĂªm ChĂ­nh Tinh";
     btn.style.cssText = `
       margin-top:5px;
       background:#7b2cbf;
@@ -12522,20 +12527,20 @@ if (val === "cungVi") {
     box.appendChild(btn);
 
     const note = document.createElement("small");
-    note.textContent = "💡 Có thể chọn tối đa 2 sao hoặc 'Vô Chính Diệu'";
+    note.textContent = "đŸ’¡ CĂ³ thá»ƒ chá»n tá»‘i Ä‘a 2 sao hoáº·c 'VĂ´ ChĂ­nh Diá»‡u'";
     note.style.color = "#666";
     box.appendChild(note);
     return;
   }
 
   // ===============================
-  // 4️⃣ TRUNG TINH (CHÍNH CUNG)
+  // 4ï¸âƒ£ TRUNG TINH (CHĂNH CUNG)
   // ===============================
   if (val === "trungTinh_ChinhCung") {
     const ds = [
-      "Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-      "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-      "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"
+      "Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+      "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+      "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"
     ];
 
     const wrap = document.createElement("div");
@@ -12552,7 +12557,7 @@ if (val === "cungVi") {
     } else addSelect();
 
     const btn = document.createElement("button");
-    btn.textContent = "➕ Thêm Trung Tinh";
+    btn.textContent = "â• ThĂªm Trung Tinh";
     btn.style.cssText = `
       margin-top:5px;
       background:#7b2cbf;
@@ -12570,13 +12575,13 @@ if (val === "cungVi") {
   }
 
   // ===============================
-  // 5️⃣ TRUNG TINH (TAM HỢP)
+  // 5ï¸âƒ£ TRUNG TINH (TAM Há»¢P)
   // ===============================
   if (val === "trungTinh_TamHop") {
     const ds = [
-      "Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-      "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-      "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"
+      "Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+      "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+      "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"
     ];
 
     const wrap = document.createElement("div");
@@ -12593,7 +12598,7 @@ if (val === "cungVi") {
     } else addSelect();
 
     const btn = document.createElement("button");
-    btn.textContent = "➕ Thêm Trung Tinh";
+    btn.textContent = "â• ThĂªm Trung Tinh";
     btn.style.cssText = `
       margin-top:5px;
       background:#7b2cbf;
@@ -12606,7 +12611,7 @@ if (val === "cungVi") {
     btn.onclick = e => { e.preventDefault(); addSelect(); };
 
     const note = document.createElement("small");
-    note.textContent = "💡 Áp dụng cho cả Chính Cung và Tam Hợp";
+    note.textContent = "đŸ’¡ Ăp dá»¥ng cho cáº£ ChĂ­nh Cung vĂ  Tam Há»£p";
     note.style.color = "#666";
 
     box.appendChild(wrap);
@@ -12616,17 +12621,17 @@ if (val === "cungVi") {
   }
 
 // ===============================
-// 6️⃣ GIÁP CUNG (CHÍNH TINH / TRUNG TINH)
+// 6ï¸âƒ£ GIĂP CUNG (CHĂNH TINH / TRUNG TINH)
 // ===============================
 if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
   const isChinh = val.includes("Chinh");
   const ds = isChinh
-    ? ["Vô Chính Diệu","Tử Vi","Thiên Phủ","Vũ Khúc","Liêm Trinh","Tham Lang",
-       "Cự Môn","Phá Quân","Thiên Tướng","Thiên Lương","Thiên Cơ",
-       "Thái Dương","Thái Âm","Thất Sát","Thiên Đồng"]
-    : ["Tả Phù","Hữu Bật","Văn Xương","Văn Khúc","Thiên Khôi","Thiên Việt",
-       "Kình Dương","Đà La","Hỏa Tinh","Linh Tinh","Địa Không","Địa Kiếp",
-       "Hóa Lộc","Hóa Quyền","Hóa Khoa","Hóa Kỵ","Lộc Tồn","Thiên Mã"];
+    ? ["VĂ´ ChĂ­nh Diá»‡u","Tá»­ Vi","ThiĂªn Phá»§","VÅ© KhĂºc","LiĂªm Trinh","Tham Lang",
+       "Cá»± MĂ´n","PhĂ¡ QuĂ¢n","ThiĂªn TÆ°á»›ng","ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡",
+       "ThĂ¡i DÆ°Æ¡ng","ThĂ¡i Ă‚m","Tháº¥t SĂ¡t","ThiĂªn Äá»“ng"]
+    : ["Táº£ PhĂ¹","Há»¯u Báº­t","VÄƒn XÆ°Æ¡ng","VÄƒn KhĂºc","ThiĂªn KhĂ´i","ThiĂªn Viá»‡t",
+       "KĂ¬nh DÆ°Æ¡ng","ÄĂ  La","Há»a Tinh","Linh Tinh","Äá»‹a KhĂ´ng","Äá»‹a Kiáº¿p",
+       "HĂ³a Lá»™c","HĂ³a Quyá»n","HĂ³a Khoa","HĂ³a Ká»µ","Lá»™c Tá»“n","ThiĂªn MĂ£"];
 
   const wrap = document.createElement("div");
   wrap.style.cssText = `
@@ -12636,11 +12641,11 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
     align-items:flex-start;
   `;
 
-  // ==== CỘT TRƯỚC ====
+  // ==== Cá»˜T TRÆ¯á»C ====
   const col1 = document.createElement("div");
   col1.style.cssText = "flex:1;display:flex;flex-direction:column;gap:4px;";
   const lbl1 = document.createElement("label");
-  lbl1.textContent = "Sao Trước:";
+  lbl1.textContent = "Sao TrÆ°á»›c:";
   lbl1.style.fontWeight = "600";
   col1.appendChild(lbl1);
 
@@ -12652,7 +12657,7 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
     s.style.cssText = "flex:1;padding:4px;border:1px solid #ccc;border-radius:4px;";
     const optEmpty = document.createElement("option");
     optEmpty.value = "";
-    optEmpty.textContent = "-- Chọn Sao --";
+    optEmpty.textContent = "-- Chá»n Sao --";
     s.appendChild(optEmpty);
     ds.forEach(v => {
       const opt = document.createElement("option");
@@ -12661,7 +12666,7 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
       s.appendChild(opt);
     });
     const del = document.createElement("button");
-    del.textContent = "❌";
+    del.textContent = "âŒ";
     del.style.cssText = "background:none;border:none;color:#a00;cursor:pointer;";
     del.onclick = (ev) => { ev.preventDefault(); sWrap.remove(); };
     sWrap.appendChild(s);
@@ -12670,13 +12675,13 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
   };
 
   const btnAddLeft = document.createElement("button");
-  btnAddLeft.textContent = "➕ Thêm Sao Trước";
+  btnAddLeft.textContent = "â• ThĂªm Sao TrÆ°á»›c";
   btnAddLeft.style.cssText = "margin-top:4px;background:#9b5de5;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;";
   btnAddLeft.onclick = (ev) => { ev.preventDefault(); addSelectLeft(); };
 
   col1.appendChild(btnAddLeft);
 
-  // ==== CỘT SAU ====
+  // ==== Cá»˜T SAU ====
   const col2 = document.createElement("div");
   col2.style.cssText = "flex:1;display:flex;flex-direction:column;gap:4px;";
   const lbl2 = document.createElement("label");
@@ -12692,7 +12697,7 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
     s.style.cssText = "flex:1;padding:4px;border:1px solid #ccc;border-radius:4px;";
     const optEmpty = document.createElement("option");
     optEmpty.value = "";
-    optEmpty.textContent = "-- Chọn Sao --";
+    optEmpty.textContent = "-- Chá»n Sao --";
     s.appendChild(optEmpty);
     ds.forEach(v => {
       const opt = document.createElement("option");
@@ -12701,7 +12706,7 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
       s.appendChild(opt);
     });
     const del = document.createElement("button");
-    del.textContent = "❌";
+    del.textContent = "âŒ";
     del.style.cssText = "background:none;border:none;color:#a00;cursor:pointer;";
     del.onclick = (ev) => { ev.preventDefault(); sWrap.remove(); };
     sWrap.appendChild(s);
@@ -12710,7 +12715,7 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
   };
 
   const btnAddRight = document.createElement("button");
-  btnAddRight.textContent = "➕ Thêm Sao Sau";
+  btnAddRight.textContent = "â• ThĂªm Sao Sau";
   btnAddRight.style.cssText = "margin-top:4px;background:#9b5de5;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;";
   btnAddRight.onclick = (ev) => { ev.preventDefault(); addSelectRight(); };
 
@@ -12726,22 +12731,22 @@ if (val === "giapCung_ChinhTinh" || val === "giapCung_TrungTinh") {
 
 
  // ===============================
-// 7️⃣ THUỘC CÁCH
+// 7ï¸âƒ£ THUá»˜C CĂCH
 // ===============================
 if (val === "thuocCach") {
   const ds = [
     "Hung",
-    "Bán Cát Bán Hung – Thiên Hung",
-    "Cát Hung Lẫn Lộn",
-    "Bán Cát Bán Hung – Thiên Cát",
-    "Cát"
+    "BĂ¡n CĂ¡t BĂ¡n Hung â€“ ThiĂªn Hung",
+    "CĂ¡t Hung Láº«n Lá»™n",
+    "BĂ¡n CĂ¡t BĂ¡n Hung â€“ ThiĂªn CĂ¡t",
+    "CĂ¡t"
   ];
 
-  // Vùng chứa các dropdown
+  // VĂ¹ng chá»©a cĂ¡c dropdown
   const listWrap = document.createElement("div");
   listWrap.className = "thuocCachList";
 
-  // Hàm thêm 1 dropdown mới
+  // HĂ m thĂªm 1 dropdown má»›i
   function addSelect(value = "") {
     const sel = taoSelect(ds);
     if (value) sel.value = value;
@@ -12749,16 +12754,16 @@ if (val === "thuocCach") {
     listWrap.appendChild(sel);
   }
 
-  // Thêm dropdown đầu tiên
+  // ThĂªm dropdown Ä‘áº§u tiĂªn
   if (giaTriCu.length) {
     giaTriCu.forEach(v => addSelect(v));
   } else {
     addSelect();
   }
 
-  // Nút thêm lựa chọn
+  // NĂºt thĂªm lá»±a chá»n
   const btnAdd = document.createElement("button");
-  btnAdd.textContent = "➕";
+  btnAdd.textContent = "â•";
   btnAdd.style.cssText = `
     background:#7b2cbf;
     color:#fff;
@@ -12773,7 +12778,7 @@ if (val === "thuocCach") {
     }
   });
 
-  // Gắn vào box
+  // Gáº¯n vĂ o box
   box.appendChild(listWrap);
   box.appendChild(btnAdd);
   return;
@@ -12781,10 +12786,10 @@ if (val === "thuocCach") {
 
 
   // ===============================
-  // 8️⃣ MẶC ĐỊNH — nếu chưa có nhóm
+  // 8ï¸âƒ£ Máº¶C Äá»NH â€” náº¿u chÆ°a cĂ³ nhĂ³m
   // ===============================
   const empty = document.createElement("i");
-  empty.textContent = "Chưa có dữ liệu cho biến này.";
+  empty.textContent = "ChÆ°a cĂ³ dá»¯ liá»‡u cho biáº¿n nĂ y.";
   empty.style.color = "#777";
   box.appendChild(empty);
 }
@@ -12794,15 +12799,15 @@ if (val === "thuocCach") {
 
 
 
-// 📝 Mở popup mô tả khi click vào tên Cách Cục
+// đŸ“ Má»Ÿ popup mĂ´ táº£ khi click vĂ o tĂªn CĂ¡ch Cá»¥c
 document.addEventListener("click",(e)=>{
   const left = e.target.closest(".cc-left");
   if(!left) return;
 
-  // 🚧 Chặn nếu chưa premium
+  // đŸ§ Cháº·n náº¿u chÆ°a premium
   if (!(window.isPaidUser && window.isPaidUser())) {
     if (typeof window.updatePremiumLock === "function") window.updatePremiumLock(false);
-    console.warn("[PREMIUM] Block mô tả cách cục vì user chưa premium");
+    console.warn("[PREMIUM] Block mĂ´ táº£ cĂ¡ch cá»¥c vĂ¬ user chÆ°a premium");
     e.preventDefault();
     e.stopImmediatePropagation();
     return;
@@ -12816,13 +12821,13 @@ document.addEventListener("click",(e)=>{
   const textarea = document.getElementById("moTaText");
   const title = document.getElementById("moTaTitle");
 
-  title.innerHTML = `📝 Mô tả: <b>${cc.ten}</b>`;
+  title.innerHTML = `đŸ“ MĂ´ táº£: <b>${cc.ten}</b>`;
   textarea.value = cc.moTa || "";
   popup.dataset.index = index;
   popup.style.display = "flex";
 });
 
-// 💾 Lưu mô tả
+// đŸ’¾ LÆ°u mĂ´ táº£
 document.getElementById("btnSaveMoTa").addEventListener("click",()=>{
   const popup = document.getElementById("popupMoTaCachCuc");
   const index = popup.dataset.index;
@@ -12831,7 +12836,7 @@ document.getElementById("btnSaveMoTa").addEventListener("click",()=>{
   if (index !== undefined) {
     CACH_CUC_DATA[index].moTa = val;
 
-    // 👉 LƯU VÀO INDEXEDDB (KHÔNG DÙNG localStorage)
+    // đŸ‘‰ LÆ¯U VĂ€O INDEXEDDB (KHĂ”NG DĂ™NG localStorage)
     syncCachCucStore();
   }
 
@@ -12839,12 +12844,12 @@ document.getElementById("btnSaveMoTa").addEventListener("click",()=>{
 });
 
 
-// ❌ Đóng popup
+// âŒ ÄĂ³ng popup
 document.getElementById("btnCloseMoTa").addEventListener("click",()=>{
   document.getElementById("popupMoTaCachCuc").style.display="none";
 });
 
-// 🔐 Đóng popup Cách Cục khi nhấn ESC
+// đŸ” ÄĂ³ng popup CĂ¡ch Cá»¥c khi nháº¥n ESC
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     const popup = document.getElementById("popupMoTaCachCuc");
@@ -12860,53 +12865,53 @@ document.addEventListener("keydown", e => {
 
 
 // ======================================================
-// 🧩 KIỂM TRA ĐIỀU KIỆN CÁCH CỤC (chuẩn hóa AND logic)
+// đŸ§© KIá»‚M TRA ÄIá»€U KIá»†N CĂCH Cá»¤C (chuáº©n hĂ³a AND logic)
 // ======================================================
 
-// 🧠 Kiểm tra 1 điều kiện đơn
+// đŸ§  Kiá»ƒm tra 1 Ä‘iá»u kiá»‡n Ä‘Æ¡n
 function kiemTraDieuKien(dk, cungId, data) {
   const cung = data[cungId];
-  console.log("🧩 Kiểm tra điều kiện:", dk.bien, dk.giaTri, "=>", cung);
+  console.log("đŸ§© Kiá»ƒm tra Ä‘iá»u kiá»‡n:", dk.bien, dk.giaTri, "=>", cung);
 
   if (!cung) return false;
 
-// 🧩 Chuẩn hóa giá trị điều kiện (dạng mảng hoặc object)
+// đŸ§© Chuáº©n hĂ³a giĂ¡ trá»‹ Ä‘iá»u kiá»‡n (dáº¡ng máº£ng hoáº·c object)
 let g = [];
 const normalize = s => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
 const normalizeKey = s => normalize(s).replace(/[^a-z0-9]/g, "");
 
-// Trường hợp CŨ: mảng STRING đơn
-// Ví dụ: ["Dần","Tý"] hoặc ["Tử Vi"]
+// TrÆ°á»ng há»£p CÅ¨: máº£ng STRING Ä‘Æ¡n
+// VĂ­ dá»¥: ["Dáº§n","TĂ½"] hoáº·c ["Tá»­ Vi"]
 if (Array.isArray(dk.giaTri) && typeof dk.giaTri[0] === "string") {
   g = dk.giaTri.map(x => x.trim()).filter(Boolean);
 }
 
-// Trường hợp MỚI: mảng NHÓM OR cho chính tinh / trung tinh
-// Ví dụ:  [ ["Thái Âm","Thiên Đồng"], ["Thiên Lương","Thiên Cơ"] ]
+// TrÆ°á»ng há»£p Má»I: máº£ng NHĂ“M OR cho chĂ­nh tinh / trung tinh
+// VĂ­ dá»¥:  [ ["ThĂ¡i Ă‚m","ThiĂªn Äá»“ng"], ["ThiĂªn LÆ°Æ¡ng","ThiĂªn CÆ¡"] ]
 else if (Array.isArray(dk.giaTri) && Array.isArray(dk.giaTri[0])) {
-  g = dk.giaTri; // GIỮ NGUYÊN, không trim
+  g = dk.giaTri; // GIá»® NGUYĂN, khĂ´ng trim
 }
 
-// Trường hợp Giáp Cung: object { truoc:[], sau:[] }
+// TrÆ°á»ng há»£p GiĂ¡p Cung: object { truoc:[], sau:[] }
 else if (dk.giaTri && typeof dk.giaTri === "object") {
   g = dk.giaTri;
 }
 
 const soSanh = (s, val) => {
-  if (Array.isArray(val)) return false;  // tránh crash cho nhóm OR
+  if (Array.isArray(val)) return false;  // trĂ¡nh crash cho nhĂ³m OR
   if (typeof val !== "string") return false;
   return normalize(s) === normalize(val);
 };
 
 
 if (dk.bien.startsWith("giapCung")) {
-  console.log("🔎 DK Giáp:", dk);
+  console.log("đŸ” DK GiĂ¡p:", dk);
 }
 
 
   switch (dk.bien) {
     /* ======================== */
-    /* 📍 Vị trí & chức năng cung */
+    /* đŸ“ Vá»‹ trĂ­ & chá»©c nÄƒng cung */
     /* ======================== */
     case "cungVi":
       return g.includes(cung.viTri);
@@ -12918,30 +12923,30 @@ if (dk.bien.startsWith("giapCung")) {
 
 
 /* ======================== */
-/* 🌞 Chính Tinh */
+/* đŸŒ ChĂ­nh Tinh */
 /* ======================== */
 case "chinhTinh_ChinhCung": {
 
-  // g có thể dạng:
-  // 1) ["Tử Vi"]  → AND (tất cả phải có)
-  // 2) [ ["A","B"], ["C","D"] ] → OR của các nhóm AND
-  // 3) ["Vô Chính Diệu"]
+  // g cĂ³ thá»ƒ dáº¡ng:
+  // 1) ["Tá»­ Vi"]  â†’ AND (táº¥t cáº£ pháº£i cĂ³)
+  // 2) [ ["A","B"], ["C","D"] ] â†’ OR cá»§a cĂ¡c nhĂ³m AND
+  // 3) ["VĂ´ ChĂ­nh Diá»‡u"]
 
-  // 👉 Trường hợp đặc biệt: Vô Chính Diệu
+  // đŸ‘‰ TrÆ°á»ng há»£p Ä‘áº·c biá»‡t: VĂ´ ChĂ­nh Diá»‡u
   const hasVoChinhDieu = Array.isArray(g) && g.some(v => normalizeKey(v) === "vochinhdieu");
   if (hasVoChinhDieu) {
     return !cung.chinhTinh || cung.chinhTinh.length === 0;
   }
 
-  // 👉 Nếu g[0] là STRING → Dạng AND (tất cả phải có)
+  // đŸ‘‰ Náº¿u g[0] lĂ  STRING â†’ Dáº¡ng AND (táº¥t cáº£ pháº£i cĂ³)
   if (Array.isArray(g) && typeof g[0] === "string") {
     return g.every(val =>
       (cung.chinhTinh || []).some(s => soSanh(s, val))
     );
   }
 
-  // 👉 Nếu g[0] là mảng → Dạng OR của nhiều nhóm AND
-  //    Ví dụ: [ ["A","B"], ["C","D"] ]
+  // đŸ‘‰ Náº¿u g[0] lĂ  máº£ng â†’ Dáº¡ng OR cá»§a nhiá»u nhĂ³m AND
+  //    VĂ­ dá»¥: [ ["A","B"], ["C","D"] ]
   return g.some(nhom =>
     nhom.every(val =>
       (cung.chinhTinh || []).some(s => soSanh(s, val))
@@ -12950,15 +12955,15 @@ case "chinhTinh_ChinhCung": {
 }
 
 /* ======================== */
-/* 🌞 Chính Tinh (Tam Hợp) – 2025 logic */
+/* đŸŒ ChĂ­nh Tinh (Tam Há»£p) â€“ 2025 logic */
 /* ======================== */
 case "chinhTinh_TamHop": {
 
-  // g = ["a","b"] hoặc g = [ ["a","b"], ["c","d"] ]
+  // g = ["a","b"] hoáº·c g = [ ["a","b"], ["c","d"] ]
 
   const list = cung.tamHopChinhTinh || [];
 
-  // Nếu nhóm OR
+  // Náº¿u nhĂ³m OR
   if (Array.isArray(g) && Array.isArray(g[0])) {
     return g.some(nhom =>
       nhom.every(sao =>
@@ -12967,7 +12972,7 @@ case "chinhTinh_TamHop": {
     );
   }
 
-  // Nếu dạng cũ: ["a","b"]
+  // Náº¿u dáº¡ng cÅ©: ["a","b"]
   return g.every(val =>
     list.some(s => soSanh(s, val))
   );
@@ -12975,7 +12980,7 @@ case "chinhTinh_TamHop": {
 
 
     /* ======================== */
-    /* 🌙 Trung Tinh */
+    /* đŸŒ™ Trung Tinh */
     /* ======================== */
     case "trungTinh_ChinhCung":
   return g.every(val =>
@@ -12983,16 +12988,16 @@ case "chinhTinh_TamHop": {
   );
 
    case "trungTinh_TamHop": {
-  // Gộp chính cung + 2 cung tam hợp
+  // Gá»™p chĂ­nh cung + 2 cung tam há»£p
   const arrTrungTinh = [
     ...(cung.trungTinh || []),
     ...(cung.tamHopTrungTinh || [])
   ];
 
-  // Loại trùng bằng Set
+  // Loáº¡i trĂ¹ng báº±ng Set
   const fullList = [...new Set(arrTrungTinh)];
 
-  // Kiểm tra tất cả sao trong điều kiện đều có trong danh sách này
+  // Kiá»ƒm tra táº¥t cáº£ sao trong Ä‘iá»u kiá»‡n Ä‘á»u cĂ³ trong danh sĂ¡ch nĂ y
   return g.every(val =>
     fullList.some(s => soSanh(s, val))
   );
@@ -13000,12 +13005,12 @@ case "chinhTinh_TamHop": {
 
 
 /* ======================== */
-/* ⚖️ Giáp Cung */
+/* â–ï¸ GiĂ¡p Cung */
 /* ======================== */
 case "giapCung_ChinhTinh":
 case "giapCung_TrungTinh":
 case "giapCung_KetHop": {
-  // 🔍 Dữ liệu dk.giaTri hiện là object { truoc:[], sau:[] }
+  // đŸ” Dá»¯ liá»‡u dk.giaTri hiá»‡n lĂ  object { truoc:[], sau:[] }
   const truoc = Array.isArray(dk.giaTri.truoc)
     ? dk.giaTri.truoc.map(x => x.trim()).filter(Boolean)
     : [];
@@ -13020,7 +13025,7 @@ case "giapCung_KetHop": {
       ? "trungTinh"
       : null;
 
-  // 🔸 Nếu là Kết hợp thì check cả hai loại
+  // đŸ”¸ Náº¿u lĂ  Káº¿t há»£p thĂ¬ check cáº£ hai loáº¡i
   if (dk.bien === "giapCung_KetHop") {
     return (
       kiemTraGiapCung_2Ben(truoc, sau, cungId, data, "giapCung_ChinhTinh") ||
@@ -13034,7 +13039,7 @@ case "giapCung_KetHop": {
 
 
     /* ======================== */
-    /* 💠 Cách loại (HUNG / CAT / ...) */
+    /* đŸ’  CĂ¡ch loáº¡i (HUNG / CAT / ...) */
     /* ======================== */
     case "thuocCach":
   if (!cung.cachLoai) return false;
@@ -13046,7 +13051,7 @@ case "thuocCach":
 
 
     /* ======================== */
-    /* ❌ Mặc định */
+    /* âŒ Máº·c Ä‘á»‹nh */
     /* ======================== */
     default:
       return false;
@@ -13054,21 +13059,21 @@ case "thuocCach":
 }
 
 
-// ⚖️ Kiểm tra Giáp Cung (chuẩn theo vị trí tên cung, không dựa vào ID)
+// â–ï¸ Kiá»ƒm tra GiĂ¡p Cung (chuáº©n theo vá»‹ trĂ­ tĂªn cung, khĂ´ng dá»±a vĂ o ID)
 function kiemTraGiapCung_2Ben(listTruoc, listSau, cid, data, bien) {
   const loai =
     bien.includes("ChinhTinh") ? "chinhTinh" :
     bien.includes("TrungTinh") ? "trungTinh" : null;
   if (!loai) return false;
 
-  // 🔹 Lấy tên cung hiện tại
+  // đŸ”¹ Láº¥y tĂªn cung hiá»‡n táº¡i
   const cungHienTai = data[cid]?.viTri;
   if (!cungHienTai) return false;
 
-  // 🔹 Vòng 12 cung cố định
+  // đŸ”¹ VĂ²ng 12 cung cá»‘ Ä‘á»‹nh
   const CUNG_LIST = [
-    "Dần","Mão","Thìn","Tỵ","Ngọ","Mùi",
-    "Thân","Dậu","Tuất","Hợi","Tý","Sửu"
+    "Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i",
+    "ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"
   ];
 
   const idx = CUNG_LIST.indexOf(cungHienTai);
@@ -13077,7 +13082,7 @@ function kiemTraGiapCung_2Ben(listTruoc, listSau, cid, data, bien) {
   const tenTruoc = CUNG_LIST[(idx - 1 + 12) % 12];
   const tenSau   = CUNG_LIST[(idx + 1) % 12];
 
-  // 🔹 Tìm dữ liệu hai cung đó
+  // đŸ”¹ TĂ¬m dá»¯ liá»‡u hai cung Ä‘Ă³
   const truoc = Object.values(data).find(c => c.viTri === tenTruoc);
   const sau   = Object.values(data).find(c => c.viTri === tenSau);
   if (!truoc || !sau) return false;
@@ -13091,7 +13096,7 @@ function kiemTraGiapCung_2Ben(listTruoc, listSau, cid, data, bien) {
     (sau[loai] || []).some(s => normalize(s) === normalize(val))
   );
 
- // ✅ Cho phép 2 chiều: Khôi-Việt hoặc Việt-Khôi đều được
+ // âœ… Cho phĂ©p 2 chiá»u: KhĂ´i-Viá»‡t hoáº·c Viá»‡t-KhĂ´i Ä‘á»u Ä‘Æ°á»£c
 const hasTruocNguoc = (listSau || []).some(val =>
   (truoc[loai] || []).some(s => normalize(s) === normalize(val))
 );
@@ -13107,7 +13112,7 @@ return (hasTruoc && hasSau) || (hasTruocNguoc && hasSauNguoc);
 
 
 
-// 💡 Alias tương thích cho code cũ
+// đŸ’¡ Alias tÆ°Æ¡ng thĂ­ch cho code cÅ©
 window.kiemTraGiapCung = function (...args) {
   const [g, cid, d, loai] = args;
   if (!Array.isArray(g) || g.length === 0) return false;
@@ -13122,11 +13127,11 @@ window.kiemTraGiapCung = function (...args) {
 
 
 // ======================================================
-// 🧮 KIỂM TRA TOÀN BỘ CÁCH CỤC (logic AND)
+// đŸ§® KIá»‚M TRA TOĂ€N Bá»˜ CĂCH Cá»¤C (logic AND)
 // ======================================================
 function kiemTraCachCuc(cid, data) {
   const cung = data[cid];
-  console.log("[CC] Kiểm tra cách cục tại cung:", cid, cung);
+  console.log("[CC] Kiá»ƒm tra cĂ¡ch cá»¥c táº¡i cung:", cid, cung);
 
   const kq = [];
   const fails = [];
@@ -13135,37 +13140,37 @@ function kiemTraCachCuc(cid, data) {
   window.CACH_CUC_DATA.forEach(cc => {
     let hopLe = true;
     let failReason = null;
-    console.groupCollapsed(`🧩 Cách cục: ${cc.ten}`);
+    console.groupCollapsed(`đŸ§© CĂ¡ch cá»¥c: ${cc.ten}`);
 
     for (const dk of cc.dieuKien) {
       const ketQua = kiemTraDieuKien(dk, cid, data);
-      console.log(`➡️ Điều kiện:`, dk.bien, dk.giaTri, "=>", ketQua);
+      console.log(`â¡ï¸ Äiá»u kiá»‡n:`, dk.bien, dk.giaTri, "=>", ketQua);
       if (!ketQua) {
         hopLe = false;
         failReason = { ten: cc.ten, bien: dk.bien, giaTri: dk.giaTri };
-        console.warn(`❌ Không đạt: ${dk.bien}`);
+        console.warn(`âŒ KhĂ´ng Ä‘áº¡t: ${dk.bien}`);
         break;
       }
     }
 
     if (hopLe) {
-      console.log(`✅ Thỏa cách cục: ${cc.ten}`);
+      console.log(`âœ… Thá»a cĂ¡ch cá»¥c: ${cc.ten}`);
       kq.push(cc.ten);
     } else {
       if (failReason) fails.push(failReason);
-      console.log(`🚫 Bị loại: ${cc.ten}`);
+      console.log(`đŸ« Bá»‹ loáº¡i: ${cc.ten}`);
     }
 
     console.groupEnd();
   });
 
-  console.log("📋 Tổng hợp cách cục:", kq);
+  console.log("đŸ“‹ Tá»•ng há»£p cĂ¡ch cá»¥c:", kq);
   window.__LAST_FAILS_CACH_CUC = fails;
   return { kq, fails };
 }
 
 
-// 🔹 Cập nhật panel phải
+// đŸ”¹ Cáº­p nháº­t panel pháº£i
 function capNhatBangCachCuc_Phai(result,cung){
   const ds = Array.isArray(result?.kq) ? result.kq : result || [];
   const wrap=document.getElementById("cachCucWrapper");
@@ -13177,20 +13182,20 @@ function capNhatBangCachCuc_Phai(result,cung){
   const maskTen = (ten) => {
     const parts = (ten || "").split(/\s+/);
     if (parts.length <= 2) return ten;
-    return parts.slice(0,2).join(" ") + " …";
+    return parts.slice(0,2).join(" ") + " â€¦";
   };
   noiDung.innerHTML = ds.length
     ? `<b>${cungLabel}</b>:<br>${ds.map(x=>{
         const label = paid ? x : maskTen(x);
         const locked = paid ? "" : " locked-premium";
         const style = paid ? "margin-left:10px;" : "margin-left:10px;pointer-events:none;";
-        return `<div class="dong-phan-tich${locked}" data-ten="${x}" style="${style}">✅ ${label}</div>`;
+        return `<div class="dong-phan-tich${locked}" data-ten="${x}" style="${style}">âœ… ${label}</div>`;
       }).join("")}`
-    : `<b>${cungLabel}</b>: <i>Không có cách cục phù hợp.</i>`;
+    : `<b>${cungLabel}</b>: <i>KhĂ´ng cĂ³ cĂ¡ch cá»¥c phĂ¹ há»£p.</i>`;
 }
 
 // =====================================================
-// 🔹 GẮN SỰ KIỆN CLICK CUNG (DELEGATE) – áp dụng cho cung tạo động
+// đŸ”¹ Gáº®N Sá»° KIá»†N CLICK CUNG (DELEGATE) â€“ Ă¡p dá»¥ng cho cung táº¡o Ä‘á»™ng
 // =====================================================
 document.addEventListener("click", async (e) => {
   const c = e.target.closest(".cung");
@@ -13199,14 +13204,14 @@ document.addEventListener("click", async (e) => {
   const id = Number(c.id.replace("cell", ""));
   const cungName = c.dataset.ten || "Cung " + id;
 
-  // Đợi dữ liệu Cách Cục nạp xong từ IndexedDB
+  // Äá»£i dá»¯ liá»‡u CĂ¡ch Cá»¥c náº¡p xong tá»« IndexedDB
   if (typeof CACH_CUC_READY !== "undefined") {
     await CACH_CUC_READY;
   }
 
-  // Lấy dữ liệu lá số thật từ DOM mỗi lần click để chắc chắn mới nhất
+  // Láº¥y dá»¯ liá»‡u lĂ¡ sá»‘ tháº­t tá»« DOM má»—i láº§n click Ä‘á»ƒ cháº¯c cháº¯n má»›i nháº¥t
   const dataReal = layDuLieuTuLayers();
-  // Giữ lại cachLoai đã tính (kết luận cát/hung) nếu có trong cache
+  // Giá»¯ láº¡i cachLoai Ä‘Ă£ tĂ­nh (káº¿t luáº­n cĂ¡t/hung) náº¿u cĂ³ trong cache
   if (window.DU_LIEU_LA_SO_THAT) {
     Object.keys(window.DU_LIEU_LA_SO_THAT).forEach(k => {
       const cached = window.DU_LIEU_LA_SO_THAT[k];
@@ -13215,32 +13220,32 @@ document.addEventListener("click", async (e) => {
       }
     });
   }
-  window.DU_LIEU_LA_SO_THAT = dataReal; // cache dùng lại nơi khác
+  window.DU_LIEU_LA_SO_THAT = dataReal; // cache dĂ¹ng láº¡i nÆ¡i khĂ¡c
 
   const { kq, fails } = kiemTraCachCuc(id, dataReal);
-  console.log("[CC] Click cung", id, cungName, "— data:", dataReal[id], "CACH_CUC_DATA:", (window.CACH_CUC_DATA||[]).length, "KQ:", kq, "Fails:", fails);
+  console.log("[CC] Click cung", id, cungName, "â€” data:", dataReal[id], "CACH_CUC_DATA:", (window.CACH_CUC_DATA||[]).length, "KQ:", kq, "Fails:", fails);
   capNhatBangCachCuc_Phai({ kq, fails }, cungName);
 });
 
 
 // =====================================================
-// 🪶 HIỂN THỊ PHÂN TÍCH CÁCH CỤC (ĐỘC LẬP VỚI CÁT HUNG)
+// đŸª¶ HIá»‚N THá» PHĂ‚N TĂCH CĂCH Cá»¤C (Äá»˜C Láº¬P Vá»I CĂT HUNG)
 // =====================================================
 window.capNhatBangCachCuc = function (cungId, tenCung) {
   const wrap = document.getElementById("cachCucWrapper");
   const noiDung = document.getElementById("cachCucNoiDung");
   if (!wrap || !noiDung) return;
 
-  // Luôn hiện bảng khi click cung
+  // LuĂ´n hiá»‡n báº£ng khi click cung
   wrap.style.display = "block";
 
-  // 🔹 Dữ liệu lá số thật (lấy từ cache hoặc đọc từ DOM)
+  // đŸ”¹ Dá»¯ liá»‡u lĂ¡ sá»‘ tháº­t (láº¥y tá»« cache hoáº·c Ä‘á»c tá»« DOM)
   const DU_LIEU_LA_SO = window.DU_LIEU_LA_SO_THAT || layDuLieuTuLayers();
   const paid = window.isPaidUser && window.isPaidUser();
   const maskTen = (ten) => {
     const parts = (ten || "").split(/\s+/);
     if (parts.length <= 2) return ten;
-    return parts.slice(0,2).join(" ") + " …";
+    return parts.slice(0,2).join(" ") + " â€¦";
   };
 
   function kiemTraDieuKien(dk,cid,data){
@@ -13256,7 +13261,7 @@ window.capNhatBangCachCuc = function (cungId, tenCung) {
      case 'giapCung_ChinhTinh':
 case 'giapCung_TrungTinh':
 case 'giapCung_KetHop': {
-  // ✅ Sử dụng hàm 2 bên chuẩn
+  // âœ… Sá»­ dá»¥ng hĂ m 2 bĂªn chuáº©n
   const truoc = dk.giaTri.truoc?.map(x=>x.trim()).filter(Boolean) || [];
   const sau   = dk.giaTri.sau?.map(x=>x.trim()).filter(Boolean) || [];
   return kiemTraGiapCung_2Ben(truoc, sau, cid, data, dk.bien);
@@ -13283,9 +13288,9 @@ case 'giapCung_KetHop': {
         const label = paid ? x : maskTen(x);
         const locked = paid ? "" : " locked-premium";
         const style = paid ? "margin-left:10px;" : "margin-left:10px;pointer-events:none;";
-        return `<div class="dong-phan-tich${locked}" data-ten="${x}" style="${style}">✅ ${label}</div>`;
+        return `<div class="dong-phan-tich${locked}" data-ten="${x}" style="${style}">âœ… ${label}</div>`;
       }).join("")}`
-    : `<b>${tenCung}</b>: <i>Không có cách cục phù hợp.</i>`;
+    : `<b>${tenCung}</b>: <i>KhĂ´ng cĂ³ cĂ¡ch cá»¥c phĂ¹ há»£p.</i>`;
 };
 
 document.getElementById("cachCucWrapper").style.display = "block";
@@ -13293,25 +13298,25 @@ document.getElementById("cachCucWrapper").style.display = "block";
 
 
 
-// 🧭 Lấy tên Cung Chức theo vị trí thực tế (theo anLop2_Menh)
+// đŸ§­ Láº¥y tĂªn Cung Chá»©c theo vá»‹ trĂ­ thá»±c táº¿ (theo anLop2_Menh)
 function layTenCungChucTheoViTri(viTri) {
   if (window.dataGlobal?.cungChucMap && window.dataGlobal.cungChucMap[viTri]) {
     return window.dataGlobal.cungChucMap[viTri];
   }
 
-  // Dự phòng nếu chưa an Mệnh xong
+  // Dá»± phĂ²ng náº¿u chÆ°a an Má»‡nh xong
   const CUNG_CHUC = [
-    "MỆNH","HUYNH ĐỆ","PHU THÊ","TỬ TỨC","TÀI BẠCH","TẬT ÁCH",
-    "THIÊN DI","NÔ BỘC","QUAN LỘC","ĐIỀN TRẠCH","PHÚC ĐỨC","PHỤ MẪU"
+    "Má»†NH","HUYNH Äá»†","PHU THĂ","Tá»¬ Tá»¨C","TĂ€I Báº CH","Táº¬T ĂCH",
+    "THIĂN DI","NĂ” Bá»˜C","QUAN Lá»˜C","ÄIá»€N TRáº CH","PHĂC Äá»¨C","PHá»¤ MáºªU"
   ];
-  const CUNG_THUAN = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
+  const CUNG_THUAN = ["Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i","ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"];
   const idx = CUNG_THUAN.indexOf(viTri);
   return idx !== -1 ? CUNG_CHUC[idx] : "";
 }
 
 
 // ======================================================
-// 🔍 HÀM LẤY DỮ LIỆU THẬT TỪ LÁ SỐ (Layer-3, Layer-6…)
+// đŸ” HĂ€M Láº¤Y Dá»® LIá»†U THáº¬T Tá»ª LĂ Sá» (Layer-3, Layer-6â€¦)
 // ======================================================
 function layDuLieuTuLayers() {
   const duLieu = {};
@@ -13349,13 +13354,13 @@ function layDuLieuTuLayers() {
   }
 
   // ======================================================
-// 🧭 Bổ sung Tam Hợp + Giáp Cung
+// đŸ§­ Bá»• sung Tam Há»£p + GiĂ¡p Cung
 // ======================================================
 for (const [ten, id] of Object.entries(mapCung)) {
   const cung = duLieu[id];
   if (!cung) continue;
 
-  // 🔹 Tam hợp
+  // đŸ”¹ Tam há»£p
   const allTamHop = (window.TAM_HOP[id] || []).filter(Boolean);
   const tamHopChinh = [];
   const tamHopTrung = [];
@@ -13370,10 +13375,10 @@ for (const [ten, id] of Object.entries(mapCung)) {
   cung.tamHopChinhTinh = tamHopChinh;
   cung.tamHopTrungTinh = tamHopTrung;
 
-  // 🔹 Giáp cung
+  // đŸ”¹ GiĂ¡p cung
   const CUNG_LIST = [
-    "Dần","Mão","Thìn","Tỵ","Ngọ","Mùi",
-    "Thân","Dậu","Tuất","Hợi","Tý","Sửu"
+    "Dáº§n","MĂ£o","ThĂ¬n","Tá»µ","Ngá»","MĂ¹i",
+    "ThĂ¢n","Dáº­u","Tuáº¥t","Há»£i","TĂ½","Sá»­u"
   ];
   const idx = CUNG_LIST.indexOf(ten);
   const giapTruoc = CUNG_LIST[(idx - 1 + 12) % 12];
@@ -13395,7 +13400,7 @@ for (const [ten, id] of Object.entries(mapCung)) {
     }
   };
 
-  // ✅ Mảng tổng hợp cho truy cập nhanh
+  // âœ… Máº£ng tá»•ng há»£p cho truy cáº­p nhanh
   cung.giapChinhTinh = [
     ...cung.giap.truoc.chinhTinh,
     ...cung.giap.sau.chinhTinh
@@ -13406,16 +13411,16 @@ for (const [ten, id] of Object.entries(mapCung)) {
   ];
 }
 
-// ✅ Trả dữ liệu hoàn chỉnh
+// âœ… Tráº£ dá»¯ liá»‡u hoĂ n chá»‰nh
 return duLieu;
-}  // ⬅️ Dấu ngoặc này rất quan trọng – đóng lại hàm cha (ví dụ: xayDungDuLieuLaSo)
+}  // â¬…ï¸ Dáº¥u ngoáº·c nĂ y ráº¥t quan trá»ng â€“ Ä‘Ă³ng láº¡i hĂ m cha (vĂ­ dá»¥: xayDungDuLieuLaSo)
 
-// 🔒 Khóa / mở khóa khu TRA NGƯỢC theo premium
+// đŸ”’ KhĂ³a / má»Ÿ khĂ³a khu TRA NGÆ¯á»¢C theo premium
 function toggleTraNguocLock(isPaid) {
   const wrap = document.getElementById("traNguocWrapper");
   if (!wrap) return;
 
-  // tạo overlay nếu chưa có
+  // táº¡o overlay náº¿u chÆ°a cĂ³
   let ov = wrap.querySelector(".tra-nguoc-overlay");
   if (!ov) {
     ov = document.createElement("div");
@@ -13449,7 +13454,7 @@ function toggleTraNguocLock(isPaid) {
 }
 window.toggleTraNguocLock = toggleTraNguocLock;
 
-// 🔒 Khóa sửa/xóa CÁCH CỤC khi chưa premium
+// đŸ”’ KhĂ³a sá»­a/xĂ³a CĂCH Cá»¤C khi chÆ°a premium
 function toggleCachCucEditLock(isPaid) {
   const list = document.getElementById("listCachCuc");
   const panel = list?.parentElement || document.getElementById("cachCucPanel");
@@ -13457,7 +13462,7 @@ function toggleCachCucEditLock(isPaid) {
   panel.style.position = "relative";
   list.style.position = "relative";
 
-  // Tắt/bật actions
+  // Táº¯t/báº­t actions
   list.querySelectorAll(".cc-actions button").forEach(btn => {
     btn.disabled = !isPaid;
     btn.style.opacity = isPaid ? "" : "0.5";
@@ -13499,10 +13504,10 @@ function toggleCachCucEditLock(isPaid) {
 }
 window.toggleCachCucEditLock = toggleCachCucEditLock;
 
-// 🔒 Khóa thao tác CHUYÊN ĐỀ (thêm/sửa) khi chưa premium
+// đŸ”’ KhĂ³a thao tĂ¡c CHUYĂN Äá»€ (thĂªm/sá»­a) khi chÆ°a premium
 function toggleChuyenDeEditLock(isPaid) {
   const list = document.getElementById("listChuyenDe");
-  const container = list?.parentElement; // phần bao cả list + nút
+  const container = list?.parentElement; // pháº§n bao cáº£ list + nĂºt
   if (container) {
     container.style.position = "relative";
     list.style.position = "relative";
@@ -13531,7 +13536,7 @@ function toggleChuyenDeEditLock(isPaid) {
     ov.style.display = isPaid ? "none" : "flex";
   }
 
-  // Disable các nút thao tác
+  // Disable cĂ¡c nĂºt thao tĂ¡c
   const btnAddCD = document.getElementById("btnAddChuyenDe");
   const btnToggleEdit = document.getElementById("btnToggleEdit");
   [btnAddCD, btnToggleEdit].forEach(btn => {
@@ -13546,18 +13551,18 @@ function toggleChuyenDeEditLock(isPaid) {
 window.toggleChuyenDeEditLock = toggleChuyenDeEditLock;
 
 document.addEventListener("DOMContentLoaded", () => {
-  // 1️⃣ Chờ toàn bộ cây chuyên đề load xong
+  // 1ï¸âƒ£ Chá» toĂ n bá»™ cĂ¢y chuyĂªn Ä‘á» load xong
   setTimeout(() => {
 
-    // 🟢 Luôn render danh sách Cách Cục
+    // đŸŸ¢ LuĂ´n render danh sĂ¡ch CĂ¡ch Cá»¥c
     if (typeof renderCachCucList === "function") {
       renderCachCucList();
-      console.log("📘 Cách Cục đã render lại sau khi load cây chuyên đề");
+      console.log("đŸ“˜ CĂ¡ch Cá»¥c Ä‘Ă£ render láº¡i sau khi load cĂ¢y chuyĂªn Ä‘á»");
     }
 
-    // 2️⃣ Mở toàn bộ node hoặc cha bị ẩn có chứa chữ 'CÁCH CỤC'
+    // 2ï¸âƒ£ Má»Ÿ toĂ n bá»™ node hoáº·c cha bá»‹ áº©n cĂ³ chá»©a chá»¯ 'CĂCH Cá»¤C'
     const nutCachCuc = [...document.querySelectorAll(".cd-name")].find(el =>
-      /CÁCH CỤC/i.test(el.textContent)
+      /CĂCH Cá»¤C/i.test(el.textContent)
     );
     if (nutCachCuc) {
       let node = nutCachCuc.closest("li.cd-item");
@@ -13569,39 +13574,39 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // 3️⃣ Bỏ display:none trên chính danh sách
+    // 3ï¸âƒ£ Bá» display:none trĂªn chĂ­nh danh sĂ¡ch
     const listCC = document.getElementById("listCachCuc");
     if (listCC) {
       listCC.style.removeProperty("display");
       listCC.style.display = "block";
     }
 
-    // 4️⃣ Bỏ display:none trên cha trực tiếp
+    // 4ï¸âƒ£ Bá» display:none trĂªn cha trá»±c tiáº¿p
     const cha = listCC?.parentElement;
     if (cha && window.getComputedStyle(cha).display === "none") {
       cha.style.display = "block";
     }
 
-    console.log("✅ Đã buộc hiển thị phần CÁCH CỤC");
+    console.log("âœ… ÄĂ£ buá»™c hiá»ƒn thá»‹ pháº§n CĂCH Cá»¤C");
 
-  }, 600); // đợi 0.6s để cây chuyên đề render xong
+  }, 600); // Ä‘á»£i 0.6s Ä‘á»ƒ cĂ¢y chuyĂªn Ä‘á» render xong
 });
 
-// 🌟 Ẩn / hiện danh sách CÁCH CỤC — chờ chắc chắn DOM có phần tử
+// đŸŒŸ áº¨n / hiá»‡n danh sĂ¡ch CĂCH Cá»¤C â€” chá» cháº¯c cháº¯n DOM cĂ³ pháº§n tá»­
 function initCachCucToggle() {
   const title = document.getElementById("titleCachCuc");
   const panel = document.getElementById("cachCucPanel");
   if (!title || !panel) {
-    // ⏳ DOM chưa load xong → chờ thêm rồi thử lại
+    // â³ DOM chÆ°a load xong â†’ chá» thĂªm rá»“i thá»­ láº¡i
     return setTimeout(initCachCucToggle, 500);
   }
 
-  console.log("✅ Đã gắn toggle cho phần CÁCH CỤC");
+  console.log("âœ… ÄĂ£ gáº¯n toggle cho pháº§n CĂCH Cá»¤C");
 
-  // Hiển thị mặc định
+  // Hiá»ƒn thá»‹ máº·c Ä‘á»‹nh
   panel.style.display = "block";
 
-  // Khi click tiêu đề thì thu gọn/mở rộng
+  // Khi click tiĂªu Ä‘á» thĂ¬ thu gá»n/má»Ÿ rá»™ng
   title.addEventListener("click", () => {
     const isHidden = panel.style.display === "none";
     panel.style.display = isHidden ? "block" : "none";
@@ -13610,12 +13615,12 @@ function initCachCucToggle() {
   });
 }
 
-// 🧩 Kích hoạt khi trang load xong hoàn toàn
+// đŸ§© KĂ­ch hoáº¡t khi trang load xong hoĂ n toĂ n
 window.addEventListener("load", initCachCucToggle);
 
 // =====================================================
-// 🔐 ĐĂNG NHẬP / PREMIUM – KHÔI PHỤC NHANH SAU F5
-// (bản gọn, độc lập để panel luôn cập nhật)
+// đŸ” ÄÄ‚NG NHáº¬P / PREMIUM â€“ KHĂ”I PHá»¤C NHANH SAU F5
+// (báº£n gá»n, Ä‘á»™c láº­p Ä‘á»ƒ panel luĂ´n cáº­p nháº­t)
 // =====================================================
 (() => {
   const state = (window.AUTH_STATE = window.AUTH_STATE || { user: null, sessionOk: false });
@@ -13638,7 +13643,7 @@ window.addEventListener("load", initCachCucToggle);
   window.isPaidUser = window.isPaidUser || isPaidUser;
   const hasPremiumAccess = (featureLabel) => {
     if (isPaidUser()) return true;
-    if (els.status) els.status.textContent = `${featureLabel || "Tính năng"} là premium. Vui lòng đăng nhập/kích hoạt.`;
+    if (els.status) els.status.textContent = `${featureLabel || "TĂ­nh nÄƒng"} lĂ  premium. Vui lĂ²ng Ä‘Äƒng nháº­p/kĂ­ch hoáº¡t.`;
     return false;
   };
   window.hasPremiumAccess = hasPremiumAccess;
@@ -13648,8 +13653,8 @@ window.addEventListener("load", initCachCucToggle);
     const u = state.sessionOk ? state.user : null;
     if (els.status) {
       els.status.textContent = u
-        ? `Đã đăng nhập: ${u.username} (${u.paid ? "premium" : "miễn phí"})`
-        : "Chưa đăng nhập";
+        ? `ÄĂ£ Ä‘Äƒng nháº­p: ${u.username} (${u.paid ? "premium" : "miá»…n phĂ­"})`
+        : "ChÆ°a Ä‘Äƒng nháº­p";
     }
     try {
       if (u) localStorage.setItem("auth_user", JSON.stringify(u));
@@ -13668,13 +13673,14 @@ window.addEventListener("load", initCachCucToggle);
   };
 
   const callApi = async (path, options = {}) => {
-    const res = await fetch(path, {
+    const res = await fetch(API_BASE + path, {
       credentials: "include",
       headers: { "Content-Type": "application/json", ...(options.headers || {}) },
       ...options
     });
     const data = await res.json().catch(() => ({}));
     return { res, data };
+  };
   };
 
   const doLogin = async () => {
@@ -13722,13 +13728,13 @@ window.addEventListener("load", initCachCucToggle);
     renderAuth();
   };
 
-  // Gắn sự kiện
+  // Gáº¯n sá»± kiá»‡n
   document.getElementById("btnLogin")?.addEventListener("click", (e) => { e.preventDefault(); doLogin(); });
   document.getElementById("btnRegister")?.addEventListener("click", (e) => { e.preventDefault(); doRegister(); });
   document.getElementById("btnLogout")?.addEventListener("click", (e) => { e.preventDefault(); doLogout(); });
   document.getElementById("btnActivatePaid")?.addEventListener("click", (e) => { e.preventDefault(); activatePaid(); });
 
-  // Khôi phục cache → render → hydrate
+  // KhĂ´i phá»¥c cache â†’ render â†’ hydrate
   renderAuth();
   hydrateUser();
 
@@ -13741,16 +13747,16 @@ window.addEventListener("load", initCachCucToggle);
 })();
 
 // =====================================================
-// 🔒 CHẶN TOÀN BỘ TƯƠNG TÁC PREMIUM KHI CHƯA TRẢ PHÍ
+// đŸ”’ CHáº¶N TOĂ€N Bá»˜ TÆ¯Æ NG TĂC PREMIUM KHI CHÆ¯A TRáº¢ PHĂ
 // =====================================================
 document.addEventListener("click", (e) => {
-  // Cho phép các click nội bộ phục vụ highlight phân tích cách cục
+  // Cho phĂ©p cĂ¡c click ná»™i bá»™ phá»¥c vá»¥ highlight phĂ¢n tĂ­ch cĂ¡ch cá»¥c
   if (e.target.closest(".dong-phan-tich")) return;
 
   const premiumZone = e.target.closest("[data-premium]");
   if (!premiumZone) return;
   if (window.isPaidUser && window.isPaidUser()) return;
-  // Chưa premium -> chặn hoàn toàn
+  // ChÆ°a premium -> cháº·n hoĂ n toĂ n
   e.stopImmediatePropagation();
   e.stopPropagation();
   e.preventDefault();
@@ -13766,15 +13772,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnClose = document.getElementById("btnCloseMoTa");
   const btnCloseX = document.getElementById("btnCloseMoTaX");
 
-  // 📘 Mở popup khi click tên Cách Cục
+  // đŸ“˜ Má»Ÿ popup khi click tĂªn CĂ¡ch Cá»¥c
   document.addEventListener("click", e => {
-    // 🚧 Chặn nếu chưa premium
+    // đŸ§ Cháº·n náº¿u chÆ°a premium
     if (!(window.isPaidUser && window.isPaidUser())) {
       if (typeof window.updatePremiumLock === "function") window.updatePremiumLock(false);
       return;
     }
 
-    // ⛔ Bỏ qua click trong bảng tick hạn
+    // â›” Bá» qua click trong báº£ng tick háº¡n
     if (e.target.closest("#bangNhomSaoLuu")) return;
 
     const left = e.target.closest(".cc-left");
@@ -13785,11 +13791,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!cc) return;
 
     popup.dataset.index = index;
-title.innerHTML = `🪶 <b>${cc.ten}</b>`;
-    content.innerHTML = cc.moTa?.trim() || "<i>Chưa có mô tả...</i>";
+title.innerHTML = `đŸª¶ <b>${cc.ten}</b>`;
+    content.innerHTML = cc.moTa?.trim() || "<i>ChÆ°a cĂ³ mĂ´ táº£...</i>";
     textarea.value = cc.moTa || "";
 
-    // reset trạng thái
+    // reset tráº¡ng thĂ¡i
     content.style.display = "block";
     textarea.style.display = "none";
     btnEdit.style.display = "inline-block";
@@ -13798,7 +13804,7 @@ title.innerHTML = `🪶 <b>${cc.ten}</b>`;
     popup.style.display = "flex";
   });
 
-  // ✏️ Chỉnh sửa
+  // âœï¸ Chá»‰nh sá»­a
   btnEdit.addEventListener("click", () => {
     content.style.display = "none";
     textarea.style.display = "block";
@@ -13807,45 +13813,45 @@ title.innerHTML = `🪶 <b>${cc.ten}</b>`;
     btnSave.style.display = "inline-block";
   });
 
-  // 💾 Lưu
+  // đŸ’¾ LÆ°u
   btnSave.addEventListener("click", () => {
     const index = popup.dataset.index;
     const cc = CACH_CUC_DATA[index];
     const newText = textarea.value.trim();
     cc.moTa = newText;
-    content.innerText = newText || "Chưa có mô tả...";
+    content.innerText = newText || "ChÆ°a cĂ³ mĂ´ táº£...";
     content.style.display = "block";
     textarea.style.display = "none";
     btnEdit.style.display = "inline-block";
     btnSave.style.display = "none";
   });
 
-  // ❌ Đóng popup
+  // âŒ ÄĂ³ng popup
   [btnClose, btnCloseX].forEach(btn =>
     btn.addEventListener("click", () => (popup.style.display = "none"))
   );
 
-  // 👆 Click ngoài khung để đóng
+  // đŸ‘† Click ngoĂ i khung Ä‘á»ƒ Ä‘Ă³ng
   popup.addEventListener("click", e => {
     if (e.target === popup) popup.style.display = "none";
   });
 });
 
 function openTab(evt, tabId) {
-  // Ẩn tất cả nội dung tab
+  // áº¨n táº¥t cáº£ ná»™i dung tab
   document.querySelectorAll("#saoPopup .tab-content").forEach(el =>
     el.classList.remove("active")
   );
 
-  // Bỏ active nút tab
+  // Bá» active nĂºt tab
   document.querySelectorAll("#saoPopup .tab-link").forEach(el =>
     el.classList.remove("active")
   );
 
-  // Hiện tab được chọn
+  // Hiá»‡n tab Ä‘Æ°á»£c chá»n
   document.getElementById(tabId).classList.add("active");
 
-  // Active nút tab vừa bấm
+  // Active nĂºt tab vá»«a báº¥m
   evt.currentTarget.classList.add("active");
 }
 
@@ -13857,18 +13863,18 @@ function renderBangCungChuc(tenCung) {
   if (!tbl || !tenCung) return;
 
   const CUNG_CHUC = [
-    "Mệnh", "Huynh Đệ", "Phu Thê", "Tử Tức", "Tài Bạch", "Tật Ách",
-    "Thiên Di", "Nô Bộc", "Quan Lộc", "Điền Trạch", "Phúc Đức", "Phụ Mẫu"
+    "Má»‡nh", "Huynh Äá»‡", "Phu ThĂª", "Tá»­ Tá»©c", "TĂ i Báº¡ch", "Táº­t Ăch",
+    "ThiĂªn Di", "NĂ´ Bá»™c", "Quan Lá»™c", "Äiá»n Tráº¡ch", "PhĂºc Äá»©c", "Phá»¥ Máº«u"
   ];
 
-  // Map cung gọi (Tý, Sửu, Dần...) → cung chức
+  // Map cung gá»i (TĂ½, Sá»­u, Dáº§n...) â†’ cung chá»©c
   const rawChuc = window.dataGlobal?.cungChucMap?.[tenCung];
   const viTriChuc = rawChuc || null;
 
   tbl.innerHTML = `
     <tr>
       <th style="width:130px;">Cung</th>
-      <th>Ý nghĩa</th>
+      <th>Ă nghÄ©a</th>
     </tr>
   `;
 
@@ -13885,26 +13891,26 @@ function renderBangCungChuc(tenCung) {
 window.showStarInfo = showStarInfo;
 
 function showStarInfo(tenSao, tenCung) {
-  console.log("📌 CLICK SAO:", tenSao, "tại cung", tenCung);
+  console.log("đŸ“Œ CLICK SAO:", tenSao, "táº¡i cung", tenCung);
 
-  // Luôn lưu lại tên sao và cung hiện tại
+  // LuĂ´n lÆ°u láº¡i tĂªn sao vĂ  cung hiá»‡n táº¡i
   window.currentSao = tenSao;
-  window.currentCung = tenCung; // Cung Tý, Sửu, Dần,...
+  window.currentCung = tenCung; // Cung TĂ½, Sá»­u, Dáº§n,...
 
   const popup = document.getElementById("saoPopup");
 
-  // Nếu popup chưa mở → dừng tại đây (để lần sau click lại mới mở)
+  // Náº¿u popup chÆ°a má»Ÿ â†’ dá»«ng táº¡i Ä‘Ă¢y (Ä‘á»ƒ láº§n sau click láº¡i má»›i má»Ÿ)
   if (!popup || popup.style.display === "none") return;
 
-  // Nếu popup đang mở → cập nhật lại nội dung
-  renderBangCungChuc(tenCung);  // truyền cung để highlight bên Tab1 (nếu dùng)
-  renderTab2(tenSao);           // render Tab 2 như cũ
-  renderTab3(tenSao);           // render Tab 3 như cũ
+  // Náº¿u popup Ä‘ang má»Ÿ â†’ cáº­p nháº­t láº¡i ná»™i dung
+  renderBangCungChuc(tenCung);  // truyá»n cung Ä‘á»ƒ highlight bĂªn Tab1 (náº¿u dĂ¹ng)
+  renderTab2(tenSao);           // render Tab 2 nhÆ° cÅ©
+  renderTab3(tenSao);           // render Tab 3 nhÆ° cÅ©
 }
 
 
 // ===============================
-// NÚT MỞ / ĐÓNG SIDEBAR TỪ ĐIỂN SAO
+// NĂT Má» / ÄĂ“NG SIDEBAR Tá»ª ÄIá»‚N SAO
 // ===============================
 document.getElementById("btnToggleSidebar")
   .addEventListener("click", () => {
@@ -13912,12 +13918,12 @@ document.getElementById("btnToggleSidebar")
       .classList.toggle("show");
   });
 
-// 📌 Mặc định mở sidebar khi F5 để tránh lỗi cần click mới hiện
+// đŸ“Œ Máº·c Ä‘á»‹nh má»Ÿ sidebar khi F5 Ä‘á»ƒ trĂ¡nh lá»—i cáº§n click má»›i hiá»‡n
 document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.getElementById("sidebarTraCuu");
   if (sidebar) {
     sidebar.classList.add("show");
-    console.log("🔔 Sidebar tra cứu đã mở mặc định");
+    console.log("đŸ”” Sidebar tra cá»©u Ä‘Ă£ má»Ÿ máº·c Ä‘á»‹nh");
   }
 });
 
@@ -13926,7 +13932,7 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     const overlay = document.getElementById("fullLasoOverlay");
 
     if (!laso || !overlay) {
-        console.error("Không tìm thấy overlay hoặc lasoContainer");
+        console.error("KhĂ´ng tĂ¬m tháº¥y overlay hoáº·c lasoContainer");
         return;
     }
 
@@ -13935,7 +13941,7 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
             position:fixed; top:10px; right:10px;
             padding:8px 14px; background:#ff4444;
             color:white; border:none; border-radius:8px;
-            z-index:10000000;">✖</button>
+            z-index:10000000;">âœ–</button>
     `;
     overlay.appendChild(laso);
     overlay.style.display = "block";
@@ -13946,10 +13952,14 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     };
 };
 (function () {
-  const ENABLE_DEBUG_LOG = true; // luôn bật log để debug tương tác
+  const ENABLE_DEBUG_LOG = true; // luĂ´n báº­t log Ä‘á»ƒ debug tÆ°Æ¡ng tĂ¡c
   if (!ENABLE_DEBUG_LOG && typeof console !== "undefined") {
     ["log", "debug", "info"].forEach(k => {
       if (console[k]) console[k] = () => {};
     });
   }
 })();
+
+
+
+
