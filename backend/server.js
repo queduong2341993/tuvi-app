@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const session = require('express-session');
 const { convertDate } = require('./lunar');
+const { tinhLaSo } = require('./calc');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -84,6 +85,16 @@ app.get('/api/me', (req, res) => {
 app.post('/api/convert', (req, res) => {
   try {
     const result = convertDate(req.body || {});
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message || 'Invalid input' });
+  }
+});
+
+// Tính lá số (bước 1): chuyển logic tính toán sang backend
+app.post('/api/tinh-laso', (req, res) => {
+  try {
+    const result = tinhLaSo(req.body || {});
     res.json(result);
   } catch (err) {
     res.status(400).json({ error: err.message || 'Invalid input' });
