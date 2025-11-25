@@ -2852,26 +2852,44 @@ span.style.cursor = "pointer";
 
 // đŸŒŸ HĂ m xĂ¡c Ä‘á»‹nh Cá»¥c Sá»‘ chuáº©n theo Can NÄƒm & Cung Má»‡nh
 function xacDinhCucSo(canChiNam, cungMenh) {
- window.CUC_SO_TINH_ROI = null;
+  window.CUC_SO_TINH_ROI = null;
 
+  const strip = (s = "") => s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D");
 
-  const can = (canChiNam || "")
-    .normalize("NFC")
-    .replace(/[ \s]+/g, " ")
-    .trim()
-    .split(" ")[0]
-    .replace(/[^\p{L}]/gu, "");
+  const canKey = strip(canChiNam || "").replace(/[\s]+/g, " ").trim().split(" ")[0].toLowerCase();
+  const chiKey = strip(typeof cungMenh === "string" ? cungMenh : "").toLowerCase();
 
-    "Ngá»": "Ngá»-MĂ¹i", "MĂ¹i": "Ngá»-MĂ¹i",
-    "ThĂ¢n": "ThĂ¢n-Dáº­u", "Dáº­u": "ThĂ¢n-Dáº­u",
-    "Tuáº¥t": "Tuáº¥t-Há»£i", "Há»£i": "Tuáº¥t-Há»£i"
+  const bangCuc = {
+    giap:  { "ty-suu": "Thuy nhi cuc",  "dan-mao": "Hoa luc cuc",  "thin-ty": "Moc tam cuc",   "ngo-mui": "Tho ngu cuc",  "than-dau": "Kim tu cuc",  "tuat-hoi": "Hoa luc cuc" },
+    ky:    { "ty-suu": "Thuy nhi cuc",  "dan-mao": "Hoa luc cuc",  "thin-ty": "Moc tam cuc",   "ngo-mui": "Tho ngu cuc",  "than-dau": "Kim tu cuc",  "tuat-hoi": "Hoa luc cuc" },
+    at:    { "ty-suu": "Hoa luc cuc",   "dan-mao": "Tho ngu cuc",  "thin-ty": "Kim tu cuc",    "ngo-mui": "Moc tam cuc",  "than-dau": "Thuy nhi cuc", "tuat-hoi": "Tho ngu cuc" },
+    canh:  { "ty-suu": "Hoa luc cuc",   "dan-mao": "Tho ngu cuc",  "thin-ty": "Kim tu cuc",    "ngo-mui": "Moc tam cuc",  "than-dau": "Thuy nhi cuc", "tuat-hoi": "Tho ngu cuc" },
+    binh:  { "ty-suu": "Tho ngu cuc",   "dan-mao": "Moc tam cuc",  "thin-ty": "Thuy nhi cuc",  "ngo-mui": "Kim tu cuc",   "than-dau": "Hoa luc cuc",  "tuat-hoi": "Moc tam cuc" },
+    tan:   { "ty-suu": "Tho ngu cuc",   "dan-mao": "Moc tam cuc",  "thin-ty": "Thuy nhi cuc",  "ngo-mui": "Kim tu cuc",   "than-dau": "Hoa luc cuc",  "tuat-hoi": "Moc tam cuc" },
+    dinh:  { "ty-suu": "Moc tam cuc",   "dan-mao": "Kim tu cuc",   "thin-ty": "Hoa luc cuc",   "ngo-mui": "Thuy nhi cuc", "than-dau": "Tho ngu cuc",  "tuat-hoi": "Kim tu cuc" },
+    nham:  { "ty-suu": "Moc tam cuc",   "dan-mao": "Kim tu cuc",   "thin-ty": "Hoa luc cuc",   "ngo-mui": "Thuy nhi cuc", "than-dau": "Tho ngu cuc",  "tuat-hoi": "Kim tu cuc" },
+    mau:   { "ty-suu": "Kim tu cuc",    "dan-mao": "Thuy nhi cuc", "thin-ty": "Tho ngu cuc",   "ngo-mui": "Hoa luc cuc",  "than-dau": "Moc tam cuc",  "tuat-hoi": "Thuy nhi cuc" },
+    quy:   { "ty-suu": "Kim tu cuc",    "dan-mao": "Thuy nhi cuc", "thin-ty": "Tho ngu cuc",   "ngo-mui": "Hoa luc cuc",  "than-dau": "Moc tam cuc",  "tuat-hoi": "Thuy nhi cuc" }
   };
 
-  const nhom = nhomCung[chi];
-  const cuc = bangCuc[can]?.[nhom] || "";
+  const nhomCung = {
+    ty: "ty-suu", suu: "ty-suu",
+    dan: "dan-mao", mao: "dan-mao",
+    thin: "thin-ty", ty: "thin-ty",
+    ngo: "ngo-mui", mui: "ngo-mui",
+    than: "than-dau", dau: "than-dau",
+    tuat: "tuat-hoi", hoi: "tuat-hoi"
+  };
 
-  console.log(`đŸŒ€ Cá»¥c sá»‘ xĂ¡c Ä‘á»‹nh: ${canChiNam} â€“ ${cungMenh} â†’ ${cuc}`);
-  window.CUC_SO_TINH_ROI = cuc; // âœ… lÆ°u káº¿t quáº£ Ä‘á»ƒ láº§n sau bá» qua
+  const nhom = nhomCung[chiKey];
+  const cuc = nhom ? (bangCuc[canKey]?.[nhom] || "") : "";
+
+  console.log(`Cuc so: ${canChiNam} – ${cungMenh} -> ${cuc}`);
+  window.CUC_SO_TINH_ROI = cuc;
   return cuc;
 }
 
@@ -13940,6 +13958,10 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     });
   }
 })();
+
+
+
+
 
 
 
