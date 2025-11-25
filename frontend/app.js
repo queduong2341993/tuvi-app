@@ -758,6 +758,23 @@ let year = parseInt(document.getElementById("year").value);
     return;
   }
 
+  // (Bước 1 tách logic) Gọi thử API tính lá số backend để sẵn dữ liệu
+  // Chưa dùng để render, chỉ lưu lại để lần sau tiếp tục tách frontend.
+  try {
+    const resCalc = await apiFetch("/api/tinh-laso", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      cache: "no-cache"
+    });
+    if (resCalc.ok) {
+      window.BACKEND_LASO = await resCalc.json();
+      console.log("[BACKEND_LASO]", window.BACKEND_LASO);
+    }
+  } catch (err) {
+    console.warn("⚠️ Không gọi được /api/tinh-laso (đang tách dần logic):", err);
+  }
+
   const { solar = {}, lunar: lunarObj = {}, canChi = {}, menh: menhApi } = apiData || {};
 
   // 🗓️ Áp dụng kết quả từ backend
