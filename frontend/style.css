@@ -1,0 +1,1428 @@
+/* 🌟 Thứ tự hiển thị các tầng (từ dưới lên trên) */
+.layer-1 { z-index: 1; position: absolute; }   /* 12 Cung cơ bản */
+.layer-2 { z-index: 2; position: absolute; }   /* Mệnh / Thân */
+.layer-3 { z-index: 3; position: absolute; }   /* Chính Tinh */
+.layer-4 { z-index: 4; position: absolute; }   /* Cục Số */
+.layer-5 { z-index: 5; position: absolute; }   /* Ngũ Hành Cung */
+.layer-tieutinh { z-index: 6; position: absolute; } /* Tiểu tinh */
+.layer-6 { z-index: 9; position: absolute; }   /* 🌟 Trung tinh (Cát + Hung) luôn nằm TRÊN Tiểu tinh */
+.layer-7 { z-index: 10; position: absolute; }  /* Tạp tinh / đặc biệt (Thiên Không, Thiên Tài, Đẩu Quân...) */
+.layer-8 { z-index: 11; position: absolute; }  /* Tuần Triệt, Vòng Tràng Sinh, hạn... */
+.layer-9 { z-index: 12; position: absolute; }  /* Các hiệu ứng highlight, Tứ Hóa click... */
+.layer-10 { z-index: 13; position: absolute; } /* Overlay hoặc chú thích cao nhất */
+
+/* 🌟 Hiệu ứng khi click vào sao hóa */
+/* 🌟 Hiệu ứng viền đỏ nhẹ khi được chọn */
+.sao-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: transparent !important;
+  border: none !important;
+  filter: none !important;
+}
+
+
+/* 🌿 Layer 8 – giữ bám đáy, KHÔNG chắn click */
+.layer-8 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto !important;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;     /* ⛔ Không chắn các lớp khác */
+  z-index: 60;
+}
+
+/* ✅ Chỉ riêng phần chữ cho phép click */
+.layer8-div {
+  display: inline-block;
+  font-size: 12px;
+  color: #000;
+  font-style: italic;
+  text-transform: capitalize;
+  line-height: 1.2;
+  margin-bottom: 5px;
+  pointer-events: auto;     /* ✅ Cho phép click riêng chữ */
+  cursor: pointer;
+}
+
+/* ========== KHUNG TỔNG ========== */
+body {
+  font-family: 'Times New Roman', serif;
+  background: #fafafa;
+  margin: 25px;
+}
+.container {
+  max-width: 920px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #222;
+  text-transform: uppercase;
+}
+/* ===== LỚP 1: VỊ TRÍ CUNG ===== */
+.layer-1 {
+  position: absolute;
+  top: 15px;
+  left: 6px;
+  font-size: 9px;
+  font-weight: bold;
+  color: #5a3b0c;
+  text-align: left;
+  pointer-events: none;
+}
+/* 🌙 LỚP 2 – MỆNH (tên chức danh của cung) */
+.layer-2 {
+ display: inline-block;
+  transform: scaleX(0.9);   /* ✅ bóp chiều ngang 90% */
+  transform-origin: center; /* ✅ giữ tâm, không lệch trái/phải */
+  letter-spacing: -0.1px;   /* ✅ ép ký tự gần nhau hơn */
+  position: relative;   /* 👈 BẮT BUỘC, tạo hệ toạ độ riêng */
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  color: #000;
+  margin-top: 7px;
+  pointer-events: none;
+}
+
+/* ========== FORM NHẬP DỮ LIỆU ========== */
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+input, select {
+  padding: 3px 5px;
+  font-size: 14px;
+}
+button {
+  padding: 6px 12px;
+  cursor: pointer;
+  border: none;
+  background: #337ab7;
+  color: white;
+  border-radius: 4px;
+}
+button:hover { background: #286090; }
+
+/* ========== KHUNG LÁ SỐ ========== */
+#lasoContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  width: 750px;
+  height: 950px;
+  margin: 0 auto;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  position: relative;
+}
+.cung {
+  border: 1.5px solid #000; /* đậm gấp đôi */
+  background: #fff;
+  font-family: "Times New Roman", serif;
+  font-size: 13px;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+.cung .layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0; left: 0;
+  pointer-events: none;
+}
+
+/* ========== Ô TRUNG TÂM (cố định khung, chỉ dịch nội dung bên trong) ========== */
+#centerCell {
+  grid-column: 2 / span 2;
+  grid-row: 2 / span 2;
+  border: 2px solid #000;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;   /* 🔼 nội dung dồn lên trên */
+  align-items: center;
+  padding: 25px 20px 5px 20px;   /* 🔼 thêm đệm trên, 🔽 giảm đệm dưới */
+  line-height: 1.3;              /* 🔽 giảm giãn dòng */
+  text-align: center;
+  box-sizing: border-box;        /* ✅ tránh tràn khung */
+  overflow: hidden;              /* ✅ tránh tràn layout */
+}
+
+#centerCell .title {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 3px;            /* 🔽 giảm khoảng cách tiêu đề */
+  letter-spacing: 1px;
+}
+
+#centerCell .info-line {
+  font-size: 14px;
+  margin: 1px 0;                 /* 🔽 các dòng sát nhau hơn */
+}
+
+#centerCell .sub-info {
+  font-size: 12px;
+  color: #555;
+  margin-top: 2px;
+  font-style: italic;
+}
+
+
+/* ========== BẢNG HIỂN THỊ KẾT QUẢ ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+th, td {
+  border: 1px solid #000;
+  padding: 6px;
+  text-align: center;
+}
+th { background: #f2f2f2; }
+/* 🌟 LỚP 3: CHÍNH TINH – nằm dưới tên cung, có khoảng đệm an toàn */
+.layer-3 {
+  position: absolute;
+  top: 37px;            /* ⬆️ từ 22px → 34px để tránh dính trần */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0px;
+  pointer-events: none;
+  z-index: 5;           /* dưới layer-2 (tên cung), trên nền */
+}
+
+.layer-3 div {
+  line-height: 1.0;    /* ⬇️ chặt hơn một chút để gọn */
+  font-weight: bold;
+  font-size: 18px;      /* ⬇️ từ 22px → 18px để không chạm trần ở ô nhỏ */
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+/* 🌟 LỚP 4 – CỤC SỐ (căn góc phải trên thoáng hơn) */
+.layer-4 {
+  position: absolute;
+  top: 6px;       /* ⬇ thấp hơn để không dính mép */
+  right: 6px;     /* ⬅ lùi vào sâu hơn một chút */
+  text-align: right;
+  font-weight: bold;
+  font-size: 13px;
+  color: #000;
+  z-index: 20;
+  pointer-events: none;
+}
+.layer-4 div {
+  position: absolute;
+  top: 8px;   /* ↑ cao lên đúng 2 px so với bản cũ */
+  right: 8px;   /* ← giữ khoảng cách vừa phải, không dính mép */
+  font-weight: bold;
+  font-size: 10px;
+  color: #000;
+  line-height: 1; /* tránh giãn dòng làm lệch */
+}
+/* 🌟 LỚP 5 – NGŨ HÀNH CUNG */
+.layer-5 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+.layer5-div {
+  position: absolute;
+  top: 20px;
+  left: 5px;
+  font-size: 8px;       /* 🔽 nhỏ hơn để dịu hơn */
+  font-weight: normal;   /* 🔽 giảm đậm */
+  color: #000;
+  opacity: 0.8;          /* 🔽 mờ nhẹ cho đỡ nổi bật */
+  line-height: 1;
+}
+/* LỚP 4 – CỤC SỐ */
+.cell {
+  position: relative; /* giúp layer 4 bám theo cung */
+}
+
+/* ✨ Hiệu ứng sáng khi chọn cung */
+.cung.highlight {
+  border: 2px solid gold !important;
+  box-shadow: 0 0 10px 3px gold;
+  transition: all 0.3s ease;
+}
+/* ✨ Hiệu ứng sáng khi chọn */
+.highlight {
+  background: rgba(255, 255, 0, 0.25);
+  box-shadow: 0 0 6px gold;
+  border-radius: 4px;
+}
+/* ✨ Hiệu ứng sáng khi chọn cung */
+.cung.highlight-cung {
+  border: 2px solid gold !important;
+  box-shadow: 0 0 10px 3px gold;
+  transition: all 0.3s ease;
+}
+/* PATCH: cố định khoảng cách cho Lớp 3 – Chính Tinh */
+.cung .layer-3{
+  top: 26px !important;           /* ⬆ hạ xuống dưới trần */
+  z-index: 5 !important;
+}
+.cung .layer-3 div{
+  font-size: 12px !important;     /* ⬇ gọn chữ để không đội trần ở ô chật */
+  line-height: 1.15 !important;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+/* 🌟 LAYER 6 – CÁT & HUNG TINH (chuẩn cuối) */
+.cung .layer-6 {
+  position: absolute !important;
+  left: 2% !important;
+  width: 96% !important;
+  top: 23% !important;
+  height: 60% !important;
+  z-index: 6 !important;
+  display: block !important;
+  /* ⚠️ pointer-events none gây lỗi màu — bỏ đi */
+  pointer-events: auto !important;
+  margin: 0 !important;
+}
+
+
+/* Hai cột song song */
+.cung .layer-6 > .cat-tinh,
+.cung .layer-6 > .hung-tinh {
+  position: absolute !important;
+  top: 0; bottom: 0;
+  width: 48%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  line-height: 1.15;
+  font-size: 13px;
+  white-space: normal;
+  word-break: keep-all;
+  pointer-events: auto; /* ⚠️ Cho phép render đầy đủ */
+  color: unset !important;  /* ✅ KHÔNG kế thừa, cho phép màu riêng của sao hiển thị */
+}
+
+/* 🟢 Cát Tinh bên trái – căn lề trái sát mép */
+.cung .layer-6 > .cat-tinh {
+  left: 0;
+  text-align: left;
+  padding-left: 2px;
+  padding-right: 0;
+}
+
+/* 🔴 Hung Tinh bên phải – căn lề phải sát mép */
+.cung .layer-6 > .hung-tinh {
+  right: 0;
+  text-align: left;
+  padding-right: 2px;
+  padding-left: 0;
+}
+/* 🌟 Màu sao theo Ngũ Hành (phiên bản sáng rõ, đồng bộ toàn hệ thống) */
+.sao-hoa  { color: #ff4d4d !important; }   /* 🔥 Hỏa – đỏ tươi sáng */
+.sao-tho  { color: #e69500 !important; }   /* 🟠 Thổ – cam đất đậm hơn, rõ chữ */
+.sao-moc  { color: #007a29 !important; }   /* 🌿 Mộc – xanh lá đậm hơn một chút */
+.sao-kim  { color: #000000 !important; }   /* ⚫ Kim – đen thuần */
+.sao-thuy { color: #004cff !important; }   /* 💧 Thủy – xanh dương đậm sáng */
+
+
+/* (Tuỳ chọn debug)
+.cung .layer-6,
+.cung .layer.layer-6.trungtinh { outline: 1px dashed red !important; }
+*/
+/* 🌟 Style sao theo Ngũ Hành + in đậm */
+.cat-tinh div,
+.hung-tinh div {
+  font-weight: 700;        /* ✅ In đậm */
+  line-height: 1.25;
+  margin-bottom: 1px;
+}
+
+/* 🔥 Hỏa – đỏ tươi sáng */
+.sao-hoa { color: #ff4d4d !important; }
+
+/* 🟠 Thổ – cam đất đậm hơn */
+.sao-tho { color: #e69500 !important; }
+
+/* 🌿 Mộc – xanh lá đậm hơn một chút */
+.sao-moc { color: #007a29 !important; }
+
+/* ⚫ Kim – đen thuần */
+.sao-kim { color: #000000 !important; }
+
+/* 💧 Thủy – xanh dương đậm sáng */
+.sao-thuy { color: #004cff !important; }
+
+.cung .layer-1 {
+  top: 8px !important;
+  left: 6px !important;
+}
+/* ✅ Cho phép click và hiệu ứng sáng */
+.layer-6 div {
+  position: relative;
+  z-index: 50 !important;     /* Cho nằm trên cùng */
+  cursor: pointer !important; /* Biến con trỏ thành bàn tay khi di chuột */
+  pointer-events: auto !important;
+}
+
+/* 🌟 Sao Hóa – nổi viền đỏ, giữ nguyên màu gốc */
+.sao-highlight {
+  font-weight: 700;
+color: inherit !important; /* ✅ kế thừa đúng màu sao hành */
+
+  text-shadow:
+    0 0 1px rgba(255, 60, 60, 0.9),
+    0 0 2px rgba(255, 60, 60, 0.7),
+    0 0 3px rgba(255, 80, 80, 0.4);
+  transition: text-shadow 0.2s ease;
+  animation: none !important;
+  will-change: color, text-shadow;
+transform: translateZ(0);
+
+}
+
+/* 🌟 Sao gốc – sáng lam nhẹ để phân biệt */
+.sao-highlight.root-star {
+color: unset !important;
+  text-shadow:
+    0 0 1px rgba(120, 180, 255, 0.8),
+    0 0 2px rgba(120, 180, 255, 0.5);
+	will-change: color, text-shadow;
+transform: translateZ(0);
+
+}
+
+
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px #00e6ff; }
+  to   { text-shadow: 0 0 25px #00e6ff, 0 0 40px #00e6ff; }
+}
+
+#lasoContainer {
+  position: relative;  /* 👈 BẮT BUỘC để Tuần/Triệt định vị đúng vị trí */
+}
+.nut-tieutinh {
+  background: #ccc;         /* 🔘 nền xám bạc khi tắt */
+  color: #000;              /* ✏️ chữ đen khi tắt */
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.nut-tieutinh.active {
+  background: #337ab7;      /* 🔵 nền xanh khi bật */
+  color: #fff;              /* ⚪ chữ trắng khi bật */
+}
+
+.nut-tieutinh:hover {
+  filter: brightness(1.1);  /* ✨ sáng nhẹ khi hover */
+}
+
+
+/* ✅ Nới chiều cao Layer 6 để chứa thêm nhiều sao mà không làm hỏng bố cục */
+.layer-6.trungtinh {
+  position: relative;
+  min-height: 220px !important;  /* 🔹 tăng tùy ý: 180px, 200px, 240px... */
+  height: auto !important;
+  overflow: visible !important;   /* 🔹 đảm bảo các sao không bị cắt */
+  z-index: 6;
+}
+
+/* ✅ Giữ nguyên cấu trúc cũ cho các sao bên trong (không flex, không grid) */
+.layer-6.trungtinh > div {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+
+/* 🌟 Làm rõ sao lưu (ĐV. / L.) mà vẫn giữ màu hành */
+.sao[data-order="9"] {
+  opacity: 0.95;
+}
+.sao-luu {
+  font-weight: 700;
+  filter: brightness(1.1);
+}
+
+/* ✅ Ép lại màu cho các sao lưu (L. / ĐV.) dựa theo hành của sao gốc */
+div[class*="sao-"].sao-luu,
+div[class*="sao-"].sao-dv {
+  font-weight: 700 !important;
+  filter: brightness(1.15) !important;
+  opacity: 1 !important;
+}
+
+/* 🎨 BẢNG MÀU CHÍNH – ÁP DỤNG CHO MỌI LỚP SAO (ưu tiên cao nhất) */
+div[class*="sao-hoa"]  { color: #ff4d4d !important; }   /* 🔥 Hỏa – đỏ tươi sáng */
+div[class*="sao-tho"]  { color: #e69500 !important; }   /* 🟠 Thổ – cam đất đậm rõ chữ */
+div[class*="sao-moc"]  { color: #007a29 !important; }   /* 🌿 Mộc – xanh lá đậm hơn một chút */
+div[class*="sao-kim"]  { color: #000000 !important; }   /* ⚫ Kim – đen thuần cổ điển */
+div[class*="sao-thuy"] { color: #004cff !important; }   /* 💧 Thủy – xanh dương đậm sáng */
+
+
+/* 🌟 Viền sáng đỏ cho cung chính và tam hợp */
+.cung.highlight-cung {
+  outline: 2px solid #ff0000 !important;
+  box-shadow: 0 0 12px #ff0000;
+  z-index: 30;
+  transition: all 0.25s ease;
+}
+
+/* 🌙 Hiệu ứng mờ elip trung tâm cho 8 cung còn lại */
+.cung.dimmed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* ✅ không chặn click sao/Tứ Hóa */
+  z-index: 10;
+  border-radius: 8px;
+
+  /* 🎨 Hiệu ứng elip: trung tâm mờ, viền trong suốt */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.5) 0%,    /* trung tâm mờ nhẹ */
+    rgba(255, 255, 255, 0.35) 40%,  /* vùng trung gian */
+    rgba(255, 255, 255, 0.0) 80%    /* viền ngoài trong suốt */
+  );
+
+  transition: opacity 0.3s ease;
+  opacity: 1;
+}
+
+/* 🌀 Khi tắt hiệu ứng, cho fade-out mượt */
+.cung:not(.dimmed)::after {
+  opacity: 0;
+}
+
+
+/* 🌟 Song Tinh – nổi viền đỏ mạnh hơn sao Hóa */
+.song-tinh {
+  font-weight: 700;
+color: inherit !important; /* ✅ giữ nguyên màu sao hành */
+
+  text-shadow:
+    0 0 1.5px rgba(255, 50, 50, 1),
+    0 0 3px rgba(255, 50, 50, 0.9),
+    0 0 5px rgba(255, 80, 80, 0.8),
+    0 0 8px rgba(255, 100, 100, 0.6);
+  transition: text-shadow 0.2s ease;
+  animation: none !important;
+  z-index: 600 !important;
+}
+
+.sub-title {
+  font-weight: bold;
+  color: #7b2cbf;
+  margin-top: 5px;
+  cursor: pointer;
+}
+.sub-title:hover { text-decoration: underline; }
+.subgroup ul { margin-left: 15px; }
+
+
+.cd-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.cd-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #7b2cbf;
+}
+.cd-actions button:hover {
+  color: #3a0ca3;
+  transform: scale(1.1);
+}
+
+.cd-addchild .btnAddChild {
+  background: none;
+  border: none;
+  color: #7b2cbf;
+  font-weight: regular;
+  cursor: pointer;
+  font-size: 5px;
+}
+.cd-addchild .btnAddChild:hover {
+  color: #3a0ca3;
+  text-decoration: underline;
+}
+
+.cd-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.cd-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  color: #7b2cbf;
+}
+.cd-actions button:hover {
+  color: #3a0ca3;
+  transform: scale(1.1);
+}
+.cd-addchild .btnAddChild {
+  background: none;
+  border: none;
+  color: #7b2cbf;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+.cd-addchild .btnAddChild:hover {
+  color: #3a0ca3;
+  text-decoration: underline;
+}
+
+
+.btnAddChuyenDe {
+  display: block;
+  margin: 10px auto;
+  background: #7b2cbf;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s;
+}
+.btnAddChuyenDe:hover {
+  background: #5a189a;
+  transform: scale(1.04);
+}
+
+
+.dragging {
+  opacity: 0.5;
+  background: #f3e8ff;
+  border: 1px dashed #7b2cbf;
+}
+
+/* =============================== */
+/* ✨ Hiệu ứng highlight nhóm đang rê chuột */
+/* =============================== */
+
+
+/* Giữ viền kẻ mềm mại */
+.cd-item > ul.cd-level {
+  border-left: 1px dotted #ccc;
+}
+
+/* Mượt hơn khi rê qua lại */
+.cd-item, .cd-item * {
+  transition: all 0.2s ease;
+}
+
+/* Ẩn toàn bộ các nút hành động mặc định */
+.cd-actions {
+  visibility: hidden;
+}
+
+/* Khi bật chế độ sửa thì hiển thị lại */
+body.edit-mode .cd-actions {
+  visibility: visible;
+}
+
+/* Hiệu ứng mượt */
+.cd-actions {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  opacity: 0;
+}
+body.edit-mode .cd-actions {
+  opacity: 1;
+}
+
+/* Nút "Sửa" đổi màu khi đang bật */
+#btnToggleEdit.active {
+  background: #c2185b !important;
+}
+/* =============================== */
+/* ⚙️ Điều chỉnh khoảng thụt cho cây CHUYÊN ĐỀ */
+/* =============================== */
+
+.cd-item > ul.cd-level {
+  padding-left: 0px !important; /* 👈 giảm thụt mạnh */
+  border-left: 0px dotted #ccc;
+}
+
+/* Cấp sâu hơn lùi nhẹ hơn nữa */
+.cd-item > ul.cd-level > li > ul.cd-level {
+  padding-left: 0px !important;
+}
+.cd-item > ul.cd-level > li > ul.cd-level > li > ul.cd-level {
+  padding-left: 0px !important;
+}
+
+
+#sidebarTraCuu li.highlight-sao {
+  background: linear-gradient(90deg, #e4dcff 0%, #f7f3ff 100%);
+  border-left: 4px solid #7b2cbf;
+  font-weight: bold;
+  color: #3a0ca3;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+/* 🌿 LAYER 8 – Vòng Tràng Sinh (nổi trên các sao, vẫn không phá tương tác khác) */
+.layer-8 {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: purple;
+  z-index: 80;                /* 🔺 cao hơn lớp 6 nhưng thấp hơn popup */
+  pointer-events: none;       /* ⛔ không chặn click chung */
+}
+
+.layer8-div {
+  pointer-events: auto;       /* ✅ chỉ chữ Tràng Sinh mới nhận click */
+  user-select: text;
+  text-transform: capitalize;
+}
+
+
+
+#listChuyenDe li.dragging {
+  opacity: 0.5;
+  background: #f8f5ff;
+  border: 1px dashed #999;
+}
+#listChuyenDe li:hover {
+  background: #fafaff;
+}
+
+
+/* 🌟 Hiệu ứng rung khi click ra ngoài đang chỉnh sửa */
+@keyframes shakeAnim {
+  0%, 100% { transform: translate(-50%, -50%) }
+  20%, 60% { transform: translate(calc(-50% - 4px), -50%) }
+  40%, 80% { transform: translate(calc(-50% + 4px), -50%) }
+}
+.shake {
+  animation: shakeAnim 0.1s ease;
+}
+
+
+
+.tuan-triet {
+  position: absolute;
+  z-index: 120 !important;
+}
+
+
+
+
+#popupChuyenDe .popup-content {
+  width: 60%;
+  max-width: 1000px;
+  min-width: 400px;
+  min-height: 250px;
+  resize: both;          /* 👉 cho phép co giãn */
+  overflow: auto;        /* cần thiết để scroll khi thu nhỏ */
+  box-sizing: border-box;
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* Thêm tay nắm kéo ở góc phải-dưới cho đẹp */
+#popupChuyenDe .popup-content::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 16px;
+  height: 16px;
+  background: repeating-linear-gradient(
+    45deg,
+    #ccc,
+    #ccc 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  cursor: se-resize;
+  border-radius: 3px;
+  opacity: 0.6;
+}
+
+.highlight-cachcuc {
+  background: linear-gradient(90deg, #fff0f0 0%, #ffe0e0 100%);
+  border: 2px solid #e03131;          /* 🔴 Viền đỏ nổi rõ */
+  border-radius: 10px;
+  box-shadow: 0 0 12px 3px rgba(224, 49, 49, 0.6); /* ánh đỏ mờ */
+  transform: scale(1.02);
+  transition: all 0.3s ease-in-out;
+  animation: highlightPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes highlightPulse {
+  from { box-shadow: 0 0 8px 2px rgba(224, 49, 49, 0.4); }
+  to   { box-shadow: 0 0 14px 3px rgba(224, 49, 49, 0.7); }
+}
+
+
+
+/* Popup Overlay */
+.popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: white;
+  width: 80%; max-width: 600px;
+  border-radius: 8px;
+  padding: 20px;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 18px; cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.tab-link {
+  flex: 1;
+  padding: 10px;
+  border: none; cursor: pointer;
+  background: #f4f4f4; font-weight: bold;
+}
+.tab-link.active {
+  background: #ddd;
+}
+
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+#cungChucTable {
+  width: 100%; border-collapse: collapse;
+}
+
+#cungChucTable td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+#cungChucTable .active {
+  background: #ffe6e6;
+  font-weight: bold;
+}
+
+
+.cung-highlight {
+  background: #fff3cd !important;
+  border: 2px solid #ffb700 !important;
+}
+
+/* Nút toggle */
+#btnToggleSidebar {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(200,200,200,0.6);
+  border-radius: 10px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  z-index: 99999;
+}
+
+/* Sidebar dạng trượt ngang */
+#sidebarTraCuu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  overflow-y: auto;
+  background: #fff;
+  border-right: 1px solid #ddd;
+  transform: translateX(-100%);
+  transition: transform 0.35s ease;
+  z-index: 9999;
+}
+#sidebarTraCuu.show {
+  transform: translateX(0);
+}
+
+/* Ngừa flicker khi iPhone overscroll */
+#sidebarTraCuu::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* ===== Auth card (login/register) ===== */
+.auth-card {
+  position: fixed; /* luôn hiển thị và nhận click */
+  top: 16px;
+  right: 16px;
+  width: 320px;
+  margin: 0;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff7f0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  z-index: 2147483647;
+  pointer-events: auto !important;
+}
+.auth-card__header {
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #7b2cbf;
+}
+.auth-card__status {
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #444;
+}
+.auth-card__form input {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.auth-card__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.auth-card__actions button,
+.auth-card__upgrade {
+  flex: 1;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  background: #5a189a;
+  color: #fff;
+}
+.auth-card__actions button:nth-child(2) {
+  background: #0d9488;
+}
+.auth-card__actions button:nth-child(3) {
+  background: #9ca3af;
+  color: #111;
+}
+.auth-card__upgrade {
+  background: #f97316;
+  margin-top: 6px;
+}
+
+/* FOOTER CỐ ĐỊNH DƯỚI CÙNG POPUP */
+#footerChuyenDe {
+  position: sticky;
+  bottom: -22px;
+  background: white;
+  padding: 10px 0 12px 0;
+  border-top: 1px solid #ddd;
+  text-align: right;
+  z-index: 50;
+}
+
+#footerChuyenDe button {
+  margin-left: 6px;
+  background: #7b2cbf;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#btnSaveCD {
+  background: #ff9800;
+}
+#btnCancelCD {
+  background: #888;
+}
+
+.tieutinh { font-weight: normal; font-size: 12px; text-transform: capitalize; margin-bottom: 1px; }
+.tieutinh.hidden { display: none !important; }
+#tieuTinhControls { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 6px; }
+#tieuTinhControls button { font-size: 12px; border-radius: 6px; border: 1px solid #999; padding: 2px 6px; cursor: pointer; }
+#tieuTinhControls button:hover { background-color: #ddd; }
+
+#sidebarTraCuu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 330px;
+  bottom: 0;              /* 🔹 Thay vì height:100% → dùng bottom:0 */
+  background: #fafafa;
+  border-right: 1px solid #ccc;
+  overflow-y: auto;       /* 🔹 Cho phép cuộn */
+  overflow-x: hidden;
+  padding: 10px 12px 80px; /* 🔹 thêm khoảng đệm đáy tránh che bởi footer */
+  font-family: "Times New Roman";
+  z-index: 99900;
+  scrollbar-width: thin;   /* 🔹 thanh cuộn mảnh, đẹp */
+}
+
+#sidebarTraCuu h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.group-title {
+  font-weight: bold;
+  cursor: pointer;
+  color: #7b2cbf;
+  margin-top: 10px;
+}
+.group ul {
+  margin-left: 15px;
+  display: none;
+}
+.group.open ul { display: block; }
+.group ul li {
+  cursor: pointer;
+  padding: 2px 0;
+}
+.group ul li:hover { background: #eae6ff; }
+
+/* Mỗi dòng chuyên đề */
+    #listChuyenDe li {
+      margin-bottom: 5px;
+      line-height: 1.5;
+      padding-bottom: 2px;
+      border-bottom: 1px dotted #ddd;
+      color: #3a0ca3;
+    }
+
+    /* Mục có danh sách con */
+    #listChuyenDe li:has(> ul) {
+      position: relative;
+      padding-left: 16px;
+    }
+
+    /* Dấu 🔹 cho mục có con */
+    #listChuyenDe li:has(> ul)::before {
+      content: "🔹";
+      position: absolute;
+      left: 0;
+      top: 2px;
+      font-size: 12px;
+      color: #6a0dad;
+    }
+
+    /* Các cấp con lùi nhẹ */
+    #listChuyenDe li ul {
+      margin-left: 12px;
+      border-left: 1px dotted #ccc;
+      padding-left: 10px;
+    }
+
+/* 🌙 Nền mờ */
+.popup-overlay {
+  display: none;              /* ✅ KHÔNG có !important */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(3px);
+  z-index: 9999;
+  overflow: visible;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* 🌟 Khung chính – tự giãn theo nội dung bảng */
+.popup-content {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 25px 35px;
+  font-family: "Times New Roman";
+  animation: fadeIn 0.25s ease;
+  position: relative;           /* ✅ không dùng fixed */
+  margin: auto;                 /* ✅ căn giữa */
+  max-width: 90vw;              /* ✅ giới hạn theo màn hình */
+  max-height: 90vh;
+  overflow: auto;               /* ✅ chỉ cuộn khi thật sự tràn */
+
+  /* ✅ Cho phép người dùng tự chỉnh kích thước nếu muốn */
+  resize: both;
+  cursor: nwse-resize;
+  box-sizing: border-box;
+}
+/* 🌿 Ẩn công cụ bảng khi không chỉnh sửa */
+[data-edit-only="true"] .table-tools {
+  display: none;
+}
+
+/* 🌿 Khi đang chỉnh sửa (popup có class .edit-mode) → hiện công cụ */
+.edit-mode [data-edit-only="true"] .table-tools {
+  display: block;
+  margin-top: 8px;
+}
+
+.table-tools button {
+  background: #4a6fa5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+.table-tools button:hover {
+  background: #2f517c;
+}
+
+
+
+/* 🌟 Hiệu ứng rung nhẹ khi không cho đóng */
+@keyframes shakePopup {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  20% { transform: translate(-49%, -50%) rotate(1deg); }
+  40% { transform: translate(-51%, -50%) rotate(-1deg); }
+  60% { transform: translate(-49%, -50%) rotate(1deg); }
+  80% { transform: translate(-51%, -50%) rotate(-1deg); }
+  100% { transform: translate(-50%, -50%) rotate(0deg); }
+}
+.shake {
+  animation: shakePopup 0.25s ease;
+}
+
+/* 🌿 Bảng trong popup – cân đều, không lệch, vừa khung */
+.popup-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px auto;
+  table-layout: fixed;           /* ✅ Các cột chia đều */
+  text-align: left;
+  background: #fff;
+}
+
+.popup-content th,
+.popup-content td {
+  border: 1px solid #444;
+  padding: 6px 8px;
+  word-break: break-word;        /* ✅ Không tràn chữ */
+  vertical-align: top;
+}
+
+.popup-content th {
+  background: #f3f3f3;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.popup-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+}
+.popup-close:hover { color: #000; }
+
+#popupFooter {
+  position: sticky;
+  bottom: -25px;
+  background: white;
+  padding: 10px 0 12px 0; /* sát mép dưới */
+  margin-top: 0;         /* bỏ khoảng trống trên */
+  border-top: 1px solid #ddd;
+  text-align: right;
+  z-index: 50;
+}
+
+#popupFooter button { margin-left: 6px; }
+
+#btnChiTiet, #btnEdit, #btnSave, #btnCancel {
+  background: #7b2cbf;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+}
+#btnChiTiet:hover, #btnEdit:hover, #btnSave:hover, #btnCancel:hover {
+  background: #5b1599;
+}
+
+.edit-input {
+  width: 97%;
+  font-family: "Times New Roman";
+  font-size: 15px;
+  margin: 3px 0;
+  resize: vertical;
+}
+/* 🌿 Mặc định ẩn công cụ bảng */
+.table-tools {
+  display: none;
+}
+
+/* 🌿 Khi popup đang chỉnh sửa → hiện công cụ */
+.edit-mode .table-tools {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  gap: 6px;
+}
+
+.table-tools button {
+  background: #4a6fa5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.table-tools button:hover {
+  background: #2f517c;
+}
+
+#popupChuyenDe .popup-content {
+    width:90%;          /* bạn có thể chỉnh 90 → 95 → 100% tùy ý */
+    max-width:1300px;   /* đủ rộng */
+    margin-left: auto;  /* đẩy sang phải */
+    margin-right: 40px; /* cách mép phải 20px, muốn sát = 0px */
+}
+
+/* ✅ Đồng bộ kích thước popup Sao & Mô tả Cách Cục như popup Chuyên Đề */
+#saoPopup .popup-content,
+#popupMoTaCachCuc .popup-content {
+  width: 90%;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: 40px;
+  min-width: 400px;
+  min-height: 250px;
+  resize: both;
+}
+
+/* ✅ Ghi đè inline cho khung mô tả Cách Cục (popup-cc-inner) */
+#popupMoTaCachCuc .popup-cc-inner {
+  width: 80% !important;
+  max-width: 1200px !important;
+  min-width: 400px;
+  min-height: 250px;
+  max-height: 85vh;
+  margin-left: auto !important;
+  margin-right: 20px !important;
+}
+
+#lasoContainer {
+  position: relative;  /* ✅ đảm bảo bảng và tick bám theo lá số */
+}
+
+#catHungWrapper {
+  position: absolute;  /* ✅ bám theo #lasoContainer thay vì toàn trang */
+  top: 50px;           /* điều chỉnh cao/thấp cho đẹp */
+  right: 10px;         /* dính góc phải khung lá số */
+  width: 450px;        /* bạn có thể thay đổi tùy thích */
+  background-color: #fff8e1;
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  font-family: "Times New Roman", serif;
+  display: none;
+  overflow-y: auto;
+  z-index: 300;       /* ✅ để không bị chìm */
+  resize: both;        /* ✅ cho phép kéo thay đổi kích thước */
+  overflow: auto;      /* ✅ để kéo resize có scrollbar */
+}
+
+#catHungWrapper h3 {
+  text-align: center;
+  margin: 0;
+  padding: 4px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+  border-bottom: 1px solid #bca96b;
+}
+#catHungWrapper .chinhTinh {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #222;
+}
+#catHungWrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+#catHungWrapper td, #catHungWrapper th {
+  border: 1px solid #999;
+  padding: 4px 6px;
+  vertical-align: top;
+}
+#catHungWrapper th {
+  text-align: center;
+  background-color: #f3e6b1;
+  font-weight: bold;
+}
+#catHungWrapper .ketluan {
+  text-align: center;
+  font-weight: bold;
+  background-color: #f3e6b1;
+  font-size: 15px;
+}
+#showCatHungToggle {
+  position: absolute;
+  top: -42px;
+  left: -105px;
+  background: #fff8e1;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  z-index: 9999; /* ✅ đẩy cao nhất để nổi lên trên tất cả layer */
+}
+
+
+
+#showCatHungToggle input {
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.popup-cc-inner::-webkit-scrollbar {
+  display:none;
+}
+
+@keyframes popIn {
+  from { transform:scale(0.9);opacity:0; }
+  to { transform:scale(1);opacity:1; }
+}
+#btnEditMoTa:hover,#btnSaveMoTa:hover { background:#6923a8; }
+#btnCloseMoTa:hover { background:#999; }
+#btnCloseMoTaX:hover { color:#b5179e; transform:scale(1.15); }
+
+/* ===== Premium lock overlay ===== */
+.premium-box {
+  position: relative;
+}
+.premium-overlay {
+  position: absolute;
+  inset: 0;
+  background: #5a189a; /* đậm 100% */
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: auto; /* chặn click/copy bên dưới */
+  user-select: none;
+  /* hé rất ít bên trái cho tò mò */
+  mask: linear-gradient(to right,
+    transparent 0%,
+    transparent 4%,
+    rgba(0,0,0,0.2) 6%,
+    black 10%,
+    black 100%);
+  -webkit-mask: linear-gradient(to right,
+    transparent 0%,
+    transparent 4%,
+    rgba(0,0,0,0.2) 6%,
+    black 10%,
+    black 100%);
+}
+.premium-locked {
+  pointer-events: none;
+  filter: grayscale(0.1) contrast(0.95);
+  opacity: 0.9;
+}
+.premium-locked * {
+  pointer-events: none !important;
+}
+.auth-card {
+  pointer-events: auto;
+}
+.auth-card * {
+  pointer-events: auto !important;
+}
+
+.premium-content {
+  position: relative;
+}
