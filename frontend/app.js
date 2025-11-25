@@ -1,4 +1,4 @@
-// =====================================================
+﻿const API_BASE = 'https://tuvi-backend-d5gx.onrender.com';\nconst apiFetch = (path, options = {}) => fetch(API_BASE + path, { credentials: 'include', ...options });\n\n// =====================================================
 // 🕵️‍♂️ DEBUG: Theo dõi mọi thay đổi giá trị Cục Số
 // -----------------------------------------------------
 Object.defineProperty(window, "debugCucSo", {
@@ -741,7 +741,7 @@ let year = parseInt(document.getElementById("year").value);
 
   let apiData;
   try {
-    const resp = await fetch("/api/convert", {
+    const resp = await apiFetch("/api/convert", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -13668,7 +13668,7 @@ window.addEventListener("load", initCachCucToggle);
   };
 
   const callApi = async (path, options = {}) => {
-    const res = await fetch(path, {
+    const res = await fetch(API_BASE + path, {
       credentials: "include",
       headers: { "Content-Type": "application/json", ...(options.headers || {}) },
       ...options
@@ -13953,3 +13953,5 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     });
   }
 })();
+
+
