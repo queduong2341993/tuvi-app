@@ -2860,27 +2860,8 @@ function xacDinhCucSo(canChiNam, cungMenh) {
     .replace(/[ \s]+/g, " ")
     .trim()
     .split(" ")[0]
-    // Giữ lại chữ cái (có dấu) bằng Unicode class \p{L}, tránh lỗi range RegExp
     .replace(/[^\p{L}]/gu, "");
-  const chi = (typeof cungMenh === "string") ? cungMenh.trim() : "";
 
-  const bangCuc = {
-    "GiĂ¡p": { "TĂ½-Sá»­u": "Thá»§y nhá»‹ cá»¥c", "Dáº§n-MĂ£o": "Há»a lá»¥c cá»¥c", "ThĂ¬n-Tá»µ": "Má»™c tam cá»¥c", "Ngá»-MĂ¹i": "Thá»• ngÅ© cá»¥c", "ThĂ¢n-Dáº­u": "Kim tá»© cá»¥c", "Tuáº¥t-Há»£i": "Há»a lá»¥c cá»¥c" },
-    "Ká»·":   { "TĂ½-Sá»­u": "Thá»§y nhá»‹ cá»¥c", "Dáº§n-MĂ£o": "Há»a lá»¥c cá»¥c", "ThĂ¬n-Tá»µ": "Má»™c tam cá»¥c", "Ngá»-MĂ¹i": "Thá»• ngÅ© cá»¥c", "ThĂ¢n-Dáº­u": "Kim tá»© cá»¥c", "Tuáº¥t-Há»£i": "Há»a lá»¥c cá»¥c" },
-    "áº¤t":   { "TĂ½-Sá»­u": "Há»a lá»¥c cá»¥c", "Dáº§n-MĂ£o": "Thá»• ngÅ© cá»¥c", "ThĂ¬n-Tá»µ": "Kim tá»© cá»¥c", "Ngá»-MĂ¹i": "Má»™c tam cá»¥c", "ThĂ¢n-Dáº­u": "Thá»§y nhá»‹ cá»¥c", "Tuáº¥t-Há»£i": "Thá»• ngÅ© cá»¥c" },
-    "Canh": { "TĂ½-Sá»­u": "Há»a lá»¥c cá»¥c", "Dáº§n-MĂ£o": "Thá»• ngÅ© cá»¥c", "ThĂ¬n-Tá»µ": "Kim tá»© cá»¥c", "Ngá»-MĂ¹i": "Má»™c tam cá»¥c", "ThĂ¢n-Dáº­u": "Thá»§y nhá»‹ cá»¥c", "Tuáº¥t-Há»£i": "Thá»• ngÅ© cá»¥c" },
-    "BĂ­nh": { "TĂ½-Sá»­u": "Thá»• ngÅ© cá»¥c", "Dáº§n-MĂ£o": "Má»™c tam cá»¥c", "ThĂ¬n-Tá»µ": "Thá»§y nhá»‹ cá»¥c", "Ngá»-MĂ¹i": "Kim tá»© cá»¥c", "ThĂ¢n-Dáº­u": "Há»a lá»¥c cá»¥c", "Tuáº¥t-Há»£i": "Má»™c tam cá»¥c" },
-    "TĂ¢n":  { "TĂ½-Sá»­u": "Thá»• ngÅ© cá»¥c", "Dáº§n-MĂ£o": "Má»™c tam cá»¥c", "ThĂ¬n-Tá»µ": "Thá»§y nhá»‹ cá»¥c", "Ngá»-MĂ¹i": "Kim tá»© cá»¥c", "ThĂ¢n-Dáº­u": "Há»a lá»¥c cá»¥c", "Tuáº¥t-Há»£i": "Má»™c tam cá»¥c" },
-    "Äinh": { "TĂ½-Sá»­u": "Má»™c tam cá»¥c", "Dáº§n-MĂ£o": "Kim tá»© cá»¥c", "ThĂ¬n-Tá»µ": "Há»a lá»¥c cá»¥c", "Ngá»-MĂ¹i": "Thá»§y nhá»‹ cá»¥c", "ThĂ¢n-Dáº­u": "Thá»• ngÅ© cá»¥c", "Tuáº¥t-Há»£i": "Kim tá»© cá»¥c" },
-    "NhĂ¢m": { "TĂ½-Sá»­u": "Má»™c tam cá»¥c", "Dáº§n-MĂ£o": "Kim tá»© cá»¥c", "ThĂ¬n-Tá»µ": "Há»a lá»¥c cá»¥c", "Ngá»-MĂ¹i": "Thá»§y nhá»‹ cá»¥c", "ThĂ¢n-Dáº­u": "Thá»• ngÅ© cá»¥c", "Tuáº¥t-Há»£i": "Kim tá»© cá»¥c" },
-    "Máº­u":  { "TĂ½-Sá»­u": "Kim tá»© cá»¥c", "Dáº§n-MĂ£o": "Thá»§y nhá»‹ cá»¥c", "ThĂ¬n-Tá»µ": "Thá»• ngÅ© cá»¥c", "Ngá»-MĂ¹i": "Há»a lá»¥c cá»¥c", "ThĂ¢n-Dáº­u": "Má»™c tam cá»¥c", "Tuáº¥t-Há»£i": "Thá»§y nhá»‹ cá»¥c" },
-    "QuĂ½":  { "TĂ½-Sá»­u": "Kim tá»© cá»¥c", "Dáº§n-MĂ£o": "Thá»§y nhá»‹ cá»¥c", "ThĂ¬n-Tá»µ": "Thá»• ngÅ© cá»¥c", "Ngá»-MĂ¹i": "Há»a lá»¥c cá»¥c", "ThĂ¢n-Dáº­u": "Má»™c tam cá»¥c", "Tuáº¥t-Há»£i": "Thá»§y nhá»‹ cá»¥c" }
-  };
-
-  const nhomCung = {
-    "TĂ½": "TĂ½-Sá»­u", "Sá»­u": "TĂ½-Sá»­u",
-    "Dáº§n": "Dáº§n-MĂ£o", "MĂ£o": "Dáº§n-MĂ£o",
-    "ThĂ¬n": "ThĂ¬n-Tá»µ", "Tá»µ": "ThĂ¬n-Tá»µ",
     "Ngá»": "Ngá»-MĂ¹i", "MĂ¹i": "Ngá»-MĂ¹i",
     "ThĂ¢n": "ThĂ¢n-Dáº­u", "Dáº­u": "ThĂ¢n-Dáº­u",
     "Tuáº¥t": "Tuáº¥t-Há»£i", "Há»£i": "Tuáº¥t-Há»£i"
@@ -13959,6 +13940,7 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     });
   }
 })();
+
 
 
 
