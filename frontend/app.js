@@ -1677,12 +1677,12 @@ else idxBacSi = (idxCung + buoc) % 12;
   // đŸŸ¢ 6ï¸âƒ£ Láº¥y káº¿t quáº£ Can nÄƒm tá»« pháº§n 3 (Cá»¥c sá»‘)
 const ketQuaCucText = document.getElementById("ketQuaCuc")?.textContent || "";
 let canPhan3 = [];
-if (ketQuaCucText.includes("Can nÄƒm")) {
-  const match = ketQuaCucText.match(/Can nÄƒm:\s*([A-Za-zĂ€-á»¹\/\s]+)/);
-  if (match && match[1]) {
-    canPhan3 = match[1].split("/").map(s => s.trim());
-  }
+const matchCanNam = ketQuaCucText.match(/Can n.m:\s*([\p{L}\/\s]+)/u);
+if (matchCanNam && matchCanNam[1]) {
+  canPhan3 = matchCanNam[1].split("/").map(s => s.trim());
 }
+
+
 
 // đŸŸ¢ 7ï¸âƒ£ TĂ­nh giao giá»¯a hai káº¿t quáº£ (pháº§n 3 & pháº§n 4)
 const giaoCan = canNamList.filter(c => canPhan3.includes(c));
@@ -13959,6 +13959,10 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     });
   }
 })();
+
+
+
+
 
 
 
