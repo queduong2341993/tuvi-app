@@ -1,4 +1,4 @@
-﻿const API_BASE = 'https://tuvi-backend-d5gx.onrender.com';
+const API_BASE = 'https://tuvi-backend-d5gx.onrender.com';
 const apiFetch = (path, options = {}) => fetch(API_BASE + path, { credentials: 'include', ...options });
 
 // =====================================================
@@ -13927,6 +13927,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("btnOpenFullLaso").onclick = () => {
     const laso = document.getElementById("lasoContainer");
     const overlay = document.getElementById("fullLasoOverlay");
+    const authPanel = document.getElementById("authPanel");
 
     if (!laso || !overlay) {
         console.error("Không tìm thấy overlay hoặc lasoContainer");
@@ -13942,10 +13943,12 @@ document.getElementById("btnOpenFullLaso").onclick = () => {
     `;
     overlay.appendChild(laso);
     overlay.style.display = "block";
+    if (authPanel) authPanel.style.display = "none";
 
     document.getElementById("btnExitFullLaso").onclick = () => {
         document.getElementById("lasoSection").appendChild(laso);
         overlay.style.display = "none";
+        if (authPanel) authPanel.style.display = "";
     };
 };
 (function () {
