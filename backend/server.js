@@ -5,6 +5,7 @@ const path = require('path');
 const session = require('express-session');
 const { convertDate } = require('./lunar');
 const { tinhLaSo } = require('./calc');
+const { tinhLaSoDayDu } = require('./laso-core');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -101,6 +102,16 @@ app.post('/api/tinh-laso', (req, res) => {
   }
 });
 
+// Lá số đầy đủ (backend tính toán, trả JSON)
+app.post('/api/laso', (req, res) => {
+  try {
+    const result = tinhLaSoDayDu(req.body || {});
+    res.json(result);
+  } catch (err) {
+    res.status(400).json({ error: err.message || 'Invalid input' });
+  }
+});
+
 // Paid-only sample endpoints
 app.post('/api/premium/tra-cuu-sao', requirePaid, (req, res) => {
   res.json({
@@ -116,13 +127,8 @@ app.post('/api/premium/cach-cuc', requirePaid, (req, res) => {
   });
 });
 
-// Serve static frontend assets
-app.use(express.static(path.join(__dirname, '../frontend')));
-
-// Catch-all route (Express 5)
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
-});
+// NOTE: Không serve frontend tại backend để tránh lộ app.js. Chỉ trả API JSON.
+app.use((req, res) => res.status(404).json({ error: 'Not Found' }));
 
 app.listen(PORT, () => {
   console.log(`Server chay tai http://localhost:${PORT}`);
