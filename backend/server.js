@@ -5,7 +5,7 @@ const path = require('path');
 const session = require('express-session');
 const { convertDate } = require('./lunar');
 const { tinhLaSo } = require('./calc');
-const { tinhLaSoDayDu } = require('./laso-core');
+const { tinhLaSoDayDu } = require('./laso-core.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
