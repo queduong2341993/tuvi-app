@@ -1,4 +1,4 @@
-const API_BASE = "https://tuvi-backend.onrender.com";
+const API_BASE = "https://tuvi-backend-d5gx.onrender.com";
 
 function apiFetch(path, options = {}) {
   return fetch(API_BASE + path, { credentials: "include", ...options });
