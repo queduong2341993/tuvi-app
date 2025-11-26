@@ -98,16 +98,27 @@ document.addEventListener("DOMContentLoaded", () => {
 function renderChart(data) {
   const container = document.getElementById("lasoContainer");
   if (!container) return;
+
+  // Map cung -> vị trí grid theo bố cục cũ (cell1..12)
+  const pos = [
+    "Tỵ", "Ngọ", "Mùi", "Thân",
+    "Thìn", "Dậu", "Mão", "Tuất",
+    "Dần", "Sửu", "Tý", "Hợi"
+  ];
+
   container.innerHTML = "";
   container.style.display = "grid";
   container.style.gridTemplateColumns = "repeat(4, 1fr)";
-  container.style.gap = "8px";
+  container.style.gap = "6px";
 
+  // Thông tin trung tâm
   const metaBox = document.createElement("div");
   metaBox.style.gridColumn = "span 4";
   metaBox.style.border = "1px solid #ccc";
   metaBox.style.padding = "8px";
+  metaBox.style.background = "#f6f7fb";
   metaBox.innerHTML = `
+    <div style="font-weight:bold;">LÁ SỐ TỬ VI</div>
     <div><b>Họ tên:</b> ${data?.meta?.input?.name || "Người dùng"}</div>
     <div><b>Giới tính:</b> ${data?.meta?.input?.gender || ""}</div>
     <div><b>Cục số:</b> ${data?.meta?.cucSo || ""}</div>
@@ -116,14 +127,19 @@ function renderChart(data) {
   container.appendChild(metaBox);
 
   const cungStars = data?.cungStars || {};
-  const order = ["Dần","Mão","Thìn","Tỵ","Ngọ","Mùi","Thân","Dậu","Tuất","Hợi","Tý","Sửu"];
 
-  order.forEach((cung) => {
+  pos.forEach((cung) => {
     const box = document.createElement("div");
     box.style.border = "1px solid #999";
     box.style.padding = "6px";
-    box.style.minHeight = "140px";
-    box.innerHTML = `<div style="font-weight:bold;margin-bottom:4px;">${cung}</div>`;
+    box.style.minHeight = "180px";
+    box.style.background = "#fff";
+
+    const title = document.createElement("div");
+    title.style.fontWeight = "bold";
+    title.style.marginBottom = "6px";
+    title.textContent = cung;
+    box.appendChild(title);
 
     const groups = [
       { key: "chinh", label: "Chính" },
@@ -136,7 +152,7 @@ function renderChart(data) {
       if (!list.length) return;
       const wrap = document.createElement("div");
       wrap.style.marginBottom = "4px";
-      wrap.innerHTML = `<div style="font-weight:bold;font-size:12px;">${g.label}</div>`;
+      wrap.innerHTML = `<div style="font-weight:600;font-size:12px;">${g.label}</div>`;
       list.forEach(item => {
         const name = typeof item === "string" ? item : (item?.name || "");
         const prefix = item?.prefix ? item.prefix + ". " : "";
