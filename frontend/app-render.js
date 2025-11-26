@@ -1,4 +1,4 @@
-const API_BASE = "https://tuvi-backend-d5gx.onrender.com";
+const API_BASE = "https://tuvi-backend.onrender.com";
 
 function apiFetch(path, options = {}) {
   return fetch(API_BASE + path, { credentials: "include", ...options });
@@ -60,11 +60,18 @@ async function handleConvert() {
       body: JSON.stringify({ ...payload, luuHan }),
       cache: "no-cache"
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
+    const ct = res.headers.get("content-type") || "";
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${text.slice(0, 120)}`);
+    }
+    if (!ct.includes("application/json")) {
+      throw new Error(`Backend trả về không phải JSON (có thể đang khởi động): ${text.slice(0, 120)}`);
+    }
+    const json = JSON.parse(text);
     renderResult(json);
   } catch (err) {
-    alert("Không gọi được backend: " + err.message);
+    alert("Không gọi được backend: " + err.message + "\nHãy chờ backend khởi động (Render) rồi thử lại.");
     console.error(err);
   }
 }
